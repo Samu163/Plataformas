@@ -34,6 +34,7 @@ public:
 	bool isJumping;
 	int jumpingCounter;
 	int pickCoinFxId;
+	int doubleJumpCounter;
 };
 
 #endif // __PLAYER_H__

@@ -47,25 +47,9 @@ bool Player::Update(float dt)
 {
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || isJumping) 
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN ) 
 	{
-		vel = b2Vec2(0, GRAVITY_Y + jumpingCounter - dt);
 		isJumping = true;
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
-		{
-			vel = b2Vec2(-speed * dt, GRAVITY_Y + jumpingCounter - dt);
-		}
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
-		{
-			vel = b2Vec2(speed * dt, GRAVITY_Y + jumpingCounter - dt);
-		}
-		jumpingCounter++;
-		if (jumpingCounter - dt >= -GRAVITY_Y *2.4f) {
-			isJumping = false;
-			jumpingCounter = 0;
-		}
-		//
-		//GRAVITY_Y+jumpingCounter-dt >= 0
 	
 
 	}
@@ -74,11 +58,93 @@ bool Player::Update(float dt)
 	}
 
 	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		vel = b2Vec2(-speed*dt, -GRAVITY_Y);
+		if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+			vel = b2Vec2(-speed * dt * 2, -GRAVITY_Y);
+		}
+		else
+		{
+			vel = b2Vec2(-speed * dt, -GRAVITY_Y);
+		}
 	}
 
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		vel = b2Vec2(speed*dt, -GRAVITY_Y);
+		if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+			vel = b2Vec2(speed * dt*2, -GRAVITY_Y);
+		}
+		else
+		{
+			vel = b2Vec2(speed * dt, -GRAVITY_Y);
+		}
+		
+	}
+
+	if (isJumping) {
+		
+
+		int posYExtra = GRAVITY_Y + jumpingCounter - dt;
+		if (posYExtra >= -GRAVITY_Y) {
+			posYExtra = -GRAVITY_Y;
+		}
+		vel = b2Vec2(0, posYExtra);
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			vel = b2Vec2(-speed * dt, posYExtra);
+			
+		}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			vel = b2Vec2(speed * dt, posYExtra);
+			
+		}
+		jumpingCounter++;
+		
+		
+		/*if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
+			vel = b2Vec2(0, -GRAVITY_Y);
+		}
+		else
+		{
+			vel = b2Vec2(0, GRAVITY_Y + jumpingCounter - dt);
+		}
+
+
+		if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
+			vel = b2Vec2(0, -GRAVITY_Y);
+		}
+		else
+		{
+			vel = b2Vec2(0, GRAVITY_Y + jumpingCounter - dt);
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
+				vel = b2Vec2(-speed * dt, -GRAVITY_Y );
+			}
+			else
+			{
+				vel = b2Vec2(-speed * dt, GRAVITY_Y + jumpingCounter - dt);
+			}
+		}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
+				vel = b2Vec2(speed * dt, -GRAVITY_Y);
+			}
+			else
+			{
+				vel = b2Vec2(speed * dt, GRAVITY_Y + jumpingCounter - dt);
+			}
+		}
+		jumpingCounter++;*/
+		/*if (jumpingCounter - dt >= -GRAVITY_Y * 50.0f) {
+			isJumping = false;
+			jumpingCounter = 0;
+		}*/
+	}
+	else
+	{
+		jumpingCounter = 0;
 	}
 
 	//Set the velocity of the pbody of the player
@@ -109,6 +175,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
+		if (isJumping) 
+		{
+			isJumping = false;
+		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
