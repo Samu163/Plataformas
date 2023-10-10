@@ -81,7 +81,7 @@ bool Player::Update(float dt)
 	if (isJumping) {
 		
 
-		int posYExtra = GRAVITY_Y + jumpingCounter - dt;
+		int posYExtra = GRAVITY_Y/2 +jumpingCounter - dt;
 		if (posYExtra >= -GRAVITY_Y) {
 			posYExtra = -GRAVITY_Y;
 		}
@@ -98,49 +98,6 @@ bool Player::Update(float dt)
 		}
 		jumpingCounter++;
 		
-		
-		/*if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
-			vel = b2Vec2(0, -GRAVITY_Y);
-		}
-		else
-		{
-			vel = b2Vec2(0, GRAVITY_Y + jumpingCounter - dt);
-		}
-
-
-		if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
-			vel = b2Vec2(0, -GRAVITY_Y);
-		}
-		else
-		{
-			vel = b2Vec2(0, GRAVITY_Y + jumpingCounter - dt);
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
-				vel = b2Vec2(-speed * dt, -GRAVITY_Y );
-			}
-			else
-			{
-				vel = b2Vec2(-speed * dt, GRAVITY_Y + jumpingCounter - dt);
-			}
-		}
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			if (GRAVITY_Y + jumpingCounter - dt >= -GRAVITY_Y) {
-				vel = b2Vec2(speed * dt, -GRAVITY_Y);
-			}
-			else
-			{
-				vel = b2Vec2(speed * dt, GRAVITY_Y + jumpingCounter - dt);
-			}
-		}
-		jumpingCounter++;*/
-		/*if (jumpingCounter - dt >= -GRAVITY_Y * 50.0f) {
-			isJumping = false;
-			jumpingCounter = 0;
-		}*/
 	}
 	else
 	{

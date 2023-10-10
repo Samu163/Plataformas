@@ -109,7 +109,21 @@ bool Scene::Update(float dt)
 			player->position.x = app->win->screenSurface->w / 2;
 		}
 		app->render->camera.x = -player->position.x + app->win->screenSurface->w / 2;
-		//app->render->camera.y = -player->position.y + app->win->screenSurface->h / 2;
+		
+		if (player->position.y <= 0) 
+		{
+			//player->position.y += app->win->screenSurface->h + 13 * 2;
+		}
+		else if (player->position.y >= app->win->screenSurface->h) 
+		{
+			player->position.y -= app->win->screenSurface->h - 13 * 2;
+		}
+		else
+		{
+			player->position.y = 0;
+		}
+		app->render->camera.y = -player->position.y;
+		
 	}
 	
 
