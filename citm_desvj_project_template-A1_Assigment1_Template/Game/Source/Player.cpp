@@ -81,7 +81,7 @@ bool Player::Update(float dt)
 	}
 
 	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		orientation = SDL_FLIP_HORIZONTAL;
+		isFlipped = true;
 		currentAnimation = &leftAnim;
 		leftAnim.Update();
 		if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
@@ -94,7 +94,7 @@ bool Player::Update(float dt)
 	}
 
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		orientation = SDL_FLIP_NONE;
+		isFlipped = false;
 		currentAnimation = &leftAnim;
 		leftAnim.Update();
 		if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
@@ -146,7 +146,7 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	
-	app->render->DrawTexture(texture, position.x-50, position.y-40, &currentAnimation->GetCurrentFrame(), 1.0f,0, orientation);
+	app->render->DrawTexture(texture, position.x-50, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame());
 
 	return true;
 }

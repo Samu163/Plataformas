@@ -43,7 +43,7 @@ public:
 	int jumpingCounter;
 	int pickCoinFxId;
 	int doubleJumpCounter;
-	SDL_RendererFlip orientation;
+	bool isFlipped;
 
 };
 

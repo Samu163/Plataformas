@@ -57,6 +57,7 @@ bool Map::Update(float dt)
                     app->render->DrawTexture(tileset->texture,
                         pos.x,
                         pos.y,
+                        false,
                         &r);
                 }
             }
@@ -196,7 +197,7 @@ bool Map::Load()
 
     while (mapLayerItem != NULL) {
 
-        if (mapLayerItem->data->properties.GetProperty("collision") != NULL && mapLayerItem->data->properties.GetProperty("collision")->value) {
+        if (mapLayerItem->data->properties.GetProperty("Collision") != NULL && mapLayerItem->data->properties.GetProperty("Collision")->value) {
 
             for (int x = 0; x < mapLayerItem->data->width; x++)
             {
@@ -205,7 +206,7 @@ bool Map::Load()
                     int gid = mapLayerItem->data->Get(x, y);
                     TileSet* tileset = GetTilesetFromTileId(gid);
 
-                    if (gid == 49) 
+                    if (gid == 1887)
                     {
                         SDL_Rect r = tileset->GetTileRect(gid);
                         iPoint pos = MapToWorld(x, y);
