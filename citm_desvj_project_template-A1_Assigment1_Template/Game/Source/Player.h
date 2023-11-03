@@ -28,6 +28,13 @@ public:
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
+
+	Animation idleAnim;
+	Animation leftAnim;
+	Animation rightAnim;
+	Animation jumpAnim;
+	Animation* currentAnimation = nullptr;
+
 	float speed = 0.2f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
@@ -36,8 +43,8 @@ public:
 	int jumpingCounter;
 	int pickCoinFxId;
 	int doubleJumpCounter;
+	SDL_RendererFlip orientation;
 
-	Animation idleAnim;
 };
 
 #endif // __PLAYER_H__
