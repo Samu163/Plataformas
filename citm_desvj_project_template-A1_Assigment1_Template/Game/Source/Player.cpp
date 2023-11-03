@@ -23,6 +23,9 @@ bool Player::Awake() {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	/*lifesAnim[0].PushBack({ 14, 22, 63, 33 });
+	lifesAnim[1].PushBack({ 14, 106, 63, 33 });
+	lifesAnim[2].PushBack({ 14, 186, 63, 33 });*/
 
 	return true;
 }
