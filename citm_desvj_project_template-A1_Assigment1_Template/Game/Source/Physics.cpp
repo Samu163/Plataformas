@@ -22,7 +22,7 @@ Physics::Physics() : Module()
 {
 	// Initialise all the internal class variables, at least to NULL pointer
 	world = NULL;
-	debug = true;
+	activeColliders = true;
 }
 
 // Destructor
@@ -224,11 +224,11 @@ bool Physics::PostUpdate()
 	bool ret = true;
 
 	// Activate or deactivate debug mode
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		debug = !debug;
+	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		activeColliders = !activeColliders;
 	
 	//  Iterate all objects in the world and draw the bodies
-	if (debug)
+	if (activeColliders)
 	{
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{
@@ -395,4 +395,9 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	}
 
 	return ret;
+}
+
+void Physics::DestroyObject(PhysBody* physBody) 
+{
+	world->DestroyBody(physBody->body);
 }

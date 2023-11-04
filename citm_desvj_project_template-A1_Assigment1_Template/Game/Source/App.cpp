@@ -131,7 +131,17 @@ bool App::Update()
 {
 	bool ret = true;
 	PrepareUpdate();
-
+	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
+		if (isIn30fps) {
+			maxFrameDuration = 16;
+			isIn30fps = false;
+		}
+		else
+		{
+			maxFrameDuration = 32;
+			isIn30fps = true;
+		}
+	}
 	if(input->GetWindowEvent(WE_QUIT) == true)
 		ret = false;
 

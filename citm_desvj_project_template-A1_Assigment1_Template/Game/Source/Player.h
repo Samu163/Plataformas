@@ -35,7 +35,7 @@ public:
 	Animation jumpAnim;
 	Animation* currentAnimation = nullptr;
 
-	float speed = 0.2f;
+	float speed = 0.4f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
@@ -44,6 +44,9 @@ public:
 	int pickCoinFxId;
 	int doubleJumpCounter;
 	bool isFlipped;
+	int lifes = 1;
+	bool isDead;
+	bool godMode;
 
 };
 

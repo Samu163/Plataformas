@@ -117,6 +117,8 @@ private:
 
 	uint32 maxFrameDuration = 16;
 
+	bool isIn30fps;
+
 };
 
 extern App* app;

@@ -41,7 +41,14 @@ bool Player::Awake() {
 	leftAnim.PushBack({ 1586, 0, 122, 91 });
 	leftAnim.speed = 0.2f;
 	leftAnim.loop = true;
-	
+
+	jumpAnim.PushBack({ 122, 91, 122, 91 });
+	jumpAnim.PushBack({ 244, 91, 122, 91 });
+	jumpAnim.PushBack({ 366, 91, 122, 91 });
+	jumpAnim.PushBack({ 488, 91, 122, 91 });
+	jumpAnim.PushBack({ 610, 91, 122, 91 });
+	jumpAnim.speed = 0.15f;
+	jumpAnim.loop = false;
 	
 
 	return true;
@@ -52,9 +59,9 @@ bool Player::Start()
 	jumpingCounter = 0;
 	isJumping = false;
 	//initilize textures
-	texture = app->tex->Load("Assets/Textures/playerIce.png");
-
-	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+	texture = app->tex->Load("Assets/Textures/playerIce_.png");
+	initialPosition = position;
+	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 
@@ -67,76 +74,86 @@ bool Player::Start()
 
 bool Player::Update(float dt)
 {
+	//Debug
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+		jumpingCounter = 0;
+		isJumping = false;
+		app->physics->DestroyObject(pbody);
+		position = initialPosition;
+		pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 18, bodyType::DYNAMIC);
+		pbody->listener = this;
+		pbody->ctype = ColliderType::PLAYER;
+		currentAnimation = &idleAnim;
+	}
+	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+		godMode = !godMode;
+	}
+
+
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
-	
-
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN ) 
+	if (!isDead) 
 	{
-		isJumping = true;
-	
 
-	}
-	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		//
-	}
-
-	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		isFlipped = true;
-		currentAnimation = &leftAnim;
-		leftAnim.Update();
-		if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-			vel = b2Vec2(-speed * dt * 2, -GRAVITY_Y);
-		}
-		else
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 		{
+			isJumping = true;
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {}
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			isFlipped = true;
+			currentAnimation = &leftAnim;
+			leftAnim.Update();
+
 			vel = b2Vec2(-speed * dt, -GRAVITY_Y);
 		}
-	}
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			isFlipped = false;
+			currentAnimation = &leftAnim;
+			leftAnim.Update();
 
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		isFlipped = false;
-		currentAnimation = &leftAnim;
-		leftAnim.Update();
-		if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-			vel = b2Vec2(speed * dt*2, -GRAVITY_Y);
+			vel = b2Vec2(speed * dt, -GRAVITY_Y);
 		}
 		else
 		{
-			vel = b2Vec2(speed * dt, -GRAVITY_Y);
+			currentAnimation = &idleAnim;
+			idleAnim.Update();
 		}
-		
+
+		if (isJumping) {
+
+			currentAnimation = &jumpAnim;
+			jumpAnim.Update();
+			LOG("%d", jumpingCounter);
+			int posYExtra = GRAVITY_Y / 2 + jumpingCounter - dt;
+			if (posYExtra >= -GRAVITY_Y) {
+				posYExtra = -GRAVITY_Y;
+			}
+			vel = b2Vec2(0, posYExtra);
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			{
+				vel = b2Vec2(-speed * dt, posYExtra);
+
+			}
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			{
+				vel = b2Vec2(speed * dt, posYExtra);
+
+			}
+			jumpingCounter++;
+
+		}
+		else
+		{
+			jumpAnim.Reset();
+			jumpingCounter = 0;
+		}
 	}
 	else
 	{
 		currentAnimation = &idleAnim;
 		idleAnim.Update();
 	}
-
-	if (isJumping) {
-		
-
-		int posYExtra = GRAVITY_Y/2 +jumpingCounter - dt;
-		if (posYExtra >= -GRAVITY_Y) {
-			posYExtra = -GRAVITY_Y;
-		}
-		vel = b2Vec2(0, posYExtra);
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			vel = b2Vec2(-speed * dt, posYExtra);
-			
-		}
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			vel = b2Vec2(speed * dt, posYExtra);
-			
-		}
-		jumpingCounter++;
-		
-	}
-	else
-	{
-		jumpingCounter = 0;
-	}
+	
 
 	//Set the velocity of the pbody of the player
 	pbody->body->SetLinearVelocity(vel);
@@ -146,7 +163,7 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	
-	app->render->DrawTexture(texture, position.x-50, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame());
+	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame());
 
 	return true;
 }
@@ -167,10 +184,31 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
-		if (isJumping) 
+		if (isJumping&&jumpingCounter>1) 
 		{
 			isJumping = false;
+			
 		}
+		break;
+	case ColliderType::DEATH:
+		if (!godMode) 
+		{
+			lifes--;
+			if (lifes < 1) {
+				speed = 0;
+				isDead = true;
+			}
+		}
+		else
+		{
+			if (isJumping && jumpingCounter > 1)
+			{
+				isJumping = false;
+
+			}
+		}
+		
+		
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

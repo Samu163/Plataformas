@@ -213,6 +213,13 @@ bool Map::Load()
                         PhysBody* c1 = app->physics->CreateRectangle(pos.x+mapData.tileWidth/2, pos.y+ mapData.tileHeight/2, mapData.tileWidth, mapData.tileHeight, STATIC);
                         c1->ctype = ColliderType::PLATFORM;
                     }
+                    else if (gid == 1888)
+                    {
+                        SDL_Rect r = tileset->GetTileRect(gid);
+                        iPoint pos = MapToWorld(x, y);
+                        PhysBody* c1 = app->physics->CreateRectangle(pos.x+mapData.tileWidth/2, pos.y+ mapData.tileHeight/2, mapData.tileWidth, mapData.tileHeight, STATIC);
+                        c1->ctype = ColliderType::DEATH;
+                    }
                    
 
                   
