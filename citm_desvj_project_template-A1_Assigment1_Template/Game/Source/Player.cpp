@@ -51,39 +51,59 @@ bool Player::Awake() {
 	jumpAnim.loop = false;
 	
 
+	deathAnim.PushBack({ 0, 182, 122, 91 });
+	deathAnim.PushBack({ 122, 182, 122, 91 });
+	deathAnim.PushBack({ 244, 182, 122, 91 });
+	deathAnim.PushBack({ 366, 182, 122, 91 });
+	deathAnim.PushBack({ 488, 182, 122, 91 });
+	deathAnim.PushBack({ 610, 182, 122, 91 });
+	deathAnim.PushBack({ 732, 182, 122, 91 });
+	deathAnim.PushBack({ 854, 182, 122, 91 });
+	deathAnim.PushBack({ 976, 182, 122, 91 });
+	deathAnim.PushBack({ 1098, 182, 122, 91 });
+	deathAnim.PushBack({ 1220, 182, 122, 91 });
+	deathAnim.PushBack({ 1342, 182, 122, 91 });
+	deathAnim.speed = 0.2f;
+	deathAnim.loop = false;
+
 	return true;
 }
 
 bool Player::Start()
 {
+
+	//initilize textures
+	texture = app->tex->Load("Assets/Textures/playerIce.png");
+	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+	Init();
+	return true;
+}
+
+void Player::Init() 
+{
+	
+	speed = 0.4f;
 	jumpingCounter = 0;
 	isJumping = false;
-	//initilize textures
-	texture = app->tex->Load("Assets/Textures/playerIce_.png");
+	isDead = false;
 	initialPosition = position;
+	currentAnimation = &idleAnim;
 	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
-
-	currentAnimation = &idleAnim;
-
-	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
-
-	return true;
 }
 
 bool Player::Update(float dt)
 {
 	//Debug
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-		jumpingCounter = 0;
-		isJumping = false;
 		app->physics->DestroyObject(pbody);
+		if (isDead) {
+			deathAnim.Reset();
+		}
+		
 		position = initialPosition;
-		pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 18, bodyType::DYNAMIC);
-		pbody->listener = this;
-		pbody->ctype = ColliderType::PLAYER;
-		currentAnimation = &idleAnim;
+		Init();
 	}
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
 		godMode = !godMode;
@@ -93,7 +113,7 @@ bool Player::Update(float dt)
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (!isDead) 
 	{
-
+		
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 		{
 			isJumping = true;
@@ -150,8 +170,8 @@ bool Player::Update(float dt)
 	}
 	else
 	{
-		currentAnimation = &idleAnim;
-		idleAnim.Update();
+		currentAnimation = &deathAnim;
+		deathAnim.Update();
 	}
 	
 

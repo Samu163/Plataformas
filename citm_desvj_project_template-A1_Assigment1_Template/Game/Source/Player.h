@@ -17,6 +17,8 @@ public:
 	
 	virtual ~Player();
 
+	void Init();
+
 	bool Awake();
 
 	bool Start();
@@ -33,6 +35,7 @@ public:
 	Animation leftAnim;
 	Animation rightAnim;
 	Animation jumpAnim;
+	Animation deathAnim;
 	Animation* currentAnimation = nullptr;
 
 	float speed = 0.4f;
