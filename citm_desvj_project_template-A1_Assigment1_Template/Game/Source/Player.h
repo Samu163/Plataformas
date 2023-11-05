@@ -32,7 +32,7 @@ public:
 public:
 
 	Animation idleAnim;
-	Animation leftAnim;
+	Animation walkAnim;
 	Animation rightAnim;
 	Animation jumpAnim;
 	Animation deathAnim;

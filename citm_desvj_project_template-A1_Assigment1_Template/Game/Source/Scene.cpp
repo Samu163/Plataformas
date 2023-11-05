@@ -81,7 +81,9 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	float camSpeed = 1;
-	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+	//Debug
+	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+	{
 		isInDebugMode=!isInDebugMode;
 	}
 	if (isInDebugMode)
@@ -109,7 +111,7 @@ bool Scene::Update(float dt)
 		
 		if (player->position.y <= 0) 
 		{
-			//player->position.y += app->win->screenSurface->h + 13 * 2;
+
 		}
 		else if (player->position.y >= app->win->screenSurface->h) 
 		{

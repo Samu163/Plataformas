@@ -19,9 +19,10 @@ Player::~Player() {
 }
 
 bool Player::Awake() {
-	//122x 91y
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
+
+	//Size of each cell of the spritesheet: 122x 91y
 	idleAnim.PushBack({ 0, 0, 122, 91 });
 	idleAnim.PushBack({ 122, 0, 122, 91 });
 	idleAnim.PushBack({ 244, 0, 122, 91 });
@@ -34,13 +35,13 @@ bool Player::Awake() {
 	idleAnim.speed = 0.2f;
 	idleAnim.loop = true;
 
-	leftAnim.PushBack({ 1098, 0, 122, 91 });
-	leftAnim.PushBack({ 1220, 0, 122, 91 });
-	leftAnim.PushBack({ 1342, 0, 122, 91 });
-	leftAnim.PushBack({ 1464, 0, 122, 91 });
-	leftAnim.PushBack({ 1586, 0, 122, 91 });
-	leftAnim.speed = 0.2f;
-	leftAnim.loop = true;
+	walkAnim.PushBack({ 1098, 0, 122, 91 });
+	walkAnim.PushBack({ 1220, 0, 122, 91 });
+	walkAnim.PushBack({ 1342, 0, 122, 91 });
+	walkAnim.PushBack({ 1464, 0, 122, 91 });
+	walkAnim.PushBack({ 1586, 0, 122, 91 });
+	walkAnim.speed = 0.2f;
+	walkAnim.loop = true;
 
 	jumpAnim.PushBack({ 122, 91, 122, 91 });
 	jumpAnim.PushBack({ 244, 91, 122, 91 });
@@ -50,7 +51,6 @@ bool Player::Awake() {
 	jumpAnim.speed = 0.15f;
 	jumpAnim.loop = false;
 	
-
 	deathAnim.PushBack({ 0, 182, 122, 91 });
 	deathAnim.PushBack({ 122, 182, 122, 91 });
 	deathAnim.PushBack({ 244, 182, 122, 91 });
@@ -71,17 +71,17 @@ bool Player::Awake() {
 
 bool Player::Start()
 {
-
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+	//initialize player parameters
 	Init();
 	return true;
 }
 
 void Player::Init() 
 {
-	
+	//Init function that initialize most of the player parameters
 	speed = 0.4f;
 	jumpingCounter = 0;
 	isJumping = false;
@@ -96,15 +96,16 @@ void Player::Init()
 bool Player::Update(float dt)
 {
 	//Debug
+	//Restart from initial position
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-		app->physics->DestroyObject(pbody);
 		if (isDead) {
 			deathAnim.Reset();
 		}
-		
+		app->physics->DestroyObject(pbody);
 		position = initialPosition;
 		Init();
 	}
+	//GodMode
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
 		godMode = !godMode;
 	}
@@ -113,7 +114,6 @@ bool Player::Update(float dt)
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (!isDead) 
 	{
-		
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 		{
 			isJumping = true;
@@ -121,15 +121,15 @@ bool Player::Update(float dt)
 		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {}
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 			isFlipped = true;
-			currentAnimation = &leftAnim;
-			leftAnim.Update();
+			currentAnimation = &walkAnim;
+			walkAnim.Update();
 
 			vel = b2Vec2(-speed * dt, -GRAVITY_Y);
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			isFlipped = false;
-			currentAnimation = &leftAnim;
-			leftAnim.Update();
+			currentAnimation = &walkAnim;
+			walkAnim.Update();
 
 			vel = b2Vec2(speed * dt, -GRAVITY_Y);
 		}
@@ -138,16 +138,18 @@ bool Player::Update(float dt)
 			currentAnimation = &idleAnim;
 			idleAnim.Update();
 		}
-
-		if (isJumping) {
+		//Jump Function with dt (is not working with 30fps)
+		if (isJumping) 
+		{
 
 			currentAnimation = &jumpAnim;
 			jumpAnim.Update();
-			LOG("%d", jumpingCounter);
+
 			int posYExtra = GRAVITY_Y / 2 + jumpingCounter - dt;
 			if (posYExtra >= -GRAVITY_Y) {
 				posYExtra = -GRAVITY_Y;
 			}
+
 			vel = b2Vec2(0, posYExtra);
 			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 			{
@@ -182,7 +184,7 @@ bool Player::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	
+	//Draw texture
 	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame());
 
 	return true;
@@ -211,6 +213,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 		break;
 	case ColliderType::DEATH:
+		LOG("Collision DEATH");
 		if (!godMode) 
 		{
 			lifes--;
@@ -224,7 +227,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (isJumping && jumpingCounter > 1)
 			{
 				isJumping = false;
-
 			}
 		}
 		
