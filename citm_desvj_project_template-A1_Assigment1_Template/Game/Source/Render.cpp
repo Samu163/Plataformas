@@ -105,14 +105,16 @@ void Render::ResetViewPort()
 }
 
 // Blit to screen
-bool Render::DrawTexture(SDL_Texture* texture, int x, int y, bool isFlipped, const SDL_Rect* section, float speed, double angle, int pivotX, int pivotY) const
+bool Render::DrawTexture(SDL_Texture* texture, int x, int y, bool isFlipped, const SDL_Rect* section, float speed, double angle, int pivotX, int pivotY, int zoomFactor) const
 {
 	bool ret = true;
 	uint scale = app->win->GetScale();
-
+//	int scaledWidth = static_cast<int>(section->w * zoomFactor);
+//	int scaledHeight = static_cast<int>(section->h * zoomFactor);
+//	SDL_Rect destRect = { x, y, scaledWidth, scaledHeight };
 	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * scale;
-	rect.y = (int)(camera.y * speed) + y * scale;
+	rect.x = (int)(camera.x * speed) + x * zoomFactor;
+	rect.y = (int)(camera.y * speed) + y * zoomFactor;
 
 	if(section != NULL)
 	{
@@ -124,8 +126,8 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, bool isFlipped, con
 		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 	}
 
-	rect.w *= scale;
-	rect.h *= scale;
+	rect.w *= zoomFactor;
+	rect.h *= zoomFactor;
 
 	SDL_Point* p = NULL;
 	SDL_Point pivot;

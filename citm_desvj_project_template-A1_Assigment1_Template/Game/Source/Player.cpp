@@ -95,6 +95,7 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
+	
 	//Debug
 	//Restart from initial position
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
@@ -172,6 +173,7 @@ bool Player::Update(float dt)
 	}
 	else
 	{
+		zoomFactor = 1.0f;
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
 	}
@@ -185,7 +187,7 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	//Draw texture
-	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame());
+	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame(), zoomFactor);
 
 	return true;
 }

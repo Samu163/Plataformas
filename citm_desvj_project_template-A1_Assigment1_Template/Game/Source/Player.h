@@ -50,6 +50,7 @@ public:
 	int lifes = 1;
 	bool isDead;
 	bool godMode;
+	int zoomFactor = 1.0f;
 
 };
 
