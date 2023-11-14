@@ -95,7 +95,13 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
-	
+	if (iceBallToDestroy != -1) 
+	{
+		app->physics->DestroyObject(listOfIceBalls[iceBallToDestroy]);
+		iceBallToDestroy = -1;
+	}
+
+
 	//Debug
 	//Restart from initial position
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
@@ -119,8 +125,18 @@ bool Player::Update(float dt)
 		{
 			isJumping = true;
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {}
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) 
+		{
+			PhysBody* iceBall = new PhysBody();
+			b2Vec2 iceBallVel = b2Vec2(20,0);
+			iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x)+20 , METERS_TO_PIXELS(pbody->body->GetTransform().p.y)-10, 15, bodyType::DYNAMIC);
+			iceBall->body->SetLinearVelocity(iceBallVel);
+			iceBall->listener = this;
+			iceBall->ctype = ColliderType::PROYECTILE;
+			listOfIceBalls.Add(iceBall);
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
+		{
 			isFlipped = true;
 			currentAnimation = &walkAnim;
 			walkAnim.Update();
@@ -189,6 +205,7 @@ bool Player::Update(float dt)
 	//Draw texture
 	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame(), zoomFactor);
 
+
 	return true;
 }
 
@@ -198,44 +215,71 @@ bool Player::CleanUp()
 	return true;
 }
 
+void Player::DestroyIceBall() 
+{
+	
+}
+
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	switch (physB->ctype)
+	if (physA->ctype == ColliderType::PLAYER) 
 	{
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
-		app->audio->PlayFx(pickCoinFxId);
-		break;
-	case ColliderType::PLATFORM:
-		LOG("Collision PLATFORM");
-		if (isJumping&&jumpingCounter>1) 
+		switch (physB->ctype)
 		{
-			isJumping = false;
-			
-		}
-		break;
-	case ColliderType::DEATH:
-		LOG("Collision DEATH");
-		if (!godMode) 
-		{
-			lifes--;
-			if (lifes < 1) {
-				speed = 0;
-				isDead = true;
-			}
-		}
-		else
-		{
+		case ColliderType::ITEM:
+			LOG("Collision ITEM");
+			app->audio->PlayFx(pickCoinFxId);
+			break;
+		case ColliderType::PLATFORM:
+			LOG("Collision PLATFORM");
 			if (isJumping && jumpingCounter > 1)
 			{
 				isJumping = false;
+
 			}
+			break;
+		case ColliderType::DEATH:
+			LOG("Collision DEATH");
+			if (!godMode)
+			{
+				lifes--;
+				if (lifes < 1) {
+					speed = 0;
+					isDead = true;
+				}
+			}
+			else
+			{
+				if (isJumping && jumpingCounter > 1)
+				{
+					isJumping = false;
+				}
+			}
+
+
+			break;
+		case ColliderType::UNKNOWN:
+			LOG("Collision UNKNOWN");
+			break;
 		}
 		
-		
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
 	}
+	else if (physA->ctype == ColliderType::PROYECTILE)
+	{
+		switch (physB->ctype)
+		{
+		case ColliderType::PLATFORM:
+			LOG("Collision PLATFORM");
+			iceBallToDestroy = listOfIceBalls.Find(physA);
+			break;
+		case ColliderType::DEATH:
+			LOG("Collision DEATH");
+			iceBallToDestroy = listOfIceBalls.Find(physA);
+			break;
+		case ColliderType::UNKNOWN:
+			LOG("Collision UNKNOWN");
+			break;
+		}
+	}
+	
 }

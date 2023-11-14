@@ -4,8 +4,13 @@
 #include "Entity.h"
 #include "Point.h"
 #include "SDL/include/SDL.h"
+#include "Physics.h"
+#include "EntityManager.h"
+#include <list>
+#include <iostream>
 
 
+using namespace std;
 struct SDL_Texture;
 
 
@@ -27,6 +32,8 @@ public:
 
 	bool CleanUp();
 
+	void DestroyIceBall();
+
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
@@ -42,6 +49,10 @@ public:
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
+
+	List<PhysBody*> listOfIceBalls;
+
+	bool destroyIceBall;
 	bool isJumping;
 	int jumpingCounter;
 	int pickCoinFxId;
@@ -51,6 +62,7 @@ public:
 	bool isDead;
 	bool godMode;
 	int zoomFactor = 1.0f;
+	int iceBallToDestroy = -1;
 
 };
 
