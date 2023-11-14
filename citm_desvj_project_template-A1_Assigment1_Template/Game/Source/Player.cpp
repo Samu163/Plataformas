@@ -84,6 +84,7 @@ void Player::Init()
 	//Init function that initialize most of the player parameters
 	speed = 0.4f;
 	jumpingCounter = 0;
+	counterForIceBalls = playerCooldown;
 	isJumping = false;
 	isDead = false;
 	initialPosition = position;
@@ -95,10 +96,10 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
-	if (iceBallToDestroy != -1) 
+	if (iceBallToDestroyIndex != -1) 
 	{
-		app->physics->DestroyObject(listOfIceBalls[iceBallToDestroy]);
-		iceBallToDestroy = -1;
+		app->physics->DestroyObject(listOfIceBalls[iceBallToDestroyIndex]);
+		iceBallToDestroyIndex = -1;
 	}
 
 
@@ -125,15 +126,23 @@ bool Player::Update(float dt)
 		{
 			isJumping = true;
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) 
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && counterForIceBalls >= playerCooldown)
 		{
 			PhysBody* iceBall = new PhysBody();
 			b2Vec2 iceBallVel = b2Vec2(20,0);
-			iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x)+20 , METERS_TO_PIXELS(pbody->body->GetTransform().p.y)-10, 15, bodyType::DYNAMIC);
+			if (isFlipped) {
+				iceBallVel = b2Vec2(-20, 0);
+				iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+			}
+			else
+			{
+				iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+			}
 			iceBall->body->SetLinearVelocity(iceBallVel);
 			iceBall->listener = this;
 			iceBall->ctype = ColliderType::PROYECTILE;
 			listOfIceBalls.Add(iceBall);
+			counterForIceBalls = 0;
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
 		{
@@ -205,6 +214,10 @@ bool Player::Update(float dt)
 	//Draw texture
 	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame(), zoomFactor);
 
+	//Updating the iceBallsCounter if is less than the cooldown
+	if (counterForIceBalls<playerCooldown) {
+		counterForIceBalls++;
+	}
 
 	return true;
 }
@@ -215,10 +228,6 @@ bool Player::CleanUp()
 	return true;
 }
 
-void Player::DestroyIceBall() 
-{
-	
-}
 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
@@ -270,11 +279,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		{
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
-			iceBallToDestroy = listOfIceBalls.Find(physA);
+			iceBallToDestroyIndex = listOfIceBalls.Find(physA);
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			iceBallToDestroy = listOfIceBalls.Find(physA);
+			iceBallToDestroyIndex = listOfIceBalls.Find(physA);
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");

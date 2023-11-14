@@ -32,8 +32,6 @@ public:
 
 	bool CleanUp();
 
-	void DestroyIceBall();
-
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
@@ -52,17 +50,22 @@ public:
 
 	List<PhysBody*> listOfIceBalls;
 
-	bool destroyIceBall;
-	bool isJumping;
-	int jumpingCounter;
 	int pickCoinFxId;
-	int doubleJumpCounter;
-	bool isFlipped;
 	int lifes = 1;
+	int zoomFactor = 1.0f;
+	int iceBallToDestroyIndex = -1;
+	const int playerCooldown = 20;
+
+	//Bools
 	bool isDead;
 	bool godMode;
-	int zoomFactor = 1.0f;
-	int iceBallToDestroy = -1;
+	bool isJumping;
+	bool isFlipped;
+
+	//Counters
+	int jumpingCounter;
+	int doubleJumpCounter;
+	int counterForIceBalls;
 
 };
 
