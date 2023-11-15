@@ -49,6 +49,7 @@ public:
 	PhysBody* pbody;
 
 	List<PhysBody*> listOfIceBalls;
+	List<PhysBody*> listOfIceBallsToDestroy;
 
 	int pickCoinFxId;
 	int lifes = 1;

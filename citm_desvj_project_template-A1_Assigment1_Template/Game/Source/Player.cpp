@@ -215,7 +215,9 @@ bool Player::Update(float dt)
 	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame(), zoomFactor);
 
 	//Updating the iceBallsCounter if is less than the cooldown
-	if (counterForIceBalls<playerCooldown) {
+	if (counterForIceBalls<playerCooldown) 
+	{
+
 		counterForIceBalls++;
 	}
 
