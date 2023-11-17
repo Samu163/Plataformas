@@ -41,7 +41,9 @@ public:
 	Animation rightAnim;
 	Animation jumpAnim;
 	Animation deathAnim;
+	Animation iceBallAnim;
 	Animation* currentAnimation = nullptr;
+	Animation* currentIceBallAnimation = nullptr;
 
 	float speed = 0.4f;
 	const char* texturePath;

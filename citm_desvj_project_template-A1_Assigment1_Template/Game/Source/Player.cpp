@@ -129,8 +129,9 @@ bool Player::Update(float dt)
 		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && counterForIceBalls >= playerCooldown)
 		{
 			PhysBody* iceBall = new PhysBody();
-			b2Vec2 iceBallVel = b2Vec2(20,0);
-			if (isFlipped) {
+			b2Vec2 iceBallVel = b2Vec2(20, 0);
+		    if (isFlipped) 
+			{
 				iceBallVel = b2Vec2(-20, 0);
 				iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
 			}
@@ -143,7 +144,10 @@ bool Player::Update(float dt)
 			iceBall->ctype = ColliderType::PROYECTILE;
 			listOfIceBalls.Add(iceBall);
 			counterForIceBalls = 0;
+			
+			
 		}
+		
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
 		{
 			isFlipped = true;
