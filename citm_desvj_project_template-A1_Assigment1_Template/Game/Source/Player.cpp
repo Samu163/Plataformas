@@ -8,6 +8,9 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include <list>
+
+
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -23,6 +26,7 @@ bool Player::Awake() {
 	position.y = parameters.attribute("y").as_int();
 
 	//Size of each cell of the spritesheet: 122x 91y
+	//Size of each cell of the spritesheet (Enemy): 72x 59y
 	idleAnim.PushBack({ 0, 0, 122, 91 });
 	idleAnim.PushBack({ 122, 0, 122, 91 });
 	idleAnim.PushBack({ 244, 0, 122, 91 });
@@ -50,7 +54,30 @@ bool Player::Awake() {
 	jumpAnim.PushBack({ 610, 91, 122, 91 });
 	jumpAnim.speed = 0.15f;
 	jumpAnim.loop = false;
-	
+
+	iceBallAnim.PushBack({ 122, 91, 122, 91 });
+	iceBallAnim.PushBack({ 244, 91, 122, 91 });
+	iceBallAnim.PushBack({ 366, 91, 122, 91 });
+	iceBallAnim.PushBack({ 488, 91, 122, 91 });
+	iceBallAnim.PushBack({ 610, 91, 122, 91 });
+	iceBallAnim.speed = 0.15f;
+	iceBallAnim.loop = true;
+
+	deathIceBallAnim.PushBack({ 0, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 122, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 244, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 366, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 488, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 610, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 732, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 854, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 976, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 1098, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 1220, 182, 122, 91 });
+	deathIceBallAnim.PushBack({ 1342, 182, 122, 91 });
+	deathIceBallAnim.speed = 0.2f;
+	deathIceBallAnim.loop = false;
+
 	deathAnim.PushBack({ 0, 182, 122, 91 });
 	deathAnim.PushBack({ 122, 182, 122, 91 });
 	deathAnim.PushBack({ 244, 182, 122, 91 });
@@ -73,6 +100,7 @@ bool Player::Start()
 {
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
+	iceBallTexture = app->tex->Load("Assets/Textures/enemy.png");
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 	//initialize player parameters
 	Init();
@@ -98,15 +126,18 @@ bool Player::Update(float dt)
 {
 	if (iceBallToDestroyIndex != -1) 
 	{
+
+		app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.y), isFlipped, &iceBallAnimations[i]->GetCurrentFrame(), zoomFactor);
 		app->physics->DestroyObject(listOfIceBalls[iceBallToDestroyIndex]);
+		listOfIceBalls.Del(listOfIceBalls.At(iceBallToDestroyIndex));
 		iceBallToDestroyIndex = -1;
 	}
-
 
 	//Debug
 	//Restart from initial position
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-		if (isDead) {
+		if (isDead) 
+		{
 			deathAnim.Reset();
 		}
 		app->physics->DestroyObject(pbody);
@@ -130,6 +161,9 @@ bool Player::Update(float dt)
 		{
 			PhysBody* iceBall = new PhysBody();
 			b2Vec2 iceBallVel = b2Vec2(20, 0);
+			currentIceBallAnimation = &iceBallAnim;
+			currentIceBallAnimation->Reset();
+			iceBallAnimations.Add(currentIceBallAnimation);
 		    if (isFlipped) 
 			{
 				iceBallVel = b2Vec2(-20, 0);
@@ -144,6 +178,7 @@ bool Player::Update(float dt)
 			iceBall->ctype = ColliderType::PROYECTILE;
 			listOfIceBalls.Add(iceBall);
 			counterForIceBalls = 0;
+
 			
 			
 		}
@@ -217,6 +252,19 @@ bool Player::Update(float dt)
 
 	//Draw texture
 	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame(), zoomFactor);
+
+	if (listOfIceBalls.Count() > 0) 
+	{
+		for (int i = 0; i < listOfIceBalls.Count(); i++)
+		{
+			if (currentIceBallAnimation != NULL && listOfIceBalls[i]!=NULL)
+			{
+				app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[i]->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[i]->body->GetTransform().p.y), isFlipped, &iceBallAnimations[i]->GetCurrentFrame(), zoomFactor);
+				iceBallAnimations[i]->Update();
+			}
+			
+		}
+	}
 
 	//Updating the iceBallsCounter if is less than the cooldown
 	if (counterForIceBalls<playerCooldown) 

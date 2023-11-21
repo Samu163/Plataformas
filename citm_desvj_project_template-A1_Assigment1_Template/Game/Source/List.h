@@ -2,6 +2,7 @@
 #define __LIST_H__
 
 #include "Defs.h"
+#include <list>
 
 // Contains items from double linked list
 template<class tdata>

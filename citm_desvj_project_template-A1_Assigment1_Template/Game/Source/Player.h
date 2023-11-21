@@ -41,6 +41,7 @@ public:
 	Animation rightAnim;
 	Animation jumpAnim;
 	Animation deathAnim;
+	Animation deathIceBallAnim;
 	Animation iceBallAnim;
 	Animation* currentAnimation = nullptr;
 	Animation* currentIceBallAnimation = nullptr;
@@ -48,10 +49,13 @@ public:
 	float speed = 0.4f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
+	SDL_Texture* iceBallTexture = NULL;
 	PhysBody* pbody;
 
 	List<PhysBody*> listOfIceBalls;
 	List<PhysBody*> listOfIceBallsToDestroy;
+
+	List<Animation*> iceBallAnimations;
 
 	int pickCoinFxId;
 	int lifes = 1;
