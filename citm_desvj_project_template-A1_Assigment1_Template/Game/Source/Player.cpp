@@ -127,7 +127,7 @@ bool Player::Update(float dt)
 	if (iceBallToDestroyIndex != -1) 
 	{
 
-		app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.y), isFlipped, &iceBallAnimations[i]->GetCurrentFrame(), zoomFactor);
+		app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.y), isFlipped, &iceBallAnimations[iceBallToDestroyIndex]->GetCurrentFrame(), zoomFactor);
 		app->physics->DestroyObject(listOfIceBalls[iceBallToDestroyIndex]);
 		listOfIceBalls.Del(listOfIceBalls.At(iceBallToDestroyIndex));
 		iceBallToDestroyIndex = -1;
