@@ -240,3 +240,22 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 
 	return ret;
 }
+
+
+bool Render::LoadState(pugi::xml_node node)
+{
+	camera.x = node.child("camera").attribute("x").as_int();
+	camera.y = node.child("camera").attribute("y").as_int();
+
+	return true;
+}
+
+bool Render::SaveState(pugi::xml_node node)
+{
+	pugi::xml_node cameraNode = node.append_child("player");
+	cameraNode.append_attribute("x").set_value(camera.x);
+	cameraNode.append_attribute("y").set_value(camera.y);
+
+
+	return true;
+}

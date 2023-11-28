@@ -10,28 +10,24 @@
 struct SDL_Texture;
 struct Collider;
 
-class Enemy : public Entity
+class EnemyWalking : public Entity
 {
 public:
 	// Constructor
 	// Saves the spawn position for later movement calculations
-	Enemy(int x, int y);
+	EnemyWalking(int x, int y);
 
-	// Destructor
-	virtual ~Enemy();
+	void Init();
 
-	// Returns the enemy's collider
-	const Collider* GetCollider() const;
+	bool Awake();
 
-	// Called from inhering enemies' Udpate
-	// Updates animation and collider position
-	virtual void Update();
+	bool Start();
 
-	// Called from ModuleEnemies' Update
-	virtual void Draw();
+	bool Update(float dt);
 
-	// Collision response
-	virtual void OnCollision(Collider* collider);
+	bool CleanUp();
+
+	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 	// Sets flag for deletion and for the collider aswell
 	virtual void SetToDelete();
@@ -50,9 +46,8 @@ public:
 	bool pendingToDelete = false;
 
 	// The enemy's collider
-	Collider* receiveDmg = nullptr;
-	Collider* afflictDmg = nullptr;
-	Collider* punchAttack = nullptr;
+	PhysBody* enemyBody;
+	PhysBody* punchAttack = nullptr;
 
 protected:
 	// A ptr to the current animation

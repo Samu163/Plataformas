@@ -1,13 +1,13 @@
-//#include "Enemy.h"
-//#include "App.h"
-//#include "Textures.h"
-//#include "Audio.h"
-//#include "Input.h"
-//#include "Render.h"
-//#include "Scene.h"
-//#include "Log.h"
-//#include "Point.h"
-//#include "Physics.h"
+//#include "enemy.h"
+//#include "app.h"
+//#include "textures.h"
+//#include "audio.h"
+//#include "input.h"
+//#include "render.h"
+//#include "scene.h"
+//#include "log.h"
+//#include "point.h"
+//#include "physics.h"
 //
 //
 //Enemy::Enemy(int x, int y) : position(x, y)
@@ -15,44 +15,44 @@
 //	spawnPos = position;
 //}
 //
-//Enemy::~Enemy()
+//enemy::~enemy()
 //{
-//	if (receiveDmg != nullptr)
-//		receiveDmg->pendingToDelete = true;
-//	if (afflictDmg != nullptr)
-//		afflictDmg->pendingToDelete = true;
+//	if (receivedmg != nullptr)
+//		receivedmg->pendingtodelete = true;
+//	if (afflictdmg != nullptr)
+//		afflictdmg->pendingtodelete = true;
 //}
 //
-//const Collider* Enemy::GetCollider() const
+//const PhysBody* enemy::getcollider() const
 //{
-//	return receiveDmg;
+//	return receivedmg;
 //}
 //
-//void Enemy::Update()
+//void enemy::update()
 //{
-//	if (currentAnim != nullptr)
-//		currentAnim->Update();
+//	if (currentanim != nullptr)
+//		currentanim->update();
 //
-//	if (receiveDmg != nullptr)
-//		receiveDmg->SetPos(position.x, position.y);
+//	if (receivedmg != nullptr)
+//		receivedmg->setpos(position.x, position.y);
 //}
 //
-//void Enemy::Draw()
+//void enemy::draw()
 //{
-//	if (currentAnim != nullptr)
-//		app->render->DrawTexture(texture, position.x - 45, position.y - 40, isFlipped, &currentAnimation->GetCurrentFrame());
+//	if (currentanim != nullptr)
+//		app->render->drawtexture(texture, position.x - 45, position.y - 40, isflipped, &currentanimation->getcurrentframe());
 //}
 //
-//void Enemy::OnCollision(Collider* collider)
+//void enemy::oncollision(collider* collider)
 //{
 //	
 //}
 //
-//void Enemy::SetToDelete()
+//void enemy::settodelete()
 //{
-//	pendingToDelete = true;
-//	if (receiveDmg != nullptr)
-//		receiveDmg->pendingToDelete = true;
-//	if (afflictDmg != nullptr)
-//		afflictDmg->pendingToDelete = true;
+//	pendingtodelete = true;
+//	if (receivedmg != nullptr)
+//		receivedmg->pendingtodelete = true;
+//	if (afflictdmg != nullptr)
+//		afflictdmg->pendingtodelete = true;
 //}
