@@ -148,6 +148,7 @@ bool Player::Update(float dt)
 		godMode = !godMode;
 	}
 
+	
 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (!isDead) 

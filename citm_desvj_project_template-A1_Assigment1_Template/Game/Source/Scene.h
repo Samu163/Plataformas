@@ -38,12 +38,16 @@ public:
 
 	bool SaveState(pugi::xml_node node);
 
+
+public: 
+	Player* player;
+
 private:
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
-	Player* player;
+
 	bool isInDebugMode = false;
 
 };

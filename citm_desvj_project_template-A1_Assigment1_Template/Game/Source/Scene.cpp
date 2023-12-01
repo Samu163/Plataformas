@@ -158,7 +158,8 @@ bool Scene::LoadState(pugi::xml_node node)
 {
 	player->position.x = node.child("player").attribute("x").as_int();
 	player->position.y = node.child("player").attribute("y").as_int();
-
+	b2Vec2 newPos(PIXEL_TO_METERS(player->position.x), PIXEL_TO_METERS(player->position.y));
+	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
 	return true;
 
 };

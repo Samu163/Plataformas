@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
-<save_state>
+<game_state>
 	<window />
 	<input />
 	<textures />
 	<audio />
 	<:anonymous />
 	<scene>
-		<player x="577" y="379" />
+		<player x="1031" y="443" />
 	</scene>
 	<map />
 	<entitymanager />
 	<renderer>
-		<player x="-65" y="0" />
+		<camera x="-519" y="0" />
 	</renderer>
-</save_state>
+</game_state>

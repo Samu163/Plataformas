@@ -346,6 +346,15 @@ const char* App::GetOrganization() const
 	return organization.GetString();
 }
 
+void App::LoadRequest()
+{
+	loadRequest = true;
+};
+void App::SaveRequest()
+{
+	saveRequest = true;
+};
+
 void App::LoadFromFile() 
 {
 	//Open the XML for reading 
@@ -382,7 +391,7 @@ void App::SaveFromFile()
 {
 	//Open the XML for reading 
 	pugi::xml_document saveGameDoc;
-	pugi::xml_node gameState = saveGameDoc.append_child("save_state");
+	pugi::xml_node gameState = saveGameDoc.append_child("game_state");
 
 	//Iterate all modules and get child of the module and call the LoadState()
 
@@ -407,12 +416,4 @@ void App::SaveFromFile()
 }
 
 
-void App::LoadRequest() 
-{
-	loadRequest = true;
-};
-void App::SaveRequest() 
-{
-	saveRequest = true;
-};
 
