@@ -10,12 +10,14 @@
 struct SDL_Texture;
 struct Collider;
 
-class EnemyWalking : public Entity
+
+class Enemy : public Entity
 {
 public:
-	// Constructor
-	// Saves the spawn position for later movement calculations
-	EnemyWalking(int x, int y);
+
+	Enemy();
+
+	virtual ~Enemy();
 
 	void Init();
 
@@ -29,38 +31,42 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
-	// Sets flag for deletion and for the collider aswell
-	virtual void SetToDelete();
-
 public:
-	// The current position in the world
-	iPoint position;
 
-	// The enemy's texture
-	SDL_Texture* texture = nullptr;
+	Animation idleAnim;
+	Animation walkAnim;
+	Animation jumpAnim;
+	Animation hitAnim;
+	Animation deathAnim;
+	Animation* currentAnimation = nullptr;
 
-	// Sound fx when destroyed
-	int destroyedFx = 0;
+	float speed = 0.4f;
+	const char* texturePath;
+	SDL_Texture* texture = NULL;
+	SDL_Texture* iceBallTexture = NULL;
+	PhysBody* pbody;
 
-	// A flag for the enemy removal. Important! We do not delete objects instantly
-	bool pendingToDelete = false;
+	List<PhysBody*> listOfIceBalls;
+	List<PhysBody*> listOfIceBallsToDestroy;
 
-	// The enemy's collider
-	PhysBody* enemyBody;
-	PhysBody* punchAttack = nullptr;
+	List<Animation*> iceBallAnimations;
 
-protected:
-	// A ptr to the current animation
-	Animation* currentAnim = nullptr;
+	int pickCoinFxId;
+	int lifes = 1;
+	int zoomFactor = 1.0f;
+	int iceBallToDestroyIndex = -1;
+	const int playerCooldown = 20;
 
-	// Variable to know which enemy is
+	//Bools
+	bool isDead;
+	bool godMode;
+	bool isJumping;
+	bool isFlipped;
 
-	int EnemyType = 0;
+	//Counters
+	int jumpingCounter;
+	int doubleJumpCounter;
+	int counterForIceBalls;
 
-	
-
-	// Original spawn position. Stored for movement calculations
-	iPoint spawnPos;
 };
-
 #endif // __ENEMY_H__

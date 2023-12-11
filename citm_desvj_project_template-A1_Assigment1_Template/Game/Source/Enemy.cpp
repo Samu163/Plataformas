@@ -10,7 +10,7 @@
 //#include "physics.h"
 //
 //
-//Enemy::Enemy(int x, int y) : position(x, y)
+//Enemy::Enemy() : Entity(EntityType::ENEMY)
 //{
 //	spawnPos = position;
 //}
@@ -43,16 +43,7 @@
 //		app->render->drawtexture(texture, position.x - 45, position.y - 40, isflipped, &currentanimation->getcurrentframe());
 //}
 //
-//void enemy::oncollision(collider* collider)
+//void Enemy::Oncollision(collider* collider)
 //{
 //	
-//}
-//
-//void enemy::settodelete()
-//{
-//	pendingtodelete = true;
-//	if (receivedmg != nullptr)
-//		receivedmg->pendingtodelete = true;
-//	if (afflictdmg != nullptr)
-//		afflictdmg->pendingtodelete = true;
 //}
