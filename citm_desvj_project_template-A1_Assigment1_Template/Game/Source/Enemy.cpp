@@ -177,6 +177,14 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 			zombieState = state::DEATH;
 			deathTimer = 0;
 		}
+	case ColliderType::PROYECTILE:
+		LOG("Collision PLAYER");
+		life--;
+		if (life < 1) {
+			speed = 0;
+			zombieState = state::DEATH;
+			deathTimer = 0;
+		}
 		break;
 
 	}
