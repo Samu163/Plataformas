@@ -43,8 +43,11 @@ public:
 public: 
 	Player* player;
 	Enemy* enemy;
+	SString path;
 
 private:
+
+
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;
 	uint texW, texH;

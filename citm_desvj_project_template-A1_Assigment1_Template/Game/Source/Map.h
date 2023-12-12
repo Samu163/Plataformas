@@ -133,6 +133,7 @@ private:
 public: 
 
 	MapData mapData;
+	SString path;
 
 private:
 
