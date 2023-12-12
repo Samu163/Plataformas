@@ -34,8 +34,8 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
-public:
 
+private: 
 	Animation idleAnim;
 	Animation walkAnim;
 	Animation rightAnim;
@@ -43,6 +43,10 @@ public:
 	Animation deathAnim;
 	Animation deathIceBallAnim;
 	Animation iceBallAnim;
+
+public:
+
+	
 	Animation* currentAnimation = nullptr;
 	Animation* currentIceBallAnimation = nullptr;
 

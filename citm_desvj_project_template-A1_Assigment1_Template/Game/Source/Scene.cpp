@@ -37,6 +37,10 @@ bool Scene::Awake(pugi::xml_node& config)
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
 	}
+	if (config.child("enemy")) {
+		enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+		enemy->parameters = config.child("enemy");
+	}
 
 	return ret;
 }

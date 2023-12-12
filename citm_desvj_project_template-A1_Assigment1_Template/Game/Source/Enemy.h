@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "EntityManager.h"
 
+
 #include "Entity.h"
 
 struct SDL_Texture;
@@ -27,35 +28,40 @@ public:
 
 	bool Update(float dt);
 
-	bool CleanUp();
-
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
 
+	//Path path;
+
 	Animation idleAnim;
 	Animation walkAnim;
-	Animation jumpAnim;
-	Animation hitAnim;
+	Animation headExplosion;
+	Animation noHeadExplosion; 
+	Animation firstHit;
 	Animation deathAnim;
 	Animation* currentAnimation = nullptr;
+
+	enum class state
+	{
+		IDLE,
+		WALK,
+		DEATH,
+		NO_ENEMY
+
+	};
+
+	state zombieState = state::WALK;
 
 	float speed = 0.4f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
-	SDL_Texture* iceBallTexture = NULL;
 	PhysBody* pbody;
 
-	List<PhysBody*> listOfIceBalls;
-	List<PhysBody*> listOfIceBallsToDestroy;
+	int life = 2;
 
-	List<Animation*> iceBallAnimations;
-
-	int pickCoinFxId;
-	int lifes = 1;
 	int zoomFactor = 1.0f;
-	int iceBallToDestroyIndex = -1;
-	const int playerCooldown = 20;
+	//const int playerCooldown = 20;
 
 	//Bools
 	bool isDead;
@@ -66,7 +72,9 @@ public:
 	//Counters
 	int jumpingCounter;
 	int doubleJumpCounter;
-	int counterForIceBalls;
+
+	//Death Counter
+	int deathTimer = 0;
 
 };
 #endif // __ENEMY_H__

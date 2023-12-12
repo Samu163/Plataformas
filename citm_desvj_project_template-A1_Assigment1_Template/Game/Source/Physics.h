@@ -24,6 +24,7 @@ enum bodyType {
 };
 
 enum class ColliderType {
+	ENEMY,
 	PLAYER, 
 	ITEM,
 	PROYECTILE,

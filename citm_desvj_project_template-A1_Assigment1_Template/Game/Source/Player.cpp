@@ -318,8 +318,24 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 					isJumping = false;
 				}
 			}
-
-
+			break;
+		case ColliderType::ENEMY:
+			LOG("Collision DEATH");
+			if (!godMode)
+			{
+				lifes--;
+				if (lifes < 1) {
+					speed = 0;
+					isDead = true;
+				}
+			}
+			else
+			{
+				if (isJumping && jumpingCounter > 1)
+				{
+					isJumping = false;
+				}
+			}
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
@@ -342,6 +358,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
 			break;
+		case ColliderType::ENEMY:
+			LOG("Collision UNKNOWN");
+			break;
+
 		}
 	}
 	
