@@ -124,13 +124,6 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
-	if (iceBallToDestroyIndex != -1) 
-	{
-		app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[iceBallToDestroyIndex]->body->GetTransform().p.y), isFlipped, &iceBallAnimations[iceBallToDestroyIndex]->GetCurrentFrame(), zoomFactor);
-		app->physics->DestroyObject(listOfIceBalls[iceBallToDestroyIndex]);
-		listOfIceBalls.Del(listOfIceBalls.At(iceBallToDestroyIndex));
-		iceBallToDestroyIndex = -1;
-	}
 
 	//Debug
 	//Restart from initial position
@@ -159,23 +152,23 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && counterForIceBalls >= playerCooldown)
 		{
-			PhysBody* iceBall = new PhysBody();
+			IceBall iceBall;
 			b2Vec2 iceBallVel = b2Vec2(20, 0);
-			currentIceBallAnimation = &iceBallAnim;
-			currentIceBallAnimation->Reset();
-			iceBallAnimations.Add(currentIceBallAnimation);
+			iceBall.currentIceBallAnimation = &iceBallAnim;
+		
+			//iceBall.currentIceBallAnimation->Reset();
 		    if (isFlipped) 
 			{
 				iceBallVel = b2Vec2(-20, 0);
-				iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+				iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
 			}
 			else
 			{
-				iceBall = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+				iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
 			}
-			iceBall->body->SetLinearVelocity(iceBallVel);
-			iceBall->listener = this;
-			iceBall->ctype = ColliderType::PROYECTILE;
+			iceBall.iceBallCollider->body->SetLinearVelocity(iceBallVel);
+			iceBall.iceBallCollider->listener = this;
+			iceBall.iceBallCollider->ctype = ColliderType::PROYECTILE;
 			listOfIceBalls.Add(iceBall);
 			counterForIceBalls = 0;
 
@@ -257,10 +250,36 @@ bool Player::Update(float dt)
 	{
 		for (int i = 0; i < listOfIceBalls.Count(); i++)
 		{
-			if (currentIceBallAnimation != NULL && listOfIceBalls[i]!=NULL)
+			if (listOfIceBalls[i].pendingToDelete) 
 			{
-				app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[i]->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[i]->body->GetTransform().p.y), isFlipped, &iceBallAnimations[i]->GetCurrentFrame(), zoomFactor);
-				iceBallAnimations[i]->Update();
+				
+				if (listOfIceBalls[i].counterForDelete < 50)
+				{
+					if (listOfIceBalls[i].counterForDelete == 0) 
+					{
+						listOfIceBalls[i].x = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x;
+						listOfIceBalls[i].y = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y;
+						app->physics->DestroyObject(listOfIceBalls[i].iceBallCollider);
+					}
+					listOfIceBalls[i].currentIceBallAnimation = &deathAnim;
+					app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[i].x), METERS_TO_PIXELS(listOfIceBalls[i].y), isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
+					listOfIceBalls[i].currentIceBallAnimation->Update();
+					listOfIceBalls[i].counterForDelete++;
+				}
+				else
+				{
+					listOfIceBalls[i].currentIceBallAnimation->Reset();
+					
+					listOfIceBalls.Del(listOfIceBalls.At(i));
+
+				}
+			}
+			else
+			{
+				listOfIceBalls[i].currentIceBallAnimation->Update();
+				
+				app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y), isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
+				//listOfIceBalls[i].currentIceBallAnimation->Reset();
 			}
 			
 		}
@@ -349,11 +368,24 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		{
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
-			iceBallToDestroyIndex = listOfIceBalls.Find(physA);
+			for (int i = 0; i < listOfIceBalls.Count(); i++)
+			{
+				if (listOfIceBalls[i].iceBallCollider == physA) 
+				{
+					listOfIceBalls[i].pendingToDelete = true;
+				}
+			}
+			
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			iceBallToDestroyIndex = listOfIceBalls.Find(physA);
+			for (int i = 0; i < listOfIceBalls.Count(); i++)
+			{
+				if (listOfIceBalls[i].iceBallCollider == physA)
+				{
+					listOfIceBalls[i].pendingToDelete = true;
+				}
+			}
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");

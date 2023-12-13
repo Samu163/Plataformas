@@ -13,6 +13,16 @@
 using namespace std;
 struct SDL_Texture;
 
+struct IceBall 
+{
+	PhysBody* iceBallCollider = new PhysBody();
+	bool pendingToDelete = false;
+	int counterForDelete = 0;
+	Animation* currentIceBallAnimation = nullptr;
+	int x, y;
+};
+
+
 
 class Player : public Entity
 {
@@ -48,7 +58,7 @@ public:
 
 	
 	Animation* currentAnimation = nullptr;
-	Animation* currentIceBallAnimation = nullptr;
+	
 
 	float speed = 0.4f;
 	const char* texturePath;
@@ -56,16 +66,13 @@ public:
 	SDL_Texture* iceBallTexture = NULL;
 	PhysBody* pbody;
 
-	List<PhysBody*> listOfIceBalls;
-	List<PhysBody*> listOfIceBallsToDestroy;
-
-	List<Animation*> iceBallAnimations;
+	List<IceBall> listOfIceBalls;
+	//List<IceBall> listOfIceBallsToDestroy;
 
 	int pickCoinFxId;
 	int lifes = 1;
 	int zoomFactor = 1.0f;
-	int iceBallToDestroyIndex = -1;
-	const int playerCooldown = 20;
+	const int playerCooldown = 10;
 
 	//Bools
 	bool isDead;
