@@ -72,8 +72,7 @@ public:
 	int pickCoinFxId;
 	int lifes = 1;
 	int zoomFactor = 1.0f;
-	const int playerCooldown = 10;
-
+	const int playerCooldown = 30;
 	//Bools
 	bool isDead;
 	bool godMode;
