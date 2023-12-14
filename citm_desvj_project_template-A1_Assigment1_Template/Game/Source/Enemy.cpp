@@ -9,6 +9,7 @@
 #include "point.h"
 #include "physics.h"
 #include "map.h"
+#include "pathfinding.h"
 
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
@@ -107,6 +108,7 @@ bool Enemy::Update(float dt)
 		else
 		{
 			zombieState = state::WALK;
+			isFollowing = false;
 		}
 	}
 	
@@ -116,7 +118,7 @@ bool Enemy::Update(float dt)
 	{
 	case state::IDLE:
 		currentAnimation = &idleAnim;
-		app->map->pathfinding->CreatePath(position, app->scene->player->position);
+		isFollowing = true;
 		idleAnim.Update();
 		//path.Update();
 		break;
@@ -167,8 +169,7 @@ bool Enemy::Update(float dt)
 		app->render->DrawTexture(texture, position.x, position.y, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
 	}
 	
-	app->render->RenderPath();
-	
+
 	
 	
 

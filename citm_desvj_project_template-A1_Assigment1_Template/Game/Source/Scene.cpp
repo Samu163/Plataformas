@@ -139,6 +139,14 @@ bool Scene::Update(float dt)
 	//If mouse button is pressed modify player position
 	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		app->map->pathfinding->CreatePath(origin, mouseTile);
+		
+	}
+	if (enemy->isFollowing) {
+		iPoint playerToTileSet = app->map->WorldToMap(player->position.x - app->render->camera.x,
+			player->position.y - app->render->camera.y);
+		iPoint enemyToTileSet = app->map->WorldToMap(enemy->position.x - app->render->camera.x,
+			enemy->position.y - app->render->camera.y);
+		app->map->pathfinding->CreatePath(enemyToTileSet, playerToTileSet);
 	}
 
 	

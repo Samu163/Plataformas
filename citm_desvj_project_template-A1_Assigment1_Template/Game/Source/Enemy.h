@@ -70,6 +70,7 @@ public:
 	bool godMode;
 	bool isJumping;
 	bool isFlipped;
+	bool isFollowing;
 
 	//Counters
 	int jumpingCounter;
