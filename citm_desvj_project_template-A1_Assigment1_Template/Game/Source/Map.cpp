@@ -26,6 +26,8 @@ bool Map::Awake(pugi::xml_node& config)
     LOG("Loading Map Parser");
     bool ret = true;
 
+    pathfinding = new PathFinding();
+
     mapFileName = config.child("mapfile").attribute("path").as_string();
     mapFolder = config.child("mapfolder").attribute("path").as_string();
 
@@ -83,7 +85,8 @@ iPoint Map::WorldToMap(int x, int y)
 {
     iPoint ret(0, 0);
 
-    //
+    ret.x = x / mapData.tileWidth;
+    ret.y = y / mapData.tileHeight;
 
     return ret;
 }

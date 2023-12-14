@@ -44,6 +44,10 @@ public:
 	Player* player;
 	Enemy* enemy;
 	SString path;
+	SDL_Texture* mouseTileTex = nullptr;
+	Animation pathAnim;
+	iPoint mousePos;
+	iPoint mouseTile;
 
 private:
 
