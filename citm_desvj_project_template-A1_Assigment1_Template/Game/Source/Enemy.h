@@ -54,6 +54,8 @@ public:
 	state zombieState = state::WALK;
 
 	float speed = 0.4f;
+	int visionRange;
+	int walkingRange;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;

@@ -36,7 +36,10 @@ bool Scene::Awake(pugi::xml_node& config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = itemNode;
 	}
+	//Get the map name from the config file and assigns the value in the module
+	app->map->name = config.child("map").attribute("name").as_string();
 	app->map->path = config.child("map").attribute("path").as_string();
+
 	if (config.child("player")) {
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
@@ -66,15 +69,6 @@ bool Scene::Start()
 
 	textPosX = (float)windowW / 2 - (float)texW / 2;
 	textPosY = (float)windowH / 2 - (float)texH / 2;
-
-	app->map->Load();
-
-	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
-		app->map->mapData.width,
-		app->map->mapData.height,
-		app->map->mapData.tileWidth,
-		app->map->mapData.tileHeight,
-		app->map->mapData.tilesets.Count());
 
 	mouseTileTex = app->tex->Load("Assets/Maps/tileSelection.png");
 
@@ -158,6 +152,9 @@ bool Scene::Update(float dt)
 	return true;
 }
 
+
+
+
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
@@ -170,16 +167,8 @@ bool Scene::PostUpdate()
 	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y, false);
 
 	// L13: Get the latest calculated path and draw
-	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
-	for (uint i = 0; i < path->Count(); ++i)
-	{
-		if (path != NULL) 
-		{
-			iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-			app->render->DrawTexture(mouseTileTex, pos.x, pos.y, false);
-		}
+	app->render->RenderPath();
 	
-	}
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;

@@ -6,9 +6,10 @@
 #include "PerfTimer.h"
 #include "Timer.h"
 #include "EntityManager.h"
-#include "Player.h"
 
 #include "PugiXml/src/pugixml.hpp"
+
+// L03: DONE 1: Add the EntityManager Module to App
 
 // Modules
 class Window;
@@ -19,6 +20,7 @@ class Audio;
 class Scene;
 class EntityManager;
 class Map;
+//L07 DONE 2: Add Physics module
 class Physics;
 
 class App
@@ -52,10 +54,13 @@ public:
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
 
+	// L14: TODO 1: Declare the methods LoadRequest() and SaveRequest() to request and call the Load / Save the game state at the end of the frame
 
-	void LoadRequest();
-	void SaveRequest();
+	// Request a save data in an XML file 
+	bool LoadRequest();
 
+	// Request to load data from XML file 
+	bool SaveRequest();
 
 private:
 
@@ -77,16 +82,16 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
-	// L14: TODO 1: Declare the methods LoadRequest() and SaveRequest() to request and call the Load / Save the game state at the end of the frame
+	// Reads XML file and loads the data
+	bool LoadFromFile();
 
-	
-	
+	// Sace XML file with modules data
+	bool SaveFromFile();
 
-	void LoadFromFile();
-
-	void SaveFromFile();
 
 public:
+
+	// L03: DONE 1: Add the EntityManager Module to App
 
 	// Modules
 	Window* win;
@@ -97,27 +102,27 @@ public:
 	Scene* scene;
 	EntityManager* entityManager;
 	Map* map;
+	//L07 DONE 2: Add Physics module
 	Physics* physics;
-	Player* player;
 
 private:
 
 	int argc;
 	char** args;
-	SString title;
+	SString gameTitle;
 	SString organization;
 
-	List<Module *> modules;
+	List<Module*> modules;
 
-	// xml_document to store the config file and
-	// xml_node(s) to read specific branches of the xml
+	// L04: DONE 2 - Create a variable to load and store the XML file in memory
+	// xml_document to store the config file
 	pugi::xml_document configFile;
-	pugi::xml_node configNode;
 
 	uint frames;
 	float dt;
 
-    // required variables are provided:
+	// L1: DONE 4: Calculate some timing measures
+	// required variables are provided:
 	Timer startupTime;
 	PerfTimer frameTime;
 	PerfTimer lastSecFrameTime;
@@ -129,12 +134,12 @@ private:
 	float averageFps = 0.0f;
 	uint32 secondsSinceStartup = 0;
 
+	//L02 DONE 1: Set the maximun frame duration in miliseconds.
 	uint32 maxFrameDuration = 16;
 
-	bool isIn30fps;
-
-	bool saveRequest;
-	bool loadRequest;
+	//
+	bool loadRequest = false;
+	bool saveRequest = false;
 
 };
 

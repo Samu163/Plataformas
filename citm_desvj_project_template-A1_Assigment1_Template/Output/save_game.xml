@@ -5,12 +5,12 @@
 	<textures />
 	<audio />
 	<:anonymous />
+	<:anonymous />
 	<scene>
-		<player x="1382" y="507" />
+		<player x="1028" y="443" />
 	</scene>
-	<map />
 	<entitymanager />
 	<renderer>
-		<player x="-865" y="0" />
+		<player x="-516" y="0" />
 	</renderer>
 </game_state>

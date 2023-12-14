@@ -42,6 +42,9 @@ public:
 
 	bool Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section = nullptr, float speed = 1.0f, bool flip = false, bool useCamera = true);
 
+
+	void RenderPath();
+
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 

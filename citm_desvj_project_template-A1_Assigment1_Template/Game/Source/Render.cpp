@@ -1,6 +1,9 @@
 #include "App.h"
 #include "Window.h"
 #include "Render.h"
+#include "Pathfinding.h"
+#include "Map.h"
+#include "Scene.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -102,6 +105,23 @@ void Render::SetViewPort(const SDL_Rect& rect)
 void Render::ResetViewPort()
 {
 	SDL_RenderSetViewport(renderer, &viewport);
+}
+
+void Render::RenderPath()
+{
+	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
+	if (path->Count() > 0)
+	{
+		for (uint i = 0; i < path->Count(); ++i)
+		{
+			if (path != NULL)
+			{
+				iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+				DrawTexture(app->scene->mouseTileTex, pos.x, pos.y, false);
+			}
+
+		}
+	}
 }
 
 // Blit to screen
