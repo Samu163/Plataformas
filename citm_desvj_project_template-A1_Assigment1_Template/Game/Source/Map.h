@@ -110,6 +110,8 @@ public:
     // Called before render is available
     bool Awake(pugi::xml_node& conf);
 
+	bool Start();
+
 	// Called each loop iteration
 	bool Update(float dt);
 
@@ -118,6 +120,10 @@ public:
 
     // Load new map
     bool Load();
+
+	void Map::CreateNavigationMap(int& width, int& height, uchar** buffer)const;
+
+
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint Map::WorldToMap(int x, int y);
@@ -142,6 +148,9 @@ private:
     SString mapFileName;
 	SString mapFolder;
     bool mapLoaded;
+
+	MapLayer* navigationLayer;
+	int blockedGid = 49; //!!!! make sure that you assign blockedGid according to your map
 };
 
 #endif // __MAP_H__
