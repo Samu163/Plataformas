@@ -137,17 +137,6 @@ bool Scene::Update(float dt)
 	// Get the mouse position and obtain the map coordinate
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 
-	iPoint origin = iPoint(2, 2);
-
-	mouseTile = app->map->WorldToMap(mousePos.x - app->render->camera.x,
-		mousePos.y - app->render->camera.y);
-
-	//If mouse button is pressed modify player position
-	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-		app->map->pathfinding->CreatePath(origin, mouseTile);
-	}
-
-	
 
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) app->SaveRequest();
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) app->LoadRequest();
@@ -178,11 +167,9 @@ bool Scene::PostUpdate()
 	
 
 	// Render a texture where the mouse is over to highlight the tile, use the texture 'mouseTileTex'
-	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
-	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y, false);
 
 	// L13: Get the latest calculated path and draw
-	DrawPath();
+
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;

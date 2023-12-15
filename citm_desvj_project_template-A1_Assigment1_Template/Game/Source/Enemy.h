@@ -47,7 +47,8 @@ public:
 		IDLE,
 		WALK,
 		DEATH,
-		NO_ENEMY
+		NO_ENEMY,
+		ATTACK
 
 	};
 
@@ -73,7 +74,7 @@ public:
 	bool isFollowing;
 
 	//Counters
-	int jumpingCounter;
+	float counterForPath;
 	int doubleJumpCounter;
 
 	//Death Counter

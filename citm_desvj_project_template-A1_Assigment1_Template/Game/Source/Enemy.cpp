@@ -83,7 +83,6 @@ void Enemy::Init()
 {
 	//Init function that initialize most of the player parameters
 	speed = 3.0f;
-	jumpingCounter = 0;
 	isJumping = false;
 	isDead = false;
 	initialPosition = position;
@@ -92,6 +91,7 @@ void Enemy::Init()
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 200;
+	counterForPath = 0;
 	walkingRange = 200;
 }
 
@@ -102,30 +102,50 @@ bool Enemy::Update(float dt)
 	if (zombieState != state::DEATH && zombieState != state::NO_ENEMY)
 	{
 
-		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange) {
-			zombieState = state::IDLE;
+		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange ) {
+			
+				zombieState = state::IDLE;
+		
 		}
 		else
 		{
 			zombieState = state::WALK;
+			counterForPath = 0;
 			app->map->pathfinding->CreatePath({0,0}, { 0,0 });
 			isFollowing = false;
 		}
 	}
+	
 
 	b2Vec2 vel = b2Vec2(0, -0.165);
 	iPoint playerPosition = app->map->WorldToMap(app->scene->player->position.x,
 		app->scene->player->position.y);
 	iPoint enemyPosition = app->map->WorldToMap(position.x,
 		position.y);
+	const DynArray<iPoint>* path;
+	iPoint pos;
+	b2Vec2 newPos;
 	switch (zombieState)
 	{
 	case state::IDLE:
 		currentAnimation = &idleAnim;
 		app->map->pathfinding->CreatePath(enemyPosition, playerPosition);
+		path = app->map->pathfinding->GetLastPath();
+		if (counterForPath < path->Count()-1)
+		{
+			counterForPath += 0.1;
+		}
+		else
+		{
+			zombieState = state::ATTACK;
+			counterForPath = 0;
+			break;
+		}
+		pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
+		newPos = b2Vec2(PIXEL_TO_METERS(pos.x), PIXEL_TO_METERS(pos.y));
+		pbody->body->SetTransform(newPos, 0);
 
 		idleAnim.Update();
-		//path.Update();
 		break;
 	case state::WALK:
 		currentAnimation = &walkAnim;
@@ -147,6 +167,7 @@ bool Enemy::Update(float dt)
 		walkAnim.Update();
 		//path.Update();
 		break;
+
 	case state::DEATH:
 		vel = b2Vec2(0, -GRAVITY_Y);
 		currentAnimation = &deathAnim;
@@ -167,8 +188,16 @@ bool Enemy::Update(float dt)
 		pbody->body->SetLinearVelocity(vel);
 
 		//Update player position in pixels
-		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+		if (zombieState != state::IDLE) 
+		{
+			position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+			position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+		}
+		else
+		{
+
+		}
+		
 
 		//Draw texture
 		app->render->DrawTexture(texture, position.x, position.y, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
@@ -188,11 +217,7 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
-		if (isJumping && jumpingCounter > 1)
-		{
-			isJumping = false;
 
-		}
 		break;
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");

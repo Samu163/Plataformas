@@ -127,7 +127,8 @@ bool Player::Update(float dt)
 
 	//Debug
 	//Restart from initial position
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
 		if (isDead) 
 		{
 			deathAnim.Reset();
@@ -137,7 +138,8 @@ bool Player::Update(float dt)
 		Init();
 	}
 	//GodMode
-	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) 
+	{
 		godMode = !godMode;
 	}
 
@@ -269,7 +271,6 @@ bool Player::Update(float dt)
 				else
 				{
 					listOfIceBalls[i].currentIceBallAnimation->Reset();
-					
 					listOfIceBalls.Del(listOfIceBalls.At(i));
 
 				}
