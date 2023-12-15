@@ -37,7 +37,7 @@ public:
 	Animation idleAnim;
 	Animation walkAnim;
 	Animation headExplosion;
-	Animation noHeadExplosion; 
+	Animation noHeadExplosion;
 	Animation firstHit;
 	Animation deathAnim;
 	Animation* currentAnimation = nullptr;
@@ -54,6 +54,8 @@ public:
 	state zombieState = state::WALK;
 
 	float speed = 0.4f;
+	int visionRange;
+	int walkingRange;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
@@ -68,6 +70,7 @@ public:
 	bool godMode;
 	bool isJumping;
 	bool isFlipped;
+	bool isFollowing;
 
 	//Counters
 	int jumpingCounter;
