@@ -223,7 +223,7 @@ bool Enemy::Update(float dt)
 		}
 		else
 		{
-			flyingEnemyState = state::IDLE;
+			flyingEnemyState = state::WALK;
 			counterForPath = 0;
 			break;
 		}
