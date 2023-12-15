@@ -108,17 +108,22 @@ bool Enemy::Update(float dt)
 		else
 		{
 			zombieState = state::WALK;
+			app->map->pathfinding->CreatePath({0,0}, { 0,0 });
 			isFollowing = false;
 		}
 	}
 
 	b2Vec2 vel = b2Vec2(0, -0.165);
-
+	iPoint playerPosition = app->map->WorldToMap(app->scene->player->position.x,
+		app->scene->player->position.y);
+	iPoint enemyPosition = app->map->WorldToMap(position.x,
+		position.y);
 	switch (zombieState)
 	{
 	case state::IDLE:
 		currentAnimation = &idleAnim;
-		isFollowing = true;
+		app->map->pathfinding->CreatePath(enemyPosition, playerPosition);
+
 		idleAnim.Update();
 		//path.Update();
 		break;
@@ -167,6 +172,7 @@ bool Enemy::Update(float dt)
 
 		//Draw texture
 		app->render->DrawTexture(texture, position.x, position.y, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+		app->scene->DrawPath();
 	}
 
 
