@@ -8,6 +8,8 @@
 #include "log.h"
 #include "point.h"
 #include "physics.h"
+#include "map.h"
+#include "pathfinding.h"
 
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
@@ -22,7 +24,7 @@ Enemy::~Enemy()
 	//if (afflictdmg != nullptr)
 	//	afflictdmg->pendingtodelete = true;
 }
-bool Enemy::Awake() 
+bool Enemy::Awake()
 {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
@@ -65,7 +67,7 @@ bool Enemy::Awake()
 	deathAnim.loop = false;
 
 	return true;
-	
+
 }
 
 bool Enemy::Start()
@@ -80,7 +82,7 @@ bool Enemy::Start()
 void Enemy::Init()
 {
 	//Init function that initialize most of the player parameters
-	speed = 0.4f;
+	speed = 3.0f;
 	jumpingCounter = 0;
 	isJumping = false;
 	isDead = false;
@@ -89,30 +91,54 @@ void Enemy::Init()
 	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
+	visionRange = 200;
+	walkingRange = 200;
 }
 
 
 bool Enemy::Update(float dt)
 {
-	
+
+	if (zombieState != state::DEATH && zombieState != state::NO_ENEMY)
+	{
+
+		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange) {
+			zombieState = state::IDLE;
+		}
+		else
+		{
+			zombieState = state::WALK;
+			isFollowing = false;
+		}
+	}
+
 	b2Vec2 vel = b2Vec2(0, -0.165);
 
-	switch (zombieState) 
+	switch (zombieState)
 	{
 	case state::IDLE:
 		currentAnimation = &idleAnim;
+		isFollowing = true;
 		idleAnim.Update();
 		//path.Update();
 		break;
 	case state::WALK:
 		currentAnimation = &walkAnim;
-		if (isFlipped) {
-			vel = b2Vec2(-3, -0.165);
-		}
-		else
+		if (position.x < initialPosition.x - walkingRange && speed < 0)
 		{
-			vel = b2Vec2(3, -0.165);
+			speed *= -1;
+			isFlipped = false;
+			position.x = initialPosition.x - walkingRange;
+			break;
 		}
+		else if (position.x > initialPosition.x + walkingRange && speed > 0)
+		{
+			speed *= -1;
+			isFlipped = true;
+			position.x = initialPosition.x + walkingRange;
+			break;
+		}
+		vel = b2Vec2(speed, -0.165);
 		walkAnim.Update();
 		//path.Update();
 		break;
@@ -129,7 +155,7 @@ bool Enemy::Update(float dt)
 			break;
 		}
 	}
-		
+
 	if (currentAnimation != nullptr)
 	{
 		//Set the velocity of the pbody of the player
@@ -142,10 +168,10 @@ bool Enemy::Update(float dt)
 		//Draw texture
 		app->render->DrawTexture(texture, position.x, position.y, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
 	}
-		
-	
-	
-	
+
+
+
+
 
 	return true;
 }
