@@ -41,6 +41,9 @@ public:
 
 	bool SaveState(pugi::xml_node node);
 
+	//Just for checking the movement in other places (enmey, player) 
+	b2Vec2 CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition);
+
 
 public: 
 	Player* player;

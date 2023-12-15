@@ -3,6 +3,7 @@
 
 #include "Point.h"
 #include "Animation.h"
+#include "Pathfinding.h"
 #include "EntityManager.h"
 
 
@@ -30,14 +31,15 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	
+
 public:
 
 	//Path path;
 
 	Animation idleAnim;
 	Animation walkAnim;
-	Animation headExplosion;
-	Animation noHeadExplosion;
+	Animation attackAnim;
 	Animation firstHit;
 	Animation deathAnim;
 	Animation* currentAnimation = nullptr;
@@ -46,22 +48,26 @@ public:
 	{
 		IDLE,
 		WALK,
+		GO_TO_PLAYER,
+		RETURNING_HOME,
+		ATTACK,
 		DEATH,
-		NO_ENEMY,
-		ATTACK
+		NO_ENEMY
+		
 
 	};
 
-	state zombieState = state::WALK;
+	state flyingEnemyState = state::WALK;
 
 	float speed = 0.4f;
 	int visionRange;
 	int walkingRange;
+	int attackRange;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 
-	int life = 2;
+
 
 	int zoomFactor = 1.0f;
 	//const int playerCooldown = 20;
@@ -79,6 +85,12 @@ public:
 
 	//Death Counter
 	int deathTimer = 0;
+	int attackDuration = 0;
 
+
+private:
+
+	int life = 4;
+	const DynArray<iPoint>* path;
 };
 #endif // __ENEMY_H__

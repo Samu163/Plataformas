@@ -6,11 +6,11 @@
 	<audio />
 	<:anonymous />
 	<scene>
-		<player x="1382" y="507" />
+		<player x="787" y="315" />
 	</scene>
 	<map />
 	<entitymanager />
 	<renderer>
-		<player x="-865" y="0" />
+		<player x="-275" y="0" />
 	</renderer>
 </game_state>

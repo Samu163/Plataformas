@@ -96,25 +96,82 @@ void Enemy::Init()
 }
 
 
-bool Enemy::Update(float dt)
+b2Vec2 Scene::CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition)
 {
-
-	if (zombieState != state::DEATH && zombieState != state::NO_ENEMY)
+	if (positionOfThePath.x > originalPosition.x)
 	{
-
-		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange ) {
-			
-				zombieState = state::IDLE;
-		
+		if (positionOfThePath.y < originalPosition.y) {
+			return b2Vec2(3, -3);
+		}
+		else if (positionOfThePath.y > originalPosition.y)
+		{
+			return b2Vec2(3, 3);
 		}
 		else
 		{
-			zombieState = state::WALK;
-			counterForPath = 0;
-			app->map->pathfinding->CreatePath({0,0}, { 0,0 });
-			isFollowing = false;
+			return b2Vec2(3, -0.165);
 		}
 	}
+	else if (positionOfThePath.x < originalPosition.x)
+	{
+		if (positionOfThePath.y < originalPosition.y) {
+			return b2Vec2(-3, -3);
+		}
+		else if (positionOfThePath.y > originalPosition.y)
+		{
+			return b2Vec2(-3, 3);
+		}
+		else
+		{
+			return b2Vec2(-3, -0.165);
+		}
+	}
+	else
+	{
+		if (positionOfThePath.y > originalPosition.y) {
+			return b2Vec2(0, -3);
+		}
+		else if (positionOfThePath.y < originalPosition.y)
+		{
+			return b2Vec2(0, 3);
+		}
+		else
+		{
+			return b2Vec2(0, -0.165);
+		}
+	}
+}
+
+bool Enemy::Update(float dt)
+{
+
+	if (flyingEnemyState != state::DEATH && flyingEnemyState != state::NO_ENEMY && flyingEnemyState != state::ATTACK )
+	{
+
+		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange && !app->scene->player->isDead)
+		{
+				flyingEnemyState = state::GO_TO_PLAYER;
+		}
+		else
+		{
+			if (position.y> initialPosition.y+20 || position.y < initialPosition.y - 20) 
+			{
+				flyingEnemyState = state::RETURNING_HOME;
+			}
+			else
+			{
+				if (flyingEnemyState == state::GO_TO_PLAYER || flyingEnemyState == state::RETURNING_HOME) {
+					app->map->pathfinding->CreatePath({ 0,0 }, { 0,0 });
+
+				}
+				flyingEnemyState = state::WALK;
+				
+			}
+			
+			counterForPath = 0;
+		}
+	}
+	
 	
 
 	b2Vec2 vel = b2Vec2(0, -0.165);
@@ -122,30 +179,58 @@ bool Enemy::Update(float dt)
 		app->scene->player->position.y);
 	iPoint enemyPosition = app->map->WorldToMap(position.x,
 		position.y);
-	const DynArray<iPoint>* path;
+	iPoint initialEnemyPosition = app->map->WorldToMap(initialPosition.x,
+		initialPosition.y);
+
 	iPoint pos;
 	b2Vec2 newPos;
-	switch (zombieState)
+	switch (flyingEnemyState)
 	{
-	case state::IDLE:
-		currentAnimation = &idleAnim;
-		app->map->pathfinding->CreatePath(enemyPosition, playerPosition);
-		path = app->map->pathfinding->GetLastPath();
-		if (counterForPath < path->Count()-1)
-		{
-			counterForPath += 0.1;
+	case state::GO_TO_PLAYER:
+		if (!app->scene->player->isDead) {
+			currentAnimation = &walkAnim;
+			app->map->pathfinding->CreatePath(enemyPosition, playerPosition);
+			path = app->map->pathfinding->GetLastPath();
+			if (counterForPath < path->Count() - 1)
+			{
+				counterForPath += 1;
+			}
+			else
+			{
+				flyingEnemyState = state::IDLE;
+				counterForPath = 0;
+				break;
+			}
+			pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
+			vel = app->scene->CheckTheMovementWithPath(pos, position);
+
+			walkAnim.Update();
 		}
 		else
 		{
-			zombieState = state::ATTACK;
+			flyingEnemyState = state::IDLE;
+			break;
+		}
+		
+		break;
+	case state::RETURNING_HOME:
+		currentAnimation = &walkAnim;
+		app->map->pathfinding->CreatePath(enemyPosition, initialEnemyPosition);
+		path = app->map->pathfinding->GetLastPath();
+		if (counterForPath < path->Count() - 1)
+		{
+			counterForPath += 1;
+		}
+		else
+		{
+			flyingEnemyState = state::IDLE;
 			counterForPath = 0;
 			break;
 		}
 		pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
-		newPos = b2Vec2(PIXEL_TO_METERS(pos.x), PIXEL_TO_METERS(pos.y));
-		pbody->body->SetTransform(newPos, 0);
+		vel = app->scene->CheckTheMovementWithPath(pos, position);
 
-		idleAnim.Update();
+		walkAnim.Update();
 		break;
 	case state::WALK:
 		currentAnimation = &walkAnim;
@@ -167,6 +252,17 @@ bool Enemy::Update(float dt)
 		walkAnim.Update();
 		//path.Update();
 		break;
+	case state::ATTACK:
+		currentAnimation = &attackAnim;
+		if (attackDuration > 40)
+		{
+			flyingEnemyState = state::IDLE;
+			attackDuration = 0;
+		}
+		attackDuration++;
+		walkAnim.Update();
+		//path.Update();
+		break;
 
 	case state::DEATH:
 		vel = b2Vec2(0, -GRAVITY_Y);
@@ -177,25 +273,20 @@ bool Enemy::Update(float dt)
 			deathTimer = 0;
 			app->physics->DestroyObject(pbody);
 			currentAnimation = nullptr;
-			zombieState = state::NO_ENEMY;
+			flyingEnemyState = state::NO_ENEMY;
 			break;
 		}
 	}
-
 	if (currentAnimation != nullptr)
 	{
 		//Set the velocity of the pbody of the player
 		pbody->body->SetLinearVelocity(vel);
 
 		//Update player position in pixels
-		if (zombieState != state::IDLE) 
+		if (flyingEnemyState != state::GO_TO_PLAYER) 
 		{
 			position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 			position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-		}
-		else
-		{
-
 		}
 		
 
@@ -228,18 +319,14 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 		break;
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");
-		life--;
-		if (life < 1) {
-			speed = 0;
-			zombieState = state::DEATH;
-			deathTimer = 0;
-		}
+		
+		flyingEnemyState = state::ATTACK;
 	case ColliderType::PROYECTILE:
 		LOG("Collision PLAYER");
 		life--;
 		if (life < 1) {
 			speed = 0;
-			zombieState = state::DEATH;
+			flyingEnemyState = state::DEATH;
 			deathTimer = 0;
 		}
 		break;
