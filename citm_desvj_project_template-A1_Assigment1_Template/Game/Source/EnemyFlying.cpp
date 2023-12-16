@@ -10,21 +10,18 @@
 #include "physics.h"
 #include "map.h"
 #include "pathfinding.h"
+#include "EnemyFlying.h"
 
 
-Enemy::Enemy() : Entity(EntityType::WALKING_ENEMY)
+FlyingEnemy::FlyingEnemy() : Entity(EntityType::FLYING_ENEMY)
 {
 	name.Create("Enemy");
 }
 
-Enemy::~Enemy()
+FlyingEnemy::~FlyingEnemy()
 {
-	//if (receivedmg != nullptr)
-	//	receivedmg->pendingtodelete = true;
-	//if (afflictdmg != nullptr)
-	//	afflictdmg->pendingtodelete = true;
 }
-bool Enemy::Awake()
+bool FlyingEnemy::Awake()
 {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
@@ -70,7 +67,7 @@ bool Enemy::Awake()
 
 }
 
-bool Enemy::Start()
+bool FlyingEnemy::Start()
 {
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/Enemy.png");
@@ -79,7 +76,7 @@ bool Enemy::Start()
 	return true;
 }
 
-void Enemy::Init()
+void FlyingEnemy::Init()
 {
 	//Init function that initialize most of the player parameters
 	speed = 3.0f;
@@ -91,51 +88,64 @@ void Enemy::Init()
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 200;
 	counterForPath = 0;
-	walkingRange = 100;
+	walkingRange = 200;
 }
 
 
 
 
-bool Enemy::Update(float dt)
+bool FlyingEnemy::Update(float dt)
 {
-
-	if (enemyState != state::DEATH && enemyState != state::NO_ENEMY && enemyState != state::ATTACK )
+	//Checking if the enemy is dead
+	if (flyingEnemyState != state::DEATH && flyingEnemyState != state::NO_ENEMY && flyingEnemyState != state::ATTACK )
 	{
-
-		if (app->scene->player->position.x+20 > initialPosition.x - walkingRange && app->scene->player->position.x-20 < initialPosition.x + walkingRange && !app->scene->player->isDead)
+		//Checking if the player is on range
+		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange && !app->scene->player->isDead)
 		{
-				enemyState = state::GO_TO_PLAYER;
+				flyingEnemyState = state::GO_TO_PLAYER;
 		}
 		else
 		{
-			
+			//if is out of his position, return to the initial position
+			if (position.y> initialPosition.y+20 || position.y < initialPosition.y - 20) 
+			{
+				flyingEnemyState = state::RETURNING_HOME;
+			}
+			else
+			{
+				if (flyingEnemyState == state::GO_TO_PLAYER || flyingEnemyState == state::RETURNING_HOME) {
+					app->map->pathfinding->CreatePath({ 0,0 }, { 0,0 });
+
+				}
+				flyingEnemyState = state::WALK;
 				
-			app->map->pathfinding->CreatePath({ 0,0 }, { 0,0 });
-			enemyState = state::WALK;
-			
+			}
+			//Updating the counter for drawing the path
 			counterForPath = 0;
 		}
 	}
 	
 	
-
-	vel = b2Vec2(0, -GRAVITY_Y);
+	//Init some variables 
+	b2Vec2 vel = b2Vec2(0, -0.165);
 	iPoint playerPosition = app->map->WorldToMap(app->scene->player->position.x,
 		app->scene->player->position.y);
 	iPoint enemyPosition = app->map->WorldToMap(position.x,
 		position.y);
 	iPoint initialEnemyPosition = app->map->WorldToMap(initialPosition.x,
 		initialPosition.y);
-
 	iPoint pos;
 	b2Vec2 newPos;
-	switch (enemyState)
+
+
+	switch (flyingEnemyState)
 	{
 	case state::GO_TO_PLAYER:
+		//checking if the player is dead
 		if (!app->scene->player->isDead) 
 		{
 			currentAnimation = &walkAnim;
+			//Creating a path from his position to the player
 			app->map->pathfinding->CreatePath(enemyPosition, playerPosition);
 			path = app->map->pathfinding->GetLastPath();
 			if (counterForPath < path->Count() - 1)
@@ -144,36 +154,36 @@ bool Enemy::Update(float dt)
 			}
 			else
 			{
-				enemyState = state::IDLE;
+				flyingEnemyState = state::IDLE;
 				counterForPath = 0;
 				break;
 			}
 			pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
+			//Checing his velocity and orientation
 			vel = app->scene->CheckTheMovementWithPath(pos, position);
-			vel.y = -GRAVITY_Y;
 			isFlipped = app->scene->CheckVelocityForFlip(vel);
-
 
 			walkAnim.Update();
 		}
 		else
 		{
-			enemyState = state::IDLE;
+			flyingEnemyState = state::IDLE;
 			break;
 		}
 		
 		break;
 	case state::RETURNING_HOME:
 		currentAnimation = &walkAnim;
+		//Creating a path to return to the initial position 
 		app->map->pathfinding->CreatePath(enemyPosition, initialEnemyPosition);
 		path = app->map->pathfinding->GetLastPath();
-		if (counterForPath < path->Count())
+		if (counterForPath < path->Count()-1)
 		{
 			counterForPath += 1;
 		}
 		else
 		{
-			enemyState = state::WALK;
+			flyingEnemyState = state::WALK;
 			counterForPath = 0;
 			break;
 		}
@@ -196,16 +206,17 @@ bool Enemy::Update(float dt)
 			position.x = initialPosition.x + walkingRange;
 			break;
 		}
-		vel.x = speed;
-		isFlipped = app->scene->CheckVelocityForFlip(vel);
+		vel = b2Vec2(speed, -0.165);
 		walkAnim.Update();
+		isFlipped = app->scene->CheckVelocityForFlip(vel);
+
 		//path.Update();
 		break;
 	case state::ATTACK:
 		currentAnimation = &attackAnim;
 		if (attackDuration > 40)
 		{
-			enemyState = state::IDLE;
+			flyingEnemyState = state::IDLE;
 			attackDuration = 0;
 		}
 		attackDuration++;
@@ -222,7 +233,7 @@ bool Enemy::Update(float dt)
 			deathTimer = 0;
 			app->physics->DestroyObject(pbody);
 			currentAnimation = nullptr;
-			enemyState = state::NO_ENEMY;
+			flyingEnemyState = state::NO_ENEMY;
 			break;
 		}
 	}
@@ -232,7 +243,7 @@ bool Enemy::Update(float dt)
 		pbody->body->SetLinearVelocity(vel);
 
 		//Update player position in pixels
-		if (enemyState != state::GO_TO_PLAYER) 
+		if (flyingEnemyState != state::GO_TO_PLAYER) 
 		{
 			position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 			position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
@@ -251,13 +262,12 @@ bool Enemy::Update(float dt)
 	return true;
 }
 
-void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
+void FlyingEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
-
 		break;
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
@@ -268,14 +278,13 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 		break;
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");
-		
-		enemyState = state::ATTACK;
+		flyingEnemyState = state::ATTACK;
 	case ColliderType::PROYECTILE:
 		LOG("Collision PLAYER");
 		life--;
 		if (life < 1) {
 			speed = 0;
-			enemyState = state::DEATH;
+			flyingEnemyState = state::DEATH;
 			deathTimer = 0;
 		}
 		break;

@@ -1,11 +1,10 @@
-#ifndef __ENEMY_H__
-#define __ENEMY_H__
+#ifndef __ENEMYFLYING_H__
+#define __ENEMYFLYING_H__
 
 #include "Point.h"
 #include "Animation.h"
 #include "Pathfinding.h"
 #include "EntityManager.h"
-#include "physics.h"
 
 
 #include "Entity.h"
@@ -14,13 +13,13 @@ struct SDL_Texture;
 struct Collider;
 
 
-class Enemy : public Entity
+class FlyingEnemy : public Entity
 {
 public:
 
-	Enemy();
+	FlyingEnemy();
 
-	virtual ~Enemy();
+	virtual ~FlyingEnemy();
 
 	void Init();
 
@@ -58,7 +57,7 @@ public:
 
 	};
 
-	state enemyState = state::WALK;
+	state flyingEnemyState = state::WALK;
 
 	float speed = 0.4f;
 	int visionRange;
@@ -68,12 +67,14 @@ public:
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 
+
+
 	int zoomFactor = 1.0f;
+	//const int playerCooldown = 20;
 
 	//Bools
 	bool isDead;
 	bool godMode;
-	bool isJumping;
 	bool isFlipped;
 	bool isFollowing;
 
@@ -90,6 +91,5 @@ private:
 
 	int life = 4;
 	const DynArray<iPoint>* path;
-	b2Vec2 vel;
 };
 #endif // __ENEMY_H__

@@ -4,7 +4,9 @@
 #include "Module.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "EnemyFlying.h"
 #include "Item.h"
+
 
 struct SDL_Texture;
 
@@ -44,10 +46,13 @@ public:
 	//Just for checking the movement in other places (enmey, player) 
 	b2Vec2 CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition);
 
+	bool CheckVelocityForFlip(b2Vec2 vel);
+
 
 public: 
 	Player* player;
 	Enemy* enemy;
+	FlyingEnemy* flyingEnemy;
 	SString path;
 	SDL_Texture* mouseTileTex = nullptr;
 	Animation pathAnim;

@@ -112,6 +112,7 @@ void Player::Init()
 	//Init function that initialize most of the player parameters
 	speed = 0.4f;
 	jumpingCounter = 0;
+	deathCounter = 0;
 	counterForIceBalls = playerCooldown;
 	isJumping = false;
 	isDead = false;
@@ -133,7 +134,10 @@ bool Player::Update(float dt)
 		{
 			deathAnim.Reset();
 		}
-		app->physics->DestroyObject(pbody);
+		else
+		{
+			app->physics->DestroyObject(pbody);
+		}
 		position = initialPosition;
 		Init();
 	}
@@ -154,6 +158,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && counterForIceBalls >= playerCooldown)
 		{
+			//attack anim if muriendo == 0 se hace la bola
 			IceBall iceBall;
 			b2Vec2 iceBallVel = b2Vec2(20, 0);
 			iceBall.currentIceBallAnimation = &iceBallAnim;
@@ -229,24 +234,36 @@ bool Player::Update(float dt)
 			jumpAnim.Reset();
 			jumpingCounter = 0;
 		}
+
+		//Set the velocity of the pbody of the player
+		pbody->body->SetLinearVelocity(vel);
+
+		//Update player position in pixels
+		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+
+		//Draw texture
+		app->render->DrawTexture(texture, position.x - 45, position.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+
 	}
 	else
 	{
+		if (deathCounter == 0) {
+			app->physics->DestroyObject(pbody);
+			deathPosition.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+			deathPosition.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+		}
 		zoomFactor = 1.0f;
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
+		
+		
+		app->render->DrawTexture(texture, deathPosition.x - 45, deathPosition.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+		deathCounter++;
 	}
 	
 
-	//Set the velocity of the pbody of the player
-	pbody->body->SetLinearVelocity(vel);
-
-	//Update player position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-
-	//Draw texture
-	app->render->DrawTexture(texture, position.x-45, position.y-40, isFlipped ,&currentAnimation->GetCurrentFrame(), zoomFactor);
+	
 
 	if (listOfIceBalls.Count() > 0) 
 	{

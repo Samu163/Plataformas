@@ -9,6 +9,7 @@
 #include "Pathfinding.h"
 
 
+
 #include "Defs.h"
 #include "Log.h"
 
@@ -31,23 +32,31 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
-	for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
+	/*for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 	{
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = itemNode;
-	}
+	}*/
 	app->map->path = config.child("map").attribute("path").as_string();
 	if (config.child("player")) {
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
 	}
+	if (config.child("flyingEnemy")) {
+		flyingEnemy = (FlyingEnemy*)app->entityManager->CreateEntity(EntityType::FLYING_ENEMY);
+		flyingEnemy->parameters = config.child("flyingEnemy");
+	}
 	if (config.child("enemy")) {
-		enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+		enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
 		enemy->parameters = config.child("enemy");
 	}
 
 	return ret;
 }
+
+
+
+
 
 // Called before the first frame
 bool Scene::Start()
@@ -138,8 +147,8 @@ bool Scene::Update(float dt)
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 
 
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) app->SaveRequest();
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) app->LoadRequest();
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN && !player->isDead) app->SaveRequest();
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && !player->isDead) app->LoadRequest();
 
 	// Renders the image in the center of the screen 
 	//app->render->DrawTexture(img, (int)textPosX, (int)textPosY,);
@@ -204,3 +213,62 @@ bool Scene::SaveState(pugi::xml_node node)
 
 	return true;
 };
+
+
+b2Vec2 Scene::CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition)
+{
+	if (positionOfThePath.x > originalPosition.x)
+	{
+		if (positionOfThePath.y < originalPosition.y) {
+			return b2Vec2(3, -3);
+		}
+		else if (positionOfThePath.y > originalPosition.y)
+		{
+			return b2Vec2(3, 3);
+		}
+		else
+		{
+			return b2Vec2(3, -0.165);
+		}
+	}
+	else if (positionOfThePath.x < originalPosition.x)
+	{
+		if (positionOfThePath.y < originalPosition.y) {
+			return b2Vec2(-3, -3);
+		}
+		else if (positionOfThePath.y > originalPosition.y)
+		{
+			return b2Vec2(-3, 3);
+		}
+		else
+		{
+			return b2Vec2(-3, -0.165);
+		}
+	}
+	else
+	{
+		if (positionOfThePath.y > originalPosition.y) {
+			return b2Vec2(0, -3);
+		}
+		else if (positionOfThePath.y < originalPosition.y)
+		{
+			return b2Vec2(0, 3);
+		}
+		else
+		{
+			return b2Vec2(0, -0.165);
+		}
+	}
+}
+
+bool Scene::CheckVelocityForFlip(b2Vec2 vel) {
+
+	if (vel.x < 0) {
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}

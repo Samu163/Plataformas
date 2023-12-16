@@ -83,6 +83,8 @@ public:
 	int jumpingCounter;
 	int doubleJumpCounter;
 	int counterForIceBalls;
+	int deathCounter;
+	iPoint deathPosition;
 
 };
 
