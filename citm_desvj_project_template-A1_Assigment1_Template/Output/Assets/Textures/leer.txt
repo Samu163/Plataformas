@@ -1,0 +1,76 @@
+Enemy1
+Tiene el mismo tamaño y separaciones que el player, incluso donde sus pies encajan, solo deberias copiar y pegar las coordenadas del player
+Frames:
+1 Idle
+2 Idle
+3 Idle
+4 Foward
+5 Foward
+6 Foward
+7 Shoot
+8 Shoot
+9 Shoot
+10 Shoot
+11 Shoot
+12 Shoot
+13 Shoot
+14 death
+15 death
+16 death
+17 death
+
+
+ICEBALL
+1-18 iceball tamaño 45x45. Solo sumale 45 para el proximo frame
+
+
+Enemy2
+Tamaño 122x107. Sumale 122 verticalmente para el proximo frame. Cada 3 frames sumale 107 horizontalmente para bajar a la proxima fila.
+1 Idle
+2 Idle
+3 Idle
+4 Attack
+5 Attack 
+6 Attack 
+7  Attack
+8  Attack
+9  Foward
+10 Foward
+11 Foward
+12 Foward
+13 Foward
+14 Foward
+15 death
+16 death
+17 death
+18 death
+19 death
+20 death
+
+
+Attack Player
+tamaño 122x91. Los frames de ataque estan debajo de la muerte. Asi que sumale 91 horizontalmente para llegar. Para pasar al proximo frame sumale 122 verticalmente. El ataque esta en la misma fila asi que no tendras que bajar mas.
+
+Solo utiliza ataque 1, el lunes intentare implementar el 2 y 3 junto al sonido. Repito frames por que si no que el ataque se ve goofy af
+
+1 ataque 1
+1 ataque 1
+2 ataque 1
+3 ataque 1
+4 ataque 1
+4 ataque 1
+
+5 ataque 2
+5 ataque 2
+6 ataque 2
+7 ataque 2
+8 ataque 2
+8 ataque 2
+
+9 ataque 3
+9 ataque 3
+10 ataque 3
+11 ataque 3
+12 ataque 3
+12 ataque 3
+
