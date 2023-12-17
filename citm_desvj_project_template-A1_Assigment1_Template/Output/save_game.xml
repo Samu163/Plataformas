@@ -6,11 +6,16 @@
 	<audio />
 	<:anonymous />
 	<scene>
-		<player x="3562" y="507" />
+		<newGame sameGame="true" />
+		<player x="220" y="539" />
+		<flyingEnemy1 isOnSceen="false" x="495" y="534" />
+		<flyingEnemy2 isOnSceen="true" x="1883" y="218" />
+		<enemy1 isOnSceen="true" x="3833" y="502" />
+		<enemy2 isOnSceen="true" x="4437" y="502" />
 	</scene>
 	<map />
 	<entitymanager />
 	<renderer>
-		<player x="-3050" y="0" />
+		<player x="0" y="0" />
 	</renderer>
 </game_state>

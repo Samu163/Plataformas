@@ -43,6 +43,7 @@ public:
 	Animation attackAnim;
 	Animation firstHit;
 	Animation deathAnim;
+	Animation isDeadAnim;
 	Animation* currentAnimation = nullptr;
 
 	enum class state
@@ -82,16 +83,20 @@ public:
 	int doubleJumpCounter;
 
 	//Death Counter
+
 	int deathTimer = 0;
 	int attackDuration = 0;
 
+	bool isOnSceen = true;
 
 private:
 
 	iPoint deathPosition;
-	int life = 4;
+	int life = 2;
 	const DynArray<iPoint>* path;
 	b2Vec2 vel;
-	bool hasDead;
+	int counterForDead = 0;
+	bool hasDead = false;
+
 };
 #endif // __ENEMY_H__

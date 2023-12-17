@@ -42,6 +42,7 @@ public:
 	Animation attackAnim;
 	Animation firstHit;
 	Animation deathAnim;
+	Animation isDeadAnim;
 	Animation* currentAnimation = nullptr;
 
 	enum class state
@@ -67,13 +68,9 @@ public:
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 
-
-
 	int zoomFactor = 1.0f;
-	//const int playerCooldown = 20;
 
 	//Bools
-	bool hasDead;
 	bool godMode;
 	bool isFlipped;
 	bool isFollowing;
@@ -86,11 +83,15 @@ public:
 	int deathTimer = 0;
 	int attackDuration = 0;
 
+	bool isOnSceen = true;
+	bool hasDead = false;
+	iPoint deathPosition;
+
+
 
 private:
 
 	int life = 2;
 	const DynArray<iPoint>* path;
-	iPoint deathPosition;
 };
 #endif // __ENEMY_H__

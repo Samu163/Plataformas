@@ -55,10 +55,12 @@ bool FlyingEnemy::Awake()
 	deathAnim.PushBack({ 366, 273, 122, 91 });
 	deathAnim.PushBack({ 0, 364, 122, 91 });
 
-
 	deathAnim.speed = 0.2f;
 	deathAnim.loop = false;
 
+	isDeadAnim.PushBack({ 0, 364, 122, 91 });
+	isDeadAnim.speed = 0.2f;
+	isDeadAnim.loop = false;
 	return true;
 
 }
@@ -92,6 +94,11 @@ void FlyingEnemy::Init()
 
 bool FlyingEnemy::Update(float dt)
 {
+
+	if (!isOnSceen) {
+		flyingEnemyState = state::NO_ENEMY;
+	}
+
 	//Checking if the enemy is dead
 	if (flyingEnemyState != state::DEATH && flyingEnemyState != state::NO_ENEMY && flyingEnemyState != state::ATTACK )
 	{
@@ -213,6 +220,8 @@ bool FlyingEnemy::Update(float dt)
 		if (attackDuration > 40)
 		{
 			flyingEnemyState = state::IDLE;
+			attackAnim.Reset();
+
 			attackDuration = 0;
 		}
 		attackDuration++;
@@ -226,10 +235,28 @@ bool FlyingEnemy::Update(float dt)
 		deathAnim.Update();
 		break;
 	case state::NO_ENEMY:
-		currentAnimation = &deathAnim;
-		if (hasDead) {
+		if (!isOnSceen) {
+			currentAnimation = &isDeadAnim;
+		}
+		else
+		{
+			currentAnimation = &deathAnim;
+
+		}
+		if (!hasDead) {
 			app->physics->DestroyObject(pbody);
-			hasDead = false;
+
+			if (!isOnSceen) {
+				currentAnimation = &isDeadAnim;
+				position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+				position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y);
+			}
+			else
+			{
+				isOnSceen = false;
+			}
+			deathPosition = position;
+			hasDead = true;
 		}
 		break;
 	}
@@ -266,17 +293,13 @@ void FlyingEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		if (flyingEnemyState == state::DEATH) {
-			deathPosition = position;
 			flyingEnemyState = state::NO_ENEMY;
-			hasDead=true;
 		}
 		break;
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
 		if (flyingEnemyState == state::DEATH) {
-			deathPosition = position;
 			flyingEnemyState = state::NO_ENEMY;
-			hasDead = true;
 		}
 		break;
 	case ColliderType::UNKNOWN:

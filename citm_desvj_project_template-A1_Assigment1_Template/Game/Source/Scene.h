@@ -70,6 +70,7 @@ private:
 	uint windowW, windowH;
 
 	bool isInDebugMode = false;
+	bool sameGame = false;
 
 };
 

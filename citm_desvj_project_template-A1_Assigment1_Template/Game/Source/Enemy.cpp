@@ -37,28 +37,36 @@ bool Enemy::Awake()
 	idleAnim.speed = 0.2f;
 	idleAnim.loop = true;
 
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
+	walkAnim.PushBack({ 244, 214, 122, 107 });
+	walkAnim.PushBack({ 0, 321, 122, 107 });
+	walkAnim.PushBack({ 122, 321, 122, 107 });
+	walkAnim.PushBack({ 244, 321, 122, 107 });
+	walkAnim.PushBack({ 0, 428, 122, 107 });
+	walkAnim.PushBack({ 122, 428, 122, 107 });
 	walkAnim.speed = 0.2f;
 	walkAnim.loop = true;
+	
+	
+	attackAnim.PushBack({ 0, 107, 122, 107 });
+	attackAnim.PushBack({ 122, 107, 122, 107 });
+	attackAnim.PushBack({ 244, 107, 122, 107 });
+	attackAnim.PushBack({ 0, 214, 122, 107 });
+	attackAnim.PushBack({ 122, 214, 122, 107 });
+	attackAnim.speed = 0.2f;
+	attackAnim.loop = false;
 
-	deathAnim.PushBack({ 0, 182, 122, 91 });
-	deathAnim.PushBack({ 122, 182, 122, 91 });
-	deathAnim.PushBack({ 244, 182, 122, 91 });
-	deathAnim.PushBack({ 366, 182, 122, 91 });
-	deathAnim.PushBack({ 488, 182, 122, 91 });
-	deathAnim.PushBack({ 610, 182, 122, 91 });
-	deathAnim.PushBack({ 732, 182, 122, 91 });
-	deathAnim.PushBack({ 854, 182, 122, 91 });
-	deathAnim.PushBack({ 976, 182, 122, 91 });
-	deathAnim.PushBack({ 1098, 182, 122, 91 });
-	deathAnim.PushBack({ 1220, 182, 122, 91 });
-	deathAnim.PushBack({ 1342, 182, 122, 91 });
+	deathAnim.PushBack({ 244, 428, 122, 107 });
+	deathAnim.PushBack({ 0, 535, 122, 107 });
+	deathAnim.PushBack({ 122, 535, 122, 107 });
+	deathAnim.PushBack({ 244, 535, 122, 107 });
+	deathAnim.PushBack({ 0, 642, 122, 107 });
+	deathAnim.PushBack({ 122, 642, 122, 107 });
 	deathAnim.speed = 0.2f;
 	deathAnim.loop = false;
+
+	isDeadAnim.PushBack({ 122, 642, 122, 107 });
+	isDeadAnim.speed = 0.2f;
+	isDeadAnim.loop = false;
 
 	return true;
 
@@ -67,7 +75,7 @@ bool Enemy::Awake()
 bool Enemy::Start()
 {
 	//initilize textures
-	texture = app->tex->Load("Assets/Textures/Enemy.png");
+	texture = app->tex->Load("Assets/Textures/Enemy2.png");
 	//initialize player parameters
 	Init();
 	return true;
@@ -80,7 +88,7 @@ void Enemy::Init()
 	isDead = false;
 	initialPosition = position;
 	currentAnimation = &idleAnim;
-	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x + 25, position.y + 25, 25, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 200;
@@ -93,6 +101,10 @@ void Enemy::Init()
 
 bool Enemy::Update(float dt)
 {
+	if (!isOnSceen) {
+		enemyState = state::NO_ENEMY;
+	}
+
 
 	if (enemyState != state::DEATH && enemyState != state::NO_ENEMY && enemyState != state::ATTACK )
 	{
@@ -196,13 +208,15 @@ bool Enemy::Update(float dt)
 		break;
 	case state::ATTACK:
 		currentAnimation = &attackAnim;
-		if (attackDuration > 40)
+		if (attackDuration > 50)
 		{
 			enemyState = state::IDLE;
 			attackDuration = 0;
+			attackAnim.Reset();
+
 		}
 		attackDuration++;
-		walkAnim.Update();
+		attackAnim.Update();
 		//path.Update();
 		break;
 
@@ -210,12 +224,35 @@ bool Enemy::Update(float dt)
 		vel = b2Vec2(0, -GRAVITY_Y);
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
+		counterForDead++;
+		if (counterForDead > 50) {
+			enemyState = state::NO_ENEMY;
+			counterForDead = 0;
+		}
 		break;
 	case state::NO_ENEMY:
-		currentAnimation = &deathAnim;
-		if (hasDead) {
+		if (!isOnSceen) {
+			currentAnimation = &isDeadAnim;
+		}
+		else
+		{
+			currentAnimation = &deathAnim;
+
+		}
+		if (!hasDead) {
 			app->physics->DestroyObject(pbody);
-			hasDead = false;
+
+			if (!isOnSceen) {
+				currentAnimation = &isDeadAnim;
+				position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+				position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y);
+			}
+			else
+			{
+				isOnSceen = false;
+			}
+			deathPosition = position;
+			hasDead = true;
 		}
 		break;
 	}
@@ -230,12 +267,12 @@ bool Enemy::Update(float dt)
 		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 		//Draw texture
-		app->render->DrawTexture(texture, position.x - 40, position.y - 10, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+		app->render->DrawTexture(texture, position.x - 40, position.y - 60, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
 
 	}
 	else
 	{
-		app->render->DrawTexture(texture, deathPosition.x - 40, deathPosition.y - 37, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+		app->render->DrawTexture(texture, deathPosition.x - 40, deathPosition.y - 60, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
 	}
 	app->scene->DrawPath();
 
@@ -252,31 +289,21 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
-		if (enemyState == state::DEATH) {
-			deathPosition = position;
-			enemyState = state::NO_ENEMY;
-			hasDead = true;
-		}
 		break;
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
-		if (enemyState == state::DEATH) {
-			deathPosition = position;
-			enemyState = state::NO_ENEMY;
-			hasDead = true;
-		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");
-		
 		enemyState = state::ATTACK;
+		break;
 	case ColliderType::PROYECTILE:
 		LOG("Collision PLAYER");
 		life--;
-		if (life < 1) {
+		if (life == 0) {
 			speed = 0;
 			enemyState = state::DEATH;
 			deathTimer = 0;

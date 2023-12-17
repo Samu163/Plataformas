@@ -155,8 +155,16 @@ bool Scene::Update(float dt)
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 
 
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN && !player->isDead) app->SaveRequest();
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && !player->isDead) app->LoadRequest();
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && !player->isDead) 
+	{
+		sameGame = true;
+		app->SaveRequest();
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && !player->isDead) 
+	{
+		app->LoadRequest();
+	}
 
 	// Renders the image in the center of the screen 
 	//app->render->DrawTexture(img, (int)textPosX, (int)textPosY,);
@@ -207,19 +215,76 @@ bool Scene::CleanUp()
 
 bool Scene::LoadState(pugi::xml_node node) 
 {
-	player->position.x = node.child("player").attribute("x").as_int();
-	player->position.y = node.child("player").attribute("y").as_int();
-	b2Vec2 newPos(PIXEL_TO_METERS(player->position.x), PIXEL_TO_METERS(player->position.y));
+	//configure position for player
+	b2Vec2 newPos(PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()));
 	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
+
+	//Configure the position of enemies and if they are dead or not
+	bool checkGame = node.child("newGame").attribute("sameGame").as_bool();
+	if (sameGame != checkGame) 
+	{
+		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("y").as_int()));
+		flyingEnemy_1->pbody->body->SetTransform(newPos, flyingEnemy_1->pbody->body->GetAngle());
+		flyingEnemy_1->isOnSceen = node.child("flyingEnemy1").attribute("isOnSceen").as_bool();
+
+
+		flyingEnemy_2->isOnSceen = node.child("flyingEnemy2").attribute("isOnSceen").as_bool();
+		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy2").attribute("y").as_int()));
+		flyingEnemy_2->pbody->body->SetTransform(newPos, flyingEnemy_2->pbody->body->GetAngle());
+
+		walkingEnemy_1->isOnSceen = node.child("enemy1").attribute("isOnSceen").as_bool();
+		newPos = b2Vec2(PIXEL_TO_METERS(node.child("enemy1").attribute("x").as_int()), PIXEL_TO_METERS(node.child("enemy1").attribute("y").as_int()));
+		walkingEnemy_1->pbody->body->SetTransform(newPos, walkingEnemy_1->pbody->body->GetAngle());
+
+		walkingEnemy_2->isOnSceen = node.child("enemy2").attribute("isOnSceen").as_bool();
+		newPos = b2Vec2(PIXEL_TO_METERS(node.child("enemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("enemy2").attribute("y").as_int()));
+		walkingEnemy_2->pbody->body->SetTransform(newPos, walkingEnemy_2->pbody->body->GetAngle());
+	}
+	
 	return true;
 
 };
 
 bool Scene::SaveState(pugi::xml_node node)
 {
+	//Save if is on a current game
+	pugi::xml_node gameNode = node.append_child("newGame");
+	gameNode.append_attribute("sameGame").set_value(sameGame);
+
+
+	//Save player position
 	pugi::xml_node playerNode = node.append_child("player");
 	playerNode.append_attribute("x").set_value(player->position.x);
 	playerNode.append_attribute("y").set_value(player->position.y);
+	//Save Enemies position
+	pugi::xml_node flyingEnemy1Node = node.append_child("flyingEnemy1");
+	flyingEnemy1Node.append_attribute("isOnSceen").set_value(flyingEnemy_1->isOnSceen);
+	if (flyingEnemy_1->isOnSceen) {
+		flyingEnemy1Node.append_attribute("x").set_value(flyingEnemy_1->position.x);
+		flyingEnemy1Node.append_attribute("y").set_value(flyingEnemy_1->position.y);
+	}
+	else
+	{
+		flyingEnemy1Node.append_attribute("x").set_value(flyingEnemy_1->deathPosition.x);
+		flyingEnemy1Node.append_attribute("y").set_value(flyingEnemy_1->deathPosition.y);
+	}
+	
+
+	pugi::xml_node flyingEnemy2Node = node.append_child("flyingEnemy2");
+	flyingEnemy2Node.append_attribute("isOnSceen").set_value(flyingEnemy_2->isOnSceen);
+	flyingEnemy2Node.append_attribute("x").set_value(flyingEnemy_2->position.x);
+	flyingEnemy2Node.append_attribute("y").set_value(flyingEnemy_2->position.y);
+
+	pugi::xml_node enemy1Node = node.append_child("enemy1");
+	enemy1Node.append_attribute("isOnSceen").set_value(walkingEnemy_1->isOnSceen);
+	enemy1Node.append_attribute("x").set_value(walkingEnemy_1->position.x);
+	enemy1Node.append_attribute("y").set_value(walkingEnemy_1->position.y);
+
+	pugi::xml_node enemy2Node = node.append_child("enemy2");
+	enemy2Node.append_attribute("isOnSceen").set_value(walkingEnemy_2->isOnSceen);
+	enemy2Node.append_attribute("x").set_value(walkingEnemy_2->position.x);
+	enemy2Node.append_attribute("y").set_value(walkingEnemy_2->position.y);
+
 
 
 	return true;
