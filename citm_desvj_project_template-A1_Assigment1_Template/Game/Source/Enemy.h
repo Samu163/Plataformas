@@ -88,8 +88,10 @@ public:
 
 private:
 
+	iPoint deathPosition;
 	int life = 4;
 	const DynArray<iPoint>* path;
 	b2Vec2 vel;
+	bool hasDead;
 };
 #endif // __ENEMY_H__

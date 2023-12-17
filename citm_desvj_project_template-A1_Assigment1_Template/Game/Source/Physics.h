@@ -81,11 +81,11 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
-private:
-
+public:
 	// Debug mode
-	bool activeColliders;
+	bool debugMode;
 
+private:
 
 	// Box2D World
 	b2World* world;

@@ -49,6 +49,7 @@ private:
 	Animation idleAnim;
 	Animation walkAnim;
 	Animation rightAnim;
+	Animation attackAnim;
 	Animation jumpAnim;
 	Animation deathAnim;
 	Animation deathIceBallAnim;
@@ -72,7 +73,7 @@ public:
 	int pickCoinFxId;
 	int lifes = 1;
 	int zoomFactor = 1.0f;
-	const int playerCooldown = 30;
+	int playerCooldown = 30;
 	//Bools
 	bool isDead;
 	bool godMode;
@@ -84,6 +85,7 @@ public:
 	int doubleJumpCounter;
 	int counterForIceBalls;
 	int deathCounter;
+	int attackCounter;
 	iPoint deathPosition;
 
 };

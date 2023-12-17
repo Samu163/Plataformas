@@ -31,35 +31,31 @@ bool FlyingEnemy::Awake()
 	idleAnim.PushBack({ 0, 0, 122, 91 });
 	idleAnim.PushBack({ 122, 0, 122, 91 });
 	idleAnim.PushBack({ 244, 0, 122, 91 });
-	idleAnim.PushBack({ 366, 0, 122, 91 });
-	idleAnim.PushBack({ 488, 0, 122, 91 });
-	idleAnim.PushBack({ 610, 0, 122, 91 });
-	idleAnim.PushBack({ 732, 0, 122, 91 });
-	idleAnim.PushBack({ 854, 0, 122, 91 });
-	idleAnim.PushBack({ 976, 0, 122, 91 });
 	idleAnim.speed = 0.2f;
 	idleAnim.loop = true;
 
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
-	walkAnim.PushBack({ 0, 0, 122, 91 });
+	walkAnim.PushBack({366, 0, 122, 91 });
+	walkAnim.PushBack({ 0, 91, 122, 91 });
+	walkAnim.PushBack({ 122, 91, 122, 91 });
 	walkAnim.speed = 0.2f;
 	walkAnim.loop = true;
+	
+	attackAnim.PushBack({244, 91, 122, 91 });
+	attackAnim.PushBack({ 366, 91, 122, 91 });
+	attackAnim.PushBack({ 0, 182, 122, 91 });
+	attackAnim.PushBack({ 122, 182, 122, 91 });
+	attackAnim.PushBack({ 244, 182, 122, 91 });
+	attackAnim.PushBack({ 366, 182, 122, 91 });
+	attackAnim.PushBack({ 0, 273, 122, 91 });
+	attackAnim.speed = 0.2f;
+	attackAnim.loop = true;
 
-	deathAnim.PushBack({ 0, 182, 122, 91 });
-	deathAnim.PushBack({ 122, 182, 122, 91 });
-	deathAnim.PushBack({ 244, 182, 122, 91 });
-	deathAnim.PushBack({ 366, 182, 122, 91 });
-	deathAnim.PushBack({ 488, 182, 122, 91 });
-	deathAnim.PushBack({ 610, 182, 122, 91 });
-	deathAnim.PushBack({ 732, 182, 122, 91 });
-	deathAnim.PushBack({ 854, 182, 122, 91 });
-	deathAnim.PushBack({ 976, 182, 122, 91 });
-	deathAnim.PushBack({ 1098, 182, 122, 91 });
-	deathAnim.PushBack({ 1220, 182, 122, 91 });
-	deathAnim.PushBack({ 1342, 182, 122, 91 });
+	deathAnim.PushBack({ 122, 273, 122, 91 });
+	deathAnim.PushBack({ 244, 273, 122, 91 });
+	deathAnim.PushBack({ 366, 273, 122, 91 });
+	deathAnim.PushBack({ 0, 364, 122, 91 });
+
+
 	deathAnim.speed = 0.2f;
 	deathAnim.loop = false;
 
@@ -70,7 +66,7 @@ bool FlyingEnemy::Awake()
 bool FlyingEnemy::Start()
 {
 	//initilize textures
-	texture = app->tex->Load("Assets/Textures/Enemy.png");
+	texture = app->tex->Load("Assets/Textures/Enemy1.png");
 	//initialize player parameters
 	Init();
 	return true;
@@ -80,10 +76,10 @@ void FlyingEnemy::Init()
 {
 	//Init function that initialize most of the player parameters
 	speed = 3.0f;
-	isDead = false;
+	hasDead = false;
 	initialPosition = position;
 	currentAnimation = &idleAnim;
-	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x + 25, position.y + 25, 20, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 200;
@@ -107,7 +103,7 @@ bool FlyingEnemy::Update(float dt)
 		else
 		{
 			//if is out of his position, return to the initial position
-			if (position.y> initialPosition.y+20 || position.y < initialPosition.y - 20) 
+			if (position.y> initialPosition.y+50 || position.y < initialPosition.y - 50) 
 			{
 				flyingEnemyState = state::RETURNING_HOME;
 			}
@@ -189,7 +185,7 @@ bool FlyingEnemy::Update(float dt)
 		}
 		pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 		vel = app->scene->CheckTheMovementWithPath(pos, position);
-
+		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
 		break;
 	case state::WALK:
@@ -220,41 +216,42 @@ bool FlyingEnemy::Update(float dt)
 			attackDuration = 0;
 		}
 		attackDuration++;
-		walkAnim.Update();
+		attackAnim.Update();
 		//path.Update();
 		break;
 
 	case state::DEATH:
 		vel = b2Vec2(0, -GRAVITY_Y);
 		currentAnimation = &deathAnim;
-		deathTimer++;
-		if (deathTimer > 20)
-		{
-			deathTimer = 0;
+		deathAnim.Update();
+		break;
+	case state::NO_ENEMY:
+		currentAnimation = &deathAnim;
+		if (hasDead) {
 			app->physics->DestroyObject(pbody);
-			currentAnimation = nullptr;
-			flyingEnemyState = state::NO_ENEMY;
-			break;
+			hasDead = false;
 		}
+		break;
 	}
-	if (currentAnimation != nullptr)
+	if (flyingEnemyState != state::NO_ENEMY)
 	{
 		//Set the velocity of the pbody of the player
 		pbody->body->SetLinearVelocity(vel);
 
 		//Update player position in pixels
-		if (flyingEnemyState != state::GO_TO_PLAYER) 
-		{
-			position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-			position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-		}
 		
+		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 		//Draw texture
-		app->render->DrawTexture(texture, position.x, position.y, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
-		app->scene->DrawPath();
+		app->render->DrawTexture(texture, position.x-40, position.y-10, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+		
 	}
-
+	else
+	{
+		app->render->DrawTexture(texture, deathPosition.x - 40, deathPosition.y-37, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+	}
+	app->scene->DrawPath();
 
 
 
@@ -268,10 +265,19 @@ void FlyingEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
+		if (flyingEnemyState == state::DEATH) {
+			deathPosition = position;
+			flyingEnemyState = state::NO_ENEMY;
+			hasDead=true;
+		}
 		break;
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
-
+		if (flyingEnemyState == state::DEATH) {
+			deathPosition = position;
+			flyingEnemyState = state::NO_ENEMY;
+			hasDead = true;
+		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
@@ -279,6 +285,7 @@ void FlyingEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");
 		flyingEnemyState = state::ATTACK;
+		break;
 	case ColliderType::PROYECTILE:
 		LOG("Collision PLAYER");
 		life--;

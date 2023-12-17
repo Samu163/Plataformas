@@ -73,7 +73,7 @@ public:
 	//const int playerCooldown = 20;
 
 	//Bools
-	bool isDead;
+	bool hasDead;
 	bool godMode;
 	bool isFlipped;
 	bool isFollowing;
@@ -89,7 +89,8 @@ public:
 
 private:
 
-	int life = 4;
+	int life = 2;
 	const DynArray<iPoint>* path;
+	iPoint deathPosition;
 };
 #endif // __ENEMY_H__

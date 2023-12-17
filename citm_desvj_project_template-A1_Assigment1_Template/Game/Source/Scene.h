@@ -51,8 +51,10 @@ public:
 
 public: 
 	Player* player;
-	Enemy* enemy;
-	FlyingEnemy* flyingEnemy;
+	Enemy* walkingEnemy_1;
+	Enemy* walkingEnemy_2;
+	FlyingEnemy* flyingEnemy_1;
+	FlyingEnemy* flyingEnemy_2;
 	SString path;
 	SDL_Texture* mouseTileTex = nullptr;
 	Animation pathAnim;

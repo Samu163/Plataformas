@@ -31,15 +31,9 @@ bool Enemy::Awake()
 
 	//Size of each cell of the spritesheet: 122x 91y
 	//Size of each cell of the spritesheet (Enemy): 72x 59y
-	idleAnim.PushBack({ 0, 0, 122, 91 });
-	idleAnim.PushBack({ 122, 0, 122, 91 });
-	idleAnim.PushBack({ 244, 0, 122, 91 });
-	idleAnim.PushBack({ 366, 0, 122, 91 });
-	idleAnim.PushBack({ 488, 0, 122, 91 });
-	idleAnim.PushBack({ 610, 0, 122, 91 });
-	idleAnim.PushBack({ 732, 0, 122, 91 });
-	idleAnim.PushBack({ 854, 0, 122, 91 });
-	idleAnim.PushBack({ 976, 0, 122, 91 });
+	idleAnim.PushBack({ 0, 0, 122, 107 });
+	idleAnim.PushBack({ 122, 0, 122, 107 });
+	idleAnim.PushBack({ 244, 0, 122, 107 });
 	idleAnim.speed = 0.2f;
 	idleAnim.loop = true;
 
@@ -105,12 +99,11 @@ bool Enemy::Update(float dt)
 
 		if (app->scene->player->position.x+20 > initialPosition.x - walkingRange && app->scene->player->position.x-20 < initialPosition.x + walkingRange && !app->scene->player->isDead)
 		{
-				enemyState = state::GO_TO_PLAYER;
+			enemyState = state::GO_TO_PLAYER;
 		}
 		else
 		{
-			
-				
+
 			app->map->pathfinding->CreatePath({ 0,0 }, { 0,0 });
 			enemyState = state::WALK;
 			
@@ -179,7 +172,7 @@ bool Enemy::Update(float dt)
 		}
 		pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 		vel = app->scene->CheckTheMovementWithPath(pos, position);
-
+		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
 		break;
 	case state::WALK:
@@ -216,33 +209,35 @@ bool Enemy::Update(float dt)
 	case state::DEATH:
 		vel = b2Vec2(0, -GRAVITY_Y);
 		currentAnimation = &deathAnim;
-		deathTimer++;
-		if (deathTimer > 20)
-		{
-			deathTimer = 0;
+		deathAnim.Update();
+		break;
+	case state::NO_ENEMY:
+		currentAnimation = &deathAnim;
+		if (hasDead) {
 			app->physics->DestroyObject(pbody);
-			currentAnimation = nullptr;
-			enemyState = state::NO_ENEMY;
-			break;
+			hasDead = false;
 		}
+		break;
 	}
-	if (currentAnimation != nullptr)
+	if (enemyState != state::NO_ENEMY)
 	{
 		//Set the velocity of the pbody of the player
 		pbody->body->SetLinearVelocity(vel);
 
 		//Update player position in pixels
-		if (enemyState != state::GO_TO_PLAYER) 
-		{
-			position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-			position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-		}
-		
+
+		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 		//Draw texture
-		app->render->DrawTexture(texture, position.x, position.y, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
-		app->scene->DrawPath();
+		app->render->DrawTexture(texture, position.x - 40, position.y - 10, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+
 	}
+	else
+	{
+		app->render->DrawTexture(texture, deathPosition.x - 40, deathPosition.y - 37, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+	}
+	app->scene->DrawPath();
 
 
 
@@ -257,11 +252,19 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
-
+		if (enemyState == state::DEATH) {
+			deathPosition = position;
+			enemyState = state::NO_ENEMY;
+			hasDead = true;
+		}
 		break;
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
-
+		if (enemyState == state::DEATH) {
+			deathPosition = position;
+			enemyState = state::NO_ENEMY;
+			hasDead = true;
+		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

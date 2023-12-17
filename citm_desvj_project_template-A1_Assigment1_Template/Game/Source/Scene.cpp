@@ -42,13 +42,21 @@ bool Scene::Awake(pugi::xml_node& config)
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
 	}
-	if (config.child("flyingEnemy")) {
-		flyingEnemy = (FlyingEnemy*)app->entityManager->CreateEntity(EntityType::FLYING_ENEMY);
-		flyingEnemy->parameters = config.child("flyingEnemy");
+	if (config.child("flyingEnemy1")) {
+		flyingEnemy_1 = (FlyingEnemy*)app->entityManager->CreateEntity(EntityType::FLYING_ENEMY);
+		flyingEnemy_1->parameters = config.child("flyingEnemy1");
 	}
-	if (config.child("enemy")) {
-		enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
-		enemy->parameters = config.child("enemy");
+	if (config.child("flyingEnemy2")) {
+		flyingEnemy_2 = (FlyingEnemy*)app->entityManager->CreateEntity(EntityType::FLYING_ENEMY);
+		flyingEnemy_2->parameters = config.child("flyingEnemy2");
+	}
+	if (config.child("enemy1")) {
+		walkingEnemy_1 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
+		walkingEnemy_1->parameters = config.child("enemy1");
+	}
+	if (config.child("enemy2")) {
+		walkingEnemy_2 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
+		walkingEnemy_2->parameters = config.child("enemy2");
 	}
 
 	return ret;
@@ -162,7 +170,10 @@ void Scene::DrawPath() {
 		if (path != NULL)
 		{
 			iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-			app->render->DrawTexture(mouseTileTex, pos.x, pos.y, false);
+			if (app->physics->debugMode) {
+				app->render->DrawTexture(mouseTileTex, pos.x, pos.y, false);
+
+			}
 		}
 
 	}
@@ -247,10 +258,10 @@ b2Vec2 Scene::CheckTheMovementWithPath(iPoint positionOfThePath, iPoint original
 	}
 	else
 	{
-		if (positionOfThePath.y > originalPosition.y) {
+		if (positionOfThePath.y < originalPosition.y) {
 			return b2Vec2(0, -3);
 		}
-		else if (positionOfThePath.y < originalPosition.y)
+		else if (positionOfThePath.y > originalPosition.y)
 		{
 			return b2Vec2(0, 3);
 		}

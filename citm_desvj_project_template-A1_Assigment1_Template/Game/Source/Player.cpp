@@ -46,6 +46,13 @@ bool Player::Awake() {
 	walkAnim.PushBack({ 1586, 0, 122, 91 });
 	walkAnim.speed = 0.2f;
 	walkAnim.loop = true;
+	
+	attackAnim.PushBack({ 0, 273, 122, 91 });
+	attackAnim.PushBack({ 122, 273, 122, 91 });
+	attackAnim.PushBack({ 244, 273, 122, 91 });
+	attackAnim.PushBack({ 366, 273, 122, 91 });
+	attackAnim.speed = 0.5f;
+	attackAnim.loop = false;
 
 	jumpAnim.PushBack({ 122, 91, 122, 91 });
 	jumpAnim.PushBack({ 244, 91, 122, 91 });
@@ -54,29 +61,6 @@ bool Player::Awake() {
 	jumpAnim.PushBack({ 610, 91, 122, 91 });
 	jumpAnim.speed = 0.15f;
 	jumpAnim.loop = false;
-
-	iceBallAnim.PushBack({ 122, 91, 122, 91 });
-	iceBallAnim.PushBack({ 244, 91, 122, 91 });
-	iceBallAnim.PushBack({ 366, 91, 122, 91 });
-	iceBallAnim.PushBack({ 488, 91, 122, 91 });
-	iceBallAnim.PushBack({ 610, 91, 122, 91 });
-	iceBallAnim.speed = 0.15f;
-	iceBallAnim.loop = true;
-
-	deathIceBallAnim.PushBack({ 0, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 122, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 244, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 366, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 488, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 610, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 732, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 854, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 976, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 1098, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 1220, 182, 122, 91 });
-	deathIceBallAnim.PushBack({ 1342, 182, 122, 91 });
-	deathIceBallAnim.speed = 0.2f;
-	deathIceBallAnim.loop = false;
 
 	deathAnim.PushBack({ 0, 182, 122, 91 });
 	deathAnim.PushBack({ 122, 182, 122, 91 });
@@ -93,6 +77,35 @@ bool Player::Awake() {
 	deathAnim.speed = 0.2f;
 	deathAnim.loop = false;
 
+
+
+
+	iceBallAnim.PushBack({ 0, 0, 45, 45 });
+	iceBallAnim.PushBack({ 45, 0, 45, 45 });
+	iceBallAnim.PushBack({ 90, 0, 45, 45 });
+	iceBallAnim.PushBack({ 0, 45, 45, 45 });
+	iceBallAnim.PushBack({ 45, 45, 45, 45 });
+	iceBallAnim.PushBack({ 90, 45, 45, 45 });
+	iceBallAnim.PushBack({ 0, 90, 45, 45 });
+	iceBallAnim.PushBack({ 45, 90, 45, 45 });
+	iceBallAnim.PushBack({ 90, 90, 45, 45 });
+	iceBallAnim.PushBack({ 0, 135, 45, 45 });
+	iceBallAnim.PushBack({ 45, 135, 45, 45 });
+	iceBallAnim.PushBack({ 90, 135, 45, 45 });
+	iceBallAnim.speed = 0.2f;
+	iceBallAnim.loop = true;
+
+	deathIceBallAnim.PushBack({ 0, 180, 45, 45 });
+	deathIceBallAnim.PushBack({ 45, 180, 45, 45 });
+	deathIceBallAnim.PushBack({ 90, 180, 45, 45 });
+	deathIceBallAnim.PushBack({ 0, 225, 45, 45 });
+	deathIceBallAnim.PushBack({ 45, 225, 45, 45 });
+	deathIceBallAnim.PushBack({ 90, 225, 45, 45 });
+	deathIceBallAnim.speed = 0.2f;
+	deathIceBallAnim.loop = false;
+
+
+
 	return true;
 }
 
@@ -100,7 +113,7 @@ bool Player::Start()
 {
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
-	iceBallTexture = app->tex->Load("Assets/Textures/enemy.png");
+	iceBallTexture = app->tex->Load("Assets/Textures/iceBall.png");
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 	//initialize player parameters
 	Init();
@@ -113,7 +126,8 @@ void Player::Init()
 	speed = 0.4f;
 	jumpingCounter = 0;
 	deathCounter = 0;
-	counterForIceBalls = playerCooldown;
+	playerCooldown = 40;
+	attackCounter = 20;
 	isJumping = false;
 	isDead = false;
 	initialPosition = position;
@@ -155,32 +169,15 @@ bool Player::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
 			isJumping = true;
+			//Sound Effect
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && counterForIceBalls >= playerCooldown)
+		else if ((app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && playerCooldown == 40))
 		{
-			//attack anim if muriendo == 0 se hace la bola
-			IceBall iceBall;
-			b2Vec2 iceBallVel = b2Vec2(20, 0);
-			iceBall.currentIceBallAnimation = &iceBallAnim;
-		
-			//iceBall.currentIceBallAnimation->Reset();
-		    if (isFlipped) 
-			{
-				iceBallVel = b2Vec2(-20, 0);
-				iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
-			}
-			else
-			{
-				iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
-			}
-			iceBall.iceBallCollider->body->SetLinearVelocity(iceBallVel);
-			iceBall.iceBallCollider->listener = this;
-			iceBall.iceBallCollider->ctype = ColliderType::PROYECTILE;
-			listOfIceBalls.Add(iceBall);
-			counterForIceBalls = 0;
-
-			
-			
+			//Set counter to shoot to 0, in order to shoot again
+			attackAnim.Reset();
+			attackCounter = 0;
+			playerCooldown = 0;
+			//Sound Effect
 		}
 		
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
@@ -235,6 +232,40 @@ bool Player::Update(float dt)
 			jumpingCounter = 0;
 		}
 
+		//Attack Animation
+		if (attackCounter < 20)
+		{
+			currentAnimation = &attackAnim;
+			attackAnim.Update();
+			attackCounter++;
+		}
+		//Init the ice Ball
+		if (playerCooldown<40)
+		{
+			//Create the ball on the first frame
+			if (playerCooldown == 0) 
+			{
+				IceBall iceBall;
+				b2Vec2 iceBallVel = b2Vec2(20, 0);
+				iceBall.currentIceBallAnimation = &iceBallAnim;
+
+				if (isFlipped)
+				{
+					iceBallVel = b2Vec2(-20, 0);
+					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+				}
+				else
+				{
+					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+				}
+				iceBall.iceBallCollider->body->SetLinearVelocity(iceBallVel);
+				iceBall.iceBallCollider->listener = this;
+				iceBall.iceBallCollider->ctype = ColliderType::PROYECTILE;
+				listOfIceBalls.Add(iceBall);
+			}
+			playerCooldown++;
+		}
+
 		//Set the velocity of the pbody of the player
 		pbody->body->SetLinearVelocity(vel);
 
@@ -248,6 +279,7 @@ bool Player::Update(float dt)
 	}
 	else
 	{
+		//If is dead draw the final animation in the death position
 		if (deathCounter == 0) {
 			app->physics->DestroyObject(pbody);
 			deathPosition.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
@@ -256,58 +288,47 @@ bool Player::Update(float dt)
 		zoomFactor = 1.0f;
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
-		
-		
 		app->render->DrawTexture(texture, deathPosition.x - 45, deathPosition.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
 		deathCounter++;
 	}
 	
 
-	
-
-	if (listOfIceBalls.Count() > 0) 
+	//Drawing IceBalls
+	for (int i = 0; i < listOfIceBalls.Count(); i++)
 	{
-		for (int i = 0; i < listOfIceBalls.Count(); i++)
+		if (listOfIceBalls[i].pendingToDelete) 
 		{
-			if (listOfIceBalls[i].pendingToDelete) 
+			//Drawing dead IceBalls
+			if (listOfIceBalls[i].counterForDelete < 50)
 			{
-				
-				if (listOfIceBalls[i].counterForDelete < 50)
+				//Doing destroy animation
+				if (listOfIceBalls[i].counterForDelete == 0) 
 				{
-					if (listOfIceBalls[i].counterForDelete == 0) 
-					{
-						listOfIceBalls[i].x = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x;
-						listOfIceBalls[i].y = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y;
-						app->physics->DestroyObject(listOfIceBalls[i].iceBallCollider);
-					}
-					listOfIceBalls[i].currentIceBallAnimation = &deathAnim;
-					app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[i].x), METERS_TO_PIXELS(listOfIceBalls[i].y), isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
-					listOfIceBalls[i].currentIceBallAnimation->Update();
-					listOfIceBalls[i].counterForDelete++;
+					listOfIceBalls[i].x = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x;
+					listOfIceBalls[i].y = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y;
+					app->physics->DestroyObject(listOfIceBalls[i].iceBallCollider);
 				}
-				else
-				{
-					listOfIceBalls[i].currentIceBallAnimation->Reset();
-					listOfIceBalls.Del(listOfIceBalls.At(i));
-
-				}
+				listOfIceBalls[i].currentIceBallAnimation = &deathIceBallAnim;
+				app->render->DrawTexture(iceBallTexture, METERS_TO_PIXELS(listOfIceBalls[i].x), METERS_TO_PIXELS(listOfIceBalls[i].y), isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
+				listOfIceBalls[i].currentIceBallAnimation->Update();
+				listOfIceBalls[i].counterForDelete++;
 			}
 			else
 			{
-				listOfIceBalls[i].currentIceBallAnimation->Update();
-				
-				app->render->DrawTexture(texture, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x), METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y), isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
-				//listOfIceBalls[i].currentIceBallAnimation->Reset();
+				//has finished destroyed animation
+				listOfIceBalls[i].currentIceBallAnimation->Reset();
+				listOfIceBalls.Del(listOfIceBalls.At(i));
+
 			}
-			
 		}
-	}
-
-	//Updating the iceBallsCounter if is less than the cooldown
-	if (counterForIceBalls<playerCooldown) 
-	{
-
-		counterForIceBalls++;
+		else
+		{
+			//Drawing regular Iceballs
+			listOfIceBalls[i].currentIceBallAnimation = &iceBallAnim;
+			app->render->DrawTexture(iceBallTexture, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x)-20, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y)-30, isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
+			iceBallAnim.Update();
+		}
+			
 	}
 
 	return true;
@@ -315,7 +336,6 @@ bool Player::Update(float dt)
 
 bool Player::CleanUp()
 {
-
 	return true;
 }
 
@@ -357,7 +377,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			}
 			break;
 		case ColliderType::ENEMY:
-			LOG("Collision DEATH");
+			LOG("Collision ENEMY");
 			if (!godMode)
 			{
 				lifes--;
@@ -409,7 +429,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			LOG("Collision UNKNOWN");
 			break;
 		case ColliderType::ENEMY:
-			LOG("Collision UNKNOWN");
+			LOG("Collision ENEMY");
+			for (int i = 0; i < listOfIceBalls.Count(); i++)
+			{
+				if (listOfIceBalls[i].iceBallCollider == physA)
+				{
+					listOfIceBalls[i].pendingToDelete = true;
+				}
+			}
 			break;
 
 		}
