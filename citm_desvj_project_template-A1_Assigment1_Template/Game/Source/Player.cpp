@@ -8,6 +8,11 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+
+
+#include "Window.h"
+
+
 #include <list>
 
 
@@ -47,12 +52,26 @@ bool Player::Awake() {
 	walkAnim.speed = 0.2f;
 	walkAnim.loop = true;
 	
-	attackAnim.PushBack({ 0, 273, 122, 91 });
-	attackAnim.PushBack({ 122, 273, 122, 91 });
-	attackAnim.PushBack({ 244, 273, 122, 91 });
-	attackAnim.PushBack({ 366, 273, 122, 91 });
-	attackAnim.speed = 0.5f;
-	attackAnim.loop = false;
+	attackAnim1.PushBack({ 0, 273, 122, 91 });
+	attackAnim1.PushBack({ 122, 273, 122, 91 });
+	attackAnim1.PushBack({ 244, 273, 122, 91 });
+	attackAnim1.PushBack({ 366, 273, 122, 91 });
+	attackAnim1.speed = 0.5f;
+	attackAnim1.loop = false;
+
+	attackAnim2.PushBack({ 488, 273, 122, 91 });
+	attackAnim2.PushBack({ 610, 273, 122, 91 });
+	attackAnim2.PushBack({ 732, 273, 122, 91 });
+	attackAnim2.PushBack({ 854, 273, 122, 91 });
+	attackAnim2.speed = 0.5f;
+	attackAnim2.loop = false;
+
+	attackAnim3.PushBack({ 976, 273, 122, 91 });
+	attackAnim3.PushBack({ 1098, 273, 122, 91 });
+	attackAnim3.PushBack({ 1220, 273, 122, 91 });
+	attackAnim3.PushBack({ 1342, 273, 122, 91 });
+	attackAnim3.speed = 0.5f;
+	attackAnim3.loop = false;
 
 	jumpAnim.PushBack({ 122, 91, 122, 91 });
 	jumpAnim.PushBack({ 244, 91, 122, 91 });
@@ -127,6 +146,9 @@ void Player::Init()
 	jumpingCounter = 0;
 	deathCounter = 0;
 	playerCooldown = 40;
+
+	AttackAnimCounter = -1;
+
 	attackCounter = 20;
 	isJumping = false;
 	isDead = false;
@@ -166,6 +188,7 @@ bool Player::Update(float dt)
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (!isDead) 
 	{
+		
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
 			isJumping = true;
@@ -173,10 +196,18 @@ bool Player::Update(float dt)
 		}
 		else if ((app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && playerCooldown == 40))
 		{
+
 			//Set counter to shoot to 0, in order to shoot again
-			attackAnim.Reset();
+			attackAnim1.Reset();
+			attackAnim2.Reset();
+			attackAnim3.Reset();
 			attackCounter = 0;
+
+
+			AttackAnimCounter++;
+
 			playerCooldown = 0;
+
 			//Sound Effect
 		}
 		
@@ -235,10 +266,38 @@ bool Player::Update(float dt)
 		//Attack Animation
 		if (attackCounter < 20)
 		{
-			currentAnimation = &attackAnim;
-			attackAnim.Update();
+
+			switch (AttackAnimCounter)
+			{
+			case 0:
+				currentAnimation = &attackAnim1;
+				attackAnim1.Update();
+				break;
+			case 1:
+				currentAnimation = &attackAnim2;
+				attackAnim2.Update();
+				break;
+			case 2:
+				currentAnimation = &attackAnim3;
+				attackAnim3.Update();
+				break;
+
+
+			default:
+				break;
+			}
+			
+			if (AttackAnimCounter > 2) {
+				AttackAnimCounter = 0;
+			}
+			
 			attackCounter++;
+
+		
+
 		}
+	
+
 		//Init the ice Ball
 		if (playerCooldown<40)
 		{
@@ -279,15 +338,30 @@ bool Player::Update(float dt)
 	}
 	else
 	{
+
 		//If is dead draw the final animation in the death position
 		if (deathCounter == 0) {
 			app->physics->DestroyObject(pbody);
+		
+			
 			deathPosition.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 			deathPosition.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+			
+			
 		}
-		zoomFactor = 1.0f;
+		position.x = deathPosition.x;
+		position.y = deathPosition.y;
+	
+
+
+
+
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
+	
+		
+
+		
 		app->render->DrawTexture(texture, deathPosition.x - 45, deathPosition.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
 		deathCounter++;
 	}

@@ -7,8 +7,7 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Pathfinding.h"
-
-
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -108,11 +107,14 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	float camSpeed = 1;
+	Player Pruebaplayer;
 	//Debug
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		isInDebugMode=!isInDebugMode;
 	}
+	
+
 	if (isInDebugMode)
 	{
 		if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -136,21 +138,19 @@ bool Scene::Update(float dt)
 		}
 		app->render->camera.x = -player->position.x + app->win->screenSurface->w / 2;
 		
-		if (player->position.y <= 0) 
+		 if (player->position.y >= app->win->screenSurface->h/1.1) 
 		{
-
-		}
-		else if (player->position.y >= app->win->screenSurface->h) 
-		{
-			player->position.y -= app->win->screenSurface->h - 13 * 2;
+			player->position.y -= app->win->screenSurface->h - 13 * 29;
 		}
 		else
 		{
-			player->position.y = 0;
+			player->position.y = 10;
 		}
+
 		app->render->camera.y = -player->position.y;
 		
 	}
+	
 	// Get the mouse position and obtain the map coordinate
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 

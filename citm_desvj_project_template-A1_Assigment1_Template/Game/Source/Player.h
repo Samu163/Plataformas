@@ -49,7 +49,9 @@ private:
 	Animation idleAnim;
 	Animation walkAnim;
 	Animation rightAnim;
-	Animation attackAnim;
+	Animation attackAnim1;
+	Animation attackAnim2;
+	Animation attackAnim3;
 	Animation jumpAnim;
 	Animation deathAnim;
 	Animation deathIceBallAnim;
@@ -74,6 +76,7 @@ public:
 	int lifes = 1;
 	int zoomFactor = 1.0f;
 	int playerCooldown = 30;
+	
 	//Bools
 	bool isDead;
 	bool godMode;
@@ -86,6 +89,7 @@ public:
 	int counterForIceBalls;
 	int deathCounter;
 	int attackCounter;
+	int AttackAnimCounter;
 	iPoint deathPosition;
 
 };
