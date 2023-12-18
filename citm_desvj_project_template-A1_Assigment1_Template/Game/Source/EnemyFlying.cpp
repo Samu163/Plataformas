@@ -69,6 +69,10 @@ bool FlyingEnemy::Start()
 {
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/Enemy1.png");
+	/*idleEn2Fx = app->audio->LoadFx("Assets/Audio/Fx/idleEn2.ogg");*/
+	deathEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/deathEn1.ogg");
+	attack2Fx = app->audio->LoadFx("Assets/Audio/Fx/attack2.ogg");
+
 	//initialize player parameters
 	Init();
 	return true;
@@ -165,7 +169,7 @@ bool FlyingEnemy::Update(float dt)
 			//Checing his velocity and orientation
 			vel = app->scene->CheckTheMovementWithPath(pos, position);
 			isFlipped = app->scene->CheckVelocityForFlip(vel);
-
+			
 			walkAnim.Update();
 		}
 		else
@@ -173,7 +177,7 @@ bool FlyingEnemy::Update(float dt)
 			flyingEnemyState = state::IDLE;
 			break;
 		}
-		
+		app->audio->PlayFx(idleEn2Fx);
 		break;
 	case state::RETURNING_HOME:
 		currentAnimation = &walkAnim;
@@ -188,12 +192,14 @@ bool FlyingEnemy::Update(float dt)
 		{
 			flyingEnemyState = state::WALK;
 			counterForPath = 0;
+			
 			break;
 		}
 		pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 		vel = app->scene->CheckTheMovementWithPath(pos, position);
 		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
+		app->audio->PlayFx(idleEn2Fx);
 		break;
 	case state::WALK:
 		currentAnimation = &walkAnim;
@@ -212,7 +218,7 @@ bool FlyingEnemy::Update(float dt)
 		vel = b2Vec2(speed, -0.165);
 		walkAnim.Update();
 		isFlipped = app->scene->CheckVelocityForFlip(vel);
-
+		app->audio->PlayFx(idleEn2Fx);
 		//path.Update();
 		break;
 	case state::ATTACK:
@@ -226,6 +232,8 @@ bool FlyingEnemy::Update(float dt)
 		}
 		attackDuration++;
 		attackAnim.Update();
+
+		app->audio->PlayFx(attack2Fx);
 		//path.Update();
 		break;
 
@@ -233,6 +241,7 @@ bool FlyingEnemy::Update(float dt)
 		vel = b2Vec2(0, -GRAVITY_Y);
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
+		app->audio->PlayFx(deathEn1Fx);
 		break;
 	case state::NO_ENEMY:
 		if (!isOnSceen) {
@@ -258,6 +267,7 @@ bool FlyingEnemy::Update(float dt)
 			deathPosition = position;
 			hasDead = true;
 		}
+		app->audio->PlayFx(idleEn2Fx);
 		break;
 	}
 	if (flyingEnemyState != state::NO_ENEMY)

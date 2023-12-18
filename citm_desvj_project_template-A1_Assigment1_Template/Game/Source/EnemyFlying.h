@@ -60,6 +60,10 @@ public:
 
 	state flyingEnemyState = state::WALK;
 
+	int idleEn2Fx;
+	int deathEn1Fx;
+	int attack2Fx;
+
 	float speed = 0.4f;
 	int visionRange;
 	int walkingRange;

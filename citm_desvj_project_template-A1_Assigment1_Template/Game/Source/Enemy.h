@@ -61,6 +61,10 @@ public:
 
 	state enemyState = state::WALK;
 
+	int idleEn1Fx;
+	int attackEn1Fx;
+	int deathEn1Fx;
+
 	float speed = 0.4f;
 	int visionRange;
 	int walkingRange;

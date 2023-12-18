@@ -73,6 +73,15 @@ public:
 	//List<IceBall> listOfIceBallsToDestroy;
 
 	int pickCoinFxId;
+
+	int jumpFx;
+	int runningFx;
+	int magicFx1;
+	int magicFx2;
+	int magicFx3;
+	int iceballdeathFx;
+	int deathFx;
+
 	int lifes = 1;
 	int zoomFactor = 1.0f;
 	int playerCooldown = 30;

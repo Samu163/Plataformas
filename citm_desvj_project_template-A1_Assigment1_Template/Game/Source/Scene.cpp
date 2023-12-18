@@ -1,4 +1,4 @@
-#include "App.h"
+﻿#include "App.h"
 #include "Input.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -68,11 +68,13 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
+
+
 	// NOTE: We have to avoid the use of paths in the code, we will move it later to a config file
 	//img = app->tex->Load("Assets/Textures/test.png");
 	
 	//Music is commented so that you can add your own music
-	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
+	app->audio->PlayMusic("Assets/Audio/Musica.wav", 0.0f);
 
 	//Get the size of the window
 	app->win->GetWindowSize(windowW, windowH);
@@ -84,6 +86,8 @@ bool Scene::Start()
 	textPosY = (float)windowH / 2 - (float)texH / 2;
 
 	app->map->Load();
+
+
 
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
 		app->map->mapData.width,
@@ -106,8 +110,9 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	
 	float camSpeed = 1;
-	Player Pruebaplayer;
+	
 	//Debug
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{

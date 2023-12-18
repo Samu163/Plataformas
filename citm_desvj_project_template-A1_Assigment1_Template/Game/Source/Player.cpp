@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include "App.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -130,10 +130,20 @@ bool Player::Awake() {
 
 bool Player::Start()
 {
+	
+	
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
 	iceBallTexture = app->tex->Load("Assets/Textures/iceBall.png");
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+	
+	jumpFx= app->audio->LoadFx("Assets/Audio/Fx/jump.ogg");
+	/*runningFx= app->audio->LoadFx("Assets/Audio/Fx/run.ogg");*/
+	magicFx1 = app->audio->LoadFx("Assets/Audio/Fx/magic1.ogg");
+	magicFx2 = app->audio->LoadFx("Assets/Audio/Fx/magic2.ogg");
+	magicFx3 = app->audio->LoadFx("Assets/Audio/Fx/magic3.ogg");
+	iceballdeathFx = app->audio->LoadFx("Assets/Audio/Fx/iceballdeath.ogg");
+	deathFx = app->audio->LoadFx("Assets/Audio/Fx/death.ogg");
 	//initialize player parameters
 	Init();
 	return true;
@@ -193,6 +203,7 @@ bool Player::Update(float dt)
 		{
 			isJumping = true;
 			//Sound Effect
+			app->audio->PlayFx(jumpFx);
 		}
 		else if ((app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && playerCooldown == 40))
 		{
@@ -218,6 +229,7 @@ bool Player::Update(float dt)
 			walkAnim.Update();
 
 			vel = b2Vec2(-speed * dt, -GRAVITY_Y);
+			app->audio->PlayFx(runningFx);
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			isFlipped = false;
@@ -225,6 +237,7 @@ bool Player::Update(float dt)
 			walkAnim.Update();
 
 			vel = b2Vec2(speed * dt, -GRAVITY_Y);
+			app->audio->PlayFx(runningFx);
 		}
 		else
 		{
@@ -272,14 +285,17 @@ bool Player::Update(float dt)
 			case 0:
 				currentAnimation = &attackAnim1;
 				attackAnim1.Update();
+				app->audio->PlayFx(magicFx1);
 				break;
 			case 1:
 				currentAnimation = &attackAnim2;
 				attackAnim2.Update();
+				app->audio->PlayFx(magicFx2);
 				break;
 			case 2:
 				currentAnimation = &attackAnim3;
 				attackAnim3.Update();
+				app->audio->PlayFx(magicFx3);
 				break;
 
 
@@ -343,7 +359,7 @@ bool Player::Update(float dt)
 		if (deathCounter == 0) {
 			app->physics->DestroyObject(pbody);
 		
-			
+			app->audio->PlayFx(deathFx);
 			deathPosition.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 			deathPosition.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 			
@@ -352,7 +368,7 @@ bool Player::Update(float dt)
 		position.x = deathPosition.x;
 		position.y = deathPosition.y;
 	
-
+		
 
 
 
@@ -381,6 +397,9 @@ bool Player::Update(float dt)
 					listOfIceBalls[i].x = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x;
 					listOfIceBalls[i].y = listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y;
 					app->physics->DestroyObject(listOfIceBalls[i].iceBallCollider);
+
+					app->audio->PlayFx(iceballdeathFx);
+
 				}
 				listOfIceBalls[i].currentIceBallAnimation = &deathIceBallAnim;
 				app->render->DrawTexture(iceBallTexture, METERS_TO_PIXELS(listOfIceBalls[i].x), METERS_TO_PIXELS(listOfIceBalls[i].y), isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);

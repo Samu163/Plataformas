@@ -76,6 +76,12 @@ bool Enemy::Start()
 {
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/Enemy2.png");
+
+	idleEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/idleEn1.ogg");
+	attackEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/attackEn1.ogg");
+	deathEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/deathEn1.ogg");
+
+
 	//initialize player parameters
 	Init();
 	return true;
@@ -135,6 +141,7 @@ bool Enemy::Update(float dt)
 
 	iPoint pos;
 	b2Vec2 newPos;
+
 	switch (enemyState)
 	{
 	case state::GO_TO_PLAYER:
@@ -166,7 +173,7 @@ bool Enemy::Update(float dt)
 			enemyState = state::IDLE;
 			break;
 		}
-		
+		app->audio->PlayFx(idleEn1Fx);
 		break;
 	case state::RETURNING_HOME:
 		currentAnimation = &walkAnim;
@@ -186,6 +193,7 @@ bool Enemy::Update(float dt)
 		vel = app->scene->CheckTheMovementWithPath(pos, position);
 		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
+		app->audio->PlayFx(idleEn1Fx);
 		break;
 	case state::WALK:
 		currentAnimation = &walkAnim;
@@ -205,6 +213,7 @@ bool Enemy::Update(float dt)
 		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
 		//path.Update();
+		app->audio->PlayFx(idleEn1Fx);
 		break;
 	case state::ATTACK:
 		currentAnimation = &attackAnim;
@@ -217,6 +226,7 @@ bool Enemy::Update(float dt)
 		}
 		attackDuration++;
 		attackAnim.Update();
+		app->audio->PlayFx(attackEn1Fx);
 		//path.Update();
 		break;
 
@@ -229,6 +239,7 @@ bool Enemy::Update(float dt)
 			enemyState = state::NO_ENEMY;
 			counterForDead = 0;
 		}
+		app->audio->PlayFx(deathEn1Fx);
 		break;
 	case state::NO_ENEMY:
 		if (!isOnSceen) {
