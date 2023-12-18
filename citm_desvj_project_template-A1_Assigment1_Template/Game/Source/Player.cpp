@@ -174,7 +174,7 @@ bool Player::Update(float dt)
 
 	//Debug
 	//Restart from initial position
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
 		if (isDead) 
 		{

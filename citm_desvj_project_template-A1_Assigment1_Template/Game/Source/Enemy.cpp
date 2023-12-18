@@ -92,6 +92,8 @@ void Enemy::Init()
 	//Init function that initialize most of the player parameters
 	speed = 3.0f;
 	isDead = false;
+	isDestroyed = false;
+	isOnSceen = true;
 	initialPosition = position;
 	currentAnimation = &idleAnim;
 	pbody = app->physics->CreateCircle(position.x + 25, position.y + 25, 25, bodyType::DYNAMIC);
@@ -100,6 +102,8 @@ void Enemy::Init()
 	visionRange = 200;
 	counterForPath = 0;
 	walkingRange = 200;
+	counterForDead = 0;
+	hasDead = false;
 }
 
 
@@ -241,6 +245,7 @@ bool Enemy::Update(float dt)
 		deathAnim.Update();
 		counterForDead++;
 		if (counterForDead == 1) {
+			isDestroyed = true;
 			app->physics->DestroyObject(pbody);
 			deathPosition = position;
 
@@ -261,9 +266,9 @@ bool Enemy::Update(float dt)
 
 		}
 		if (!hasDead) {
-			if (pbody->height != NULL) {
+			if (!isDestroyed) {
 				app->physics->DestroyObject(pbody);
-
+				isDestroyed = true;
 			}
 			if (!isOnSceen) {
 				

@@ -88,7 +88,7 @@ public:
 	
 	//Bools
 	bool isDead;
-	bool godMode;
+	bool godMode = false;
 	bool isJumping;
 	bool isFlipped;
 

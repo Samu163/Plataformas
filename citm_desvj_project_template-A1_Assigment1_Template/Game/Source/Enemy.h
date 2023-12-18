@@ -81,6 +81,7 @@ public:
 	bool isJumping;
 	bool isFlipped;
 	bool isFollowing;
+	bool isDestroyed = false;
 
 	//Counters
 	float counterForPath;
