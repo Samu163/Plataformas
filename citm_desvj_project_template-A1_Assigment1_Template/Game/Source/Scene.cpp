@@ -278,8 +278,15 @@ bool Scene::SaveState(pugi::xml_node node)
 
 	pugi::xml_node flyingEnemy2Node = node.append_child("flyingEnemy2");
 	flyingEnemy2Node.append_attribute("isOnSceen").set_value(flyingEnemy_2->isOnSceen);
-	flyingEnemy2Node.append_attribute("x").set_value(flyingEnemy_2->position.x);
-	flyingEnemy2Node.append_attribute("y").set_value(flyingEnemy_2->position.y);
+	if (flyingEnemy_2->isOnSceen) {
+		flyingEnemy2Node.append_attribute("x").set_value(flyingEnemy_2->position.x);
+		flyingEnemy2Node.append_attribute("y").set_value(flyingEnemy_2->position.y);
+	}
+	else
+	{
+		flyingEnemy2Node.append_attribute("x").set_value(flyingEnemy_2->deathPosition.x);
+		flyingEnemy2Node.append_attribute("y").set_value(flyingEnemy_2->deathPosition.y);
+	}
 
 	pugi::xml_node enemy1Node = node.append_child("enemy1");
 	enemy1Node.append_attribute("isOnSceen").set_value(walkingEnemy_1->isOnSceen);

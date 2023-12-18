@@ -83,7 +83,7 @@ public:
 
 public:
 	// Debug mode
-	bool debugMode;
+	bool debugMode = false;
 
 private:
 
