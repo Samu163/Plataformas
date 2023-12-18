@@ -24,8 +24,8 @@
   <scene>
     <player x="400" y="352" texturepath="Assets/Textures/player1.png"/>
 	<flyingEnemy1 x="700" y="200" texturepath="Assets/Textures/Enemy.png"/>
-	<flyingEnemy2 x="1700" y="200" texturepath="Assets/Textures/Enemy.png"/>
-    <enemy1 x="3800" y="200" texturepath="Assets/Textures/Enemy.png"/>
+	<flyingEnemy2 x="4300" y="1800" texturepath="Assets/Textures/Enemy.png"/>
+    <enemy1 x="3700" y="200" texturepath="Assets/Textures/Enemy.png"/>
     <enemy2 x="4500" y="200" texturepath="Assets/Textures/Enemy.png"/>
 	<map path="Assets/Maps/" name="MapTemplate.tmx"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>

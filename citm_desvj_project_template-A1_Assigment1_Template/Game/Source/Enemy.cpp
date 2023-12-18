@@ -99,7 +99,7 @@ void Enemy::Init()
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 200;
 	counterForPath = 0;
-	walkingRange = 100;
+	walkingRange = 200;
 }
 
 
@@ -115,7 +115,11 @@ bool Enemy::Update(float dt)
 	if (enemyState != state::DEATH && enemyState != state::NO_ENEMY && enemyState != state::ATTACK )
 	{
 
-		if (app->scene->player->position.x+20 > initialPosition.x - walkingRange && app->scene->player->position.x-20 < initialPosition.x + walkingRange && !app->scene->player->isDead)
+		if (app->scene->player->position.x+20 > initialPosition.x - walkingRange &&
+			app->scene->player->position.x-20 < initialPosition.x + walkingRange && 
+			app->scene->player->position.y < position.y + visionRange * 3 &&
+			app->scene->player->position.y > position.y - visionRange * 3 &&
+			!app->scene->player->isDead)
 		{
 			enemyState = state::GO_TO_PLAYER;
 		}
@@ -162,6 +166,7 @@ bool Enemy::Update(float dt)
 			}
 			pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 			vel = app->scene->CheckTheMovementWithPath(pos, position);
+			vel.x *= 2;
 			vel.y = -GRAVITY_Y;
 			isFlipped = app->scene->CheckVelocityForFlip(vel);
 
@@ -235,6 +240,11 @@ bool Enemy::Update(float dt)
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
 		counterForDead++;
+		if (counterForDead == 1) {
+			app->physics->DestroyObject(pbody);
+			deathPosition = position;
+
+		}
 		if (counterForDead > 50) {
 			enemyState = state::NO_ENEMY;
 			counterForDead = 0;
@@ -251,9 +261,12 @@ bool Enemy::Update(float dt)
 
 		}
 		if (!hasDead) {
-			app->physics->DestroyObject(pbody);
+			if (pbody->height != NULL) {
+				app->physics->DestroyObject(pbody);
 
+			}
 			if (!isOnSceen) {
+				
 				currentAnimation = &isDeadAnim;
 				position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 				position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y);
@@ -267,7 +280,7 @@ bool Enemy::Update(float dt)
 		}
 		break;
 	}
-	if (enemyState != state::NO_ENEMY)
+	if (enemyState != state::NO_ENEMY && enemyState != state::DEATH)
 	{
 		//Set the velocity of the pbody of the player
 		pbody->body->SetLinearVelocity(vel);

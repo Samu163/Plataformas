@@ -60,6 +60,7 @@ public:
 	Animation pathAnim;
 	iPoint mousePos;
 	iPoint mouseTile;
+	bool sameGame = false;
 
 private:
 
@@ -70,7 +71,6 @@ private:
 	uint windowW, windowH;
 
 	bool isInDebugMode = false;
-	bool sameGame = false;
 
 };
 

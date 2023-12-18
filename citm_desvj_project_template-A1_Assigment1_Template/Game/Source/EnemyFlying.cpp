@@ -107,7 +107,11 @@ bool FlyingEnemy::Update(float dt)
 	if (flyingEnemyState != state::DEATH && flyingEnemyState != state::NO_ENEMY && flyingEnemyState != state::ATTACK )
 	{
 		//Checking if the player is on range
-		if (app->scene->player->position.x > position.x - visionRange && app->scene->player->position.x < position.x + visionRange && !app->scene->player->isDead)
+		if (app->scene->player->position.x > position.x - visionRange && 
+			app->scene->player->position.x < position.x + visionRange && 
+			app->scene->player->position.y < position.y + visionRange*3 && 
+			app->scene->player->position.y > position.y - visionRange*3 &&
+			!app->scene->player->isDead)
 		{
 				flyingEnemyState = state::GO_TO_PLAYER;
 		}

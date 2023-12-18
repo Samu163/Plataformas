@@ -203,7 +203,6 @@ bool Player::Update(float dt)
 		{
 			isJumping = true;
 			//Sound Effect
-			app->audio->PlayFx(jumpFx);
 		}
 		else if ((app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && playerCooldown == 40))
 		{
@@ -247,7 +246,10 @@ bool Player::Update(float dt)
 		//Jump Function with dt (is not working with 30fps)
 		if (isJumping) 
 		{
+			if (jumpingCounter == 0) {
+				app->audio->PlayFx(jumpFx);
 
+			}
 			currentAnimation = &jumpAnim;
 			jumpAnim.Update();
 

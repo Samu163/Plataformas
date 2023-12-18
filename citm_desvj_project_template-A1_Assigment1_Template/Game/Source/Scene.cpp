@@ -244,6 +244,7 @@ bool Scene::LoadState(pugi::xml_node node)
 		walkingEnemy_2->isOnSceen = node.child("enemy2").attribute("isOnSceen").as_bool();
 		newPos = b2Vec2(PIXEL_TO_METERS(node.child("enemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("enemy2").attribute("y").as_int()));
 		walkingEnemy_2->pbody->body->SetTransform(newPos, walkingEnemy_2->pbody->body->GetAngle());
+		sameGame = true;
 	}
 	
 	return true;
