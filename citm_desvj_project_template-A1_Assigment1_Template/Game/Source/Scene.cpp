@@ -254,11 +254,10 @@ bool Scene::SaveState(pugi::xml_node node)
 	pugi::xml_node gameNode = node.append_child("newGame");
 	gameNode.append_attribute("sameGame").set_value(sameGame);
 
-
 	//Save player position
 	pugi::xml_node playerNode = node.append_child("player");
-	playerNode.append_attribute("x").set_value(player->position.x);
-	playerNode.append_attribute("y").set_value(player->position.y);
+	playerNode.append_attribute("x").set_value(player->lastCheckPoint.x);
+	playerNode.append_attribute("y").set_value(player->lastCheckPoint.y);
 	//Save Enemies position
 	pugi::xml_node flyingEnemy1Node = node.append_child("flyingEnemy1");
 	flyingEnemy1Node.append_attribute("isOnSceen").set_value(flyingEnemy_1->isOnSceen);
@@ -294,6 +293,7 @@ bool Scene::SaveState(pugi::xml_node node)
 	enemy2Node.append_attribute("isOnSceen").set_value(walkingEnemy_2->isOnSceen);
 	enemy2Node.append_attribute("x").set_value(walkingEnemy_2->position.x);
 	enemy2Node.append_attribute("y").set_value(walkingEnemy_2->position.y);
+
 
 
 

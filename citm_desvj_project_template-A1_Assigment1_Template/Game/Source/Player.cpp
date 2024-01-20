@@ -144,6 +144,7 @@ bool Player::Start()
 	magicFx3 = app->audio->LoadFx("Assets/Audio/Fx/magic3.ogg");
 	iceballdeathFx = app->audio->LoadFx("Assets/Audio/Fx/iceballdeath.ogg");
 	deathFx = app->audio->LoadFx("Assets/Audio/Fx/death.ogg");
+	initialPosition = position;
 	//initialize player parameters
 	Init();
 	return true;
@@ -162,7 +163,6 @@ void Player::Init()
 	attackCounter = 20;
 	isJumping = false;
 	isDead = false;
-	initialPosition = position;
 	currentAnimation = &idleAnim;
 	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -385,9 +385,6 @@ bool Player::Update(float dt)
 		position.x = deathPosition.x;
 		position.y = deathPosition.y;
 	
-		
-
-
 
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
