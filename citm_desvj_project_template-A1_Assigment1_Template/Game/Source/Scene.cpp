@@ -30,7 +30,7 @@ bool Scene::Awake(pugi::xml_node& config)
 	checkPoint1 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
 
 	checkPoint1->position.x = 1200;
-	checkPoint1->position.y = 300;
+	checkPoint1->position.y = 460;
 
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access

@@ -22,14 +22,14 @@ bool CheckPoint::Awake() {
 	/*position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();*/
 
-	upAnim.PushBack({ 0, 0, 500, 500 });
+	upAnim.PushBack({ 0, 0, 46, 79 });
 
-	downAnim.PushBack({ 500, 0, 500, 500 });
+	downAnim.PushBack({ 46, 0, 46, 79 });
 
-	risingAnim.PushBack({ 500, 0, 500, 500 });
-	risingAnim.PushBack({ 1000, 0, 500, 500 });
-	risingAnim.PushBack({ 1500, 0, 500, 500 });
-	risingAnim.PushBack({ 2000, 0, 500, 500 });
+	risingAnim.PushBack({ 46, 0, 46, 79 });
+	risingAnim.PushBack({ 46*2, 0, 46, 79 });
+	risingAnim.PushBack({ 46*3, 0, 46, 79 });
+	risingAnim.PushBack({ 0, 0, 46, 79 });
 	risingAnim.speed = 0.2f;
 	risingAnim.loop = false;
 
@@ -41,7 +41,7 @@ bool CheckPoint::Awake() {
 bool CheckPoint::Start() {
 
 	//initilize textures
-	texture = app->tex->Load("Assets/Textures/checkPoint.png");
+	texture = app->tex->Load("Assets/Textures/checkPointRed.png");
 	pbody = app->physics->CreateCircle(position.x + 40, position.y + 40, 40, bodyType::STATIC);
 	pbody->ctype = ColliderType::CHECKPOINT;
 
@@ -83,7 +83,7 @@ bool CheckPoint::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	//rendering
-	app->render->DrawTexture(texture, position.x, position.y, false, &currentAnimation->GetCurrentFrame());
+	app->render->DrawTexture(texture, position.x, position.y-20, false, &currentAnimation->GetCurrentFrame());
 
 	return true;
 }
