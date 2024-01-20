@@ -174,7 +174,7 @@ bool Player::Update(float dt)
 
 	//Debug
 	//Restart from initial position
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
 		if (isDead) 
 		{
@@ -187,6 +187,21 @@ bool Player::Update(float dt)
 		position = initialPosition;
 		Init();
 	}
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN )
+	{
+		if (isDead) 
+		{
+			deathAnim.Reset();
+		}
+		else
+		{
+			app->physics->DestroyObject(pbody);
+		}
+		position = lastCheckPoint;
+		Init();
+	}
+
+
 	//GodMode
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) 
 	{
@@ -444,6 +459,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
 			app->audio->PlayFx(pickCoinFxId);
+			break;
+		case ColliderType::CHECKPOINT:
+			LOG("Collision checkPoint");
+			physB->body->SetActive(false);
+			lastCheckPoint.x = METERS_TO_PIXELS(physB->body->GetTransform().p.x);
+			lastCheckPoint.y = METERS_TO_PIXELS(physB->body->GetTransform().p.y);
 			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");

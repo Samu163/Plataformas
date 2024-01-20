@@ -101,6 +101,14 @@ public:
 	int AttackAnimCounter;
 	iPoint deathPosition;
 
+	//checkPoints
+	iPoint lastCheckPoint = { 400,352 };
+
+	//Bools for knowing if has passed that checkPoint
+	bool checkPoint1 = false;
+
+
+
 };
 
 #endif // __PLAYER_H__

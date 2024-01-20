@@ -30,6 +30,7 @@ enum class ColliderType {
 	PROYECTILE,
 	PLATFORM, 
 	DEATH, 
+	CHECKPOINT, 
 	UNKNOWN
 	// ..
 };

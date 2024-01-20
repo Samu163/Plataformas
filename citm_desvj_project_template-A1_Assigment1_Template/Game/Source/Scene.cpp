@@ -24,10 +24,13 @@ Scene::~Scene()
 // Called before render is available
 bool Scene::Awake(pugi::xml_node& config)
 {
-
-
 	LOG("Loading Scene");
 	bool ret = true;
+
+	checkPoint1 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+
+	checkPoint1->position.x = 1200;
+	checkPoint1->position.y = 300;
 
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
@@ -111,6 +114,8 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	
+
+
 	float camSpeed = 1;
 	
 	//Debug
@@ -197,13 +202,6 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	
-
-	// Render a texture where the mouse is over to highlight the tile, use the texture 'mouseTileTex'
-
-	// L13: Get the latest calculated path and draw
-
-
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
@@ -231,7 +229,6 @@ bool Scene::LoadState(pugi::xml_node node)
 		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("y").as_int()));
 		flyingEnemy_1->pbody->body->SetTransform(newPos, flyingEnemy_1->pbody->body->GetAngle());
 		flyingEnemy_1->isOnSceen = node.child("flyingEnemy1").attribute("isOnSceen").as_bool();
-
 
 		flyingEnemy_2->isOnSceen = node.child("flyingEnemy2").attribute("isOnSceen").as_bool();
 		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy2").attribute("y").as_int()));

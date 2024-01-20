@@ -6,6 +6,8 @@
 #include "Enemy.h"
 #include "EnemyFlying.h"
 #include "Item.h"
+#include "CheckPoint.h"
+#include <list>
 
 
 struct SDL_Texture;
@@ -61,6 +63,12 @@ public:
 	iPoint mousePos;
 	iPoint mouseTile;
 	bool sameGame = false;
+
+	//CheckPoints
+	CheckPoint* checkPoint1;
+
+	//List<CheckPoint*> listOfCheckPoints;
+
 
 private:
 
