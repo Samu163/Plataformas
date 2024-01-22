@@ -321,7 +321,7 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 		break;
 	case ColliderType::CHECKPOINT:
 		LOG("Collision PLATFORM");
-		physB.bo
+		physB->body->SetActive(false);
 
 		break;
 	case ColliderType::DEATH:
