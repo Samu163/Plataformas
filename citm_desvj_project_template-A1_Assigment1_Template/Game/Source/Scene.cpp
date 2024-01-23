@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "GuiControl.h"
 #include "GuiManager.h"
+#include "GuiControlButton.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -106,7 +107,9 @@ bool Scene::Start()
 
 
 	SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
-	gcButtom = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "Epico", btPos, this);
+	exitPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "EXIT", btPos, this);
+	exitPauseButton->function = FunctionGUI::EXIT;
+	exitPauseButton->state = GuiControlState::DISABLED;
 
 	return true;
 }
@@ -129,6 +132,11 @@ bool Scene::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		isInDebugMode=!isInDebugMode;
+	}
+	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		isOnPause = !isOnPause;
+		ShowPauseButtons(isOnPause);
 	}
 	
 
@@ -209,10 +217,22 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || exitPauseButton->hasToExit)
 		ret = false;
 
 	return ret;
+}
+
+void Scene::ShowPauseButtons(bool condition)
+{
+	if (condition) 
+	{
+		exitPauseButton->state = GuiControlState::NORMAL;
+	}
+	else
+	{
+		exitPauseButton->state = GuiControlState::DISABLED;
+	}
 }
 
 // Called before quitting

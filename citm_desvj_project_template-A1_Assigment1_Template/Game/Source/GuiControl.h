@@ -9,6 +9,7 @@
 #include "SString.h"
 
 #include "SDL/include/SDL.h"
+#include "Log.h"
 
 enum class GuiControlType
 {
@@ -31,6 +32,22 @@ enum class GuiControlState
 	FOCUSED,
 	PRESSED,
 	SELECTED
+};
+enum class FunctionGUI
+{
+	START,
+	EXIT,
+	SETTINGS,
+	CREDITS,
+	MUSIC,
+	FX,
+	FULLSCREEN,
+	VSYNC,
+	TIMER,
+	LIVES,
+	COINS,
+	RESUME,
+	BACKTOTITLE
 };
 
 class GuiControl
@@ -70,9 +87,46 @@ public:
 		observer = module;
 	}
 
+	void SetFunction(FunctionGUI function) 
+	{
+		this->function = function;
+	}
+
 	// 
 	void NotifyObserver()
 	{
+		switch (function)
+		{
+		case FunctionGUI::START:
+			break;
+		case FunctionGUI::EXIT:
+			hasToExit = true;
+			break;
+		case FunctionGUI::SETTINGS:
+			break;
+		case FunctionGUI::CREDITS:
+			break;
+		case FunctionGUI::MUSIC:
+			break;
+		case FunctionGUI::FX:
+			break;
+		case FunctionGUI::FULLSCREEN:
+			break;
+		case FunctionGUI::VSYNC:
+			break;
+		case FunctionGUI::TIMER:
+			break;
+		case FunctionGUI::LIVES:
+			break;
+		case FunctionGUI::COINS:
+			break;
+		case FunctionGUI::RESUME:
+			break;
+		case FunctionGUI::BACKTOTITLE:
+			break;
+		default:
+			break;
+		}
 		observer->OnGuiMouseClickEvent(this);
 	}
 
@@ -81,6 +135,7 @@ public:
 	uint32 id;
 	GuiControlType type;
 	GuiControlState state;
+	FunctionGUI function;
 
 	SString text;           // Control text (if required)
 	SDL_Rect bounds;        // Position and size
@@ -90,6 +145,11 @@ public:
 	SDL_Rect section;       // Texture atlas base section
 
 	Module* observer;        // Observer 
+
+
+
+	//checking
+	bool hasToExit;
 };
 
 #endif // __GUICONTROL_H__

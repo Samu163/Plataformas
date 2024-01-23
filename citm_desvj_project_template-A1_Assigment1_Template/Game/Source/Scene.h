@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "CheckPoint.h"
 #include "GuiControl.h"
+#include "GuiManager.h"
 #include "GuiControlButton.h"
 #include <list>
 
@@ -51,6 +52,7 @@ public:
 	b2Vec2 CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition);
 
 	bool CheckVelocityForFlip(b2Vec2 vel);
+	void ShowPauseButtons(bool condition);
 
 
 public: 
@@ -71,6 +73,8 @@ public:
 
 	//List<CheckPoint*> listOfCheckPoints;
 
+	bool retButton = true;
+
 
 private:
 
@@ -82,7 +86,10 @@ private:
 
 	bool isInDebugMode = false;
 
-	GuiControlButton* gcButtom;
+	GuiControlButton* exitPauseButton;
+
+	bool isOnPause = false;
+
 
 };
 
