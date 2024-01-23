@@ -11,6 +11,8 @@
 #include "GuiControl.h"
 #include "GuiManager.h"
 #include "GuiControlButton.h"
+#include "GuiControlSlider.h"
+
 
 #include "Defs.h"
 #include "Log.h"
@@ -110,6 +112,13 @@ bool Scene::Start()
 	exitPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "EXIT", btPos, this);
 	exitPauseButton->function = FunctionGUI::EXIT;
 	exitPauseButton->state = GuiControlState::DISABLED;
+	musicSlider = (GuiControlSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", btPos, this);
+	musicSlider->function = FunctionGUI::MUSIC;
+	musicSlider->state = GuiControlState::DISABLED;
+	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos, this);
+	playerLifesBox->function = FunctionGUI::LIVES;
+	//playerLifesBox->state = GuiControlState::DISABLED;
+
 
 	return true;
 }
@@ -123,7 +132,12 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	
+	if (app->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+	{
+		player->lifes++;
+	}
+	string strPlayerLifes = std::to_string(player->lifes);
+	playerLifesBox->SetValue(strPlayerLifes);
 
 
 	float camSpeed = 1;

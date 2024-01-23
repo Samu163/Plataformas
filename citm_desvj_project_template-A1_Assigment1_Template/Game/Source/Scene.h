@@ -10,6 +10,8 @@
 #include "GuiControl.h"
 #include "GuiManager.h"
 #include "GuiControlButton.h"
+#include "GuiControlSlider.h"
+#include "GuiControlValueBox.h"
 #include <list>
 
 
@@ -87,6 +89,8 @@ private:
 	bool isInDebugMode = false;
 
 	GuiControlButton* exitPauseButton;
+	GuiControlSlider* musicSlider;
+	GuiControlValueBox* playerLifesBox;
 
 	bool isOnPause = false;
 
