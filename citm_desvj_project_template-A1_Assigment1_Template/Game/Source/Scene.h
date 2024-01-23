@@ -70,11 +70,6 @@ public:
 	iPoint mouseTile;
 	bool sameGame = false;
 
-	//CheckPoints
-	CheckPoint* checkPoint1;
-	CheckPoint* checkPoint2;
-	CheckPoint* checkPoint3;
-	CheckPoint* checkPoint4;
 
 	//List<CheckPoint*> listOfCheckPoints;
 

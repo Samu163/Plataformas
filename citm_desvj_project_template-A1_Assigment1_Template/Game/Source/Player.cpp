@@ -135,7 +135,8 @@ bool Player::Start()
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
 	iceBallTexture = app->tex->Load("Assets/Textures/iceBall.png");
-	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinFx.ogg");
+	checkPointFxId = app->audio->LoadFx("Assets/Audio/Fx/successFx.ogg");
 	
 	jumpFx= app->audio->LoadFx("Assets/Audio/Fx/jump.ogg");
 	/*runningFx= app->audio->LoadFx("Assets/Audio/Fx/run.ogg");*/
@@ -474,7 +475,7 @@ bool Player::Update(float dt)
 		}
 			
 	}
-
+	currentPosition = position;
 	return true;
 }
 
@@ -492,10 +493,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		{
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
+			physB->body->SetActive(false);
 			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::CHECKPOINT:
 			LOG("Collision checkPoint");
+			app->audio->PlayFx(checkPointFxId);
 			physB->body->SetActive(false);
 			lastCheckPoint.x = METERS_TO_PIXELS(physB->body->GetTransform().p.x);
 			lastCheckPoint.y = METERS_TO_PIXELS(physB->body->GetTransform().p.y);

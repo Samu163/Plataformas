@@ -37,11 +37,18 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
-	/*for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
+	for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 	{
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = itemNode;
-	}*/
+	}
+	for (pugi::xml_node checkPointNode = config.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
+	{
+		CheckPoint* checkPoint = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+		checkPoint->parameters = checkPointNode;
+	}
+
+
 	app->map->path = config.child("map").attribute("path").as_string();
 	if (config.child("player")) {
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
@@ -63,23 +70,7 @@ bool Scene::Awake(pugi::xml_node& config)
 		walkingEnemy_2 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
 		walkingEnemy_2->parameters = config.child("enemy2");
 	}
-	if (config.child("checkPoint")) {
-		checkPoint1 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
-		checkPoint1->parameters = config.child("checkPoint");
-	}	
-	if (config.child("checkPoint2")) {
-		checkPoint2 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
-		checkPoint2->parameters = config.child("checkPoint2");
-	}
-	if (config.child("checkPoint3")) {
-		checkPoint3 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
-		checkPoint3->parameters = config.child("checkPoint3");
-	}
-	if (config.child("checkPoint4")) {
-		checkPoint4 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
-		checkPoint4->parameters = config.child("checkPoint4");
-	}
-
+	
 	return ret;
 }
 

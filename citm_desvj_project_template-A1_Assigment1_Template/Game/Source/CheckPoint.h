@@ -22,6 +22,7 @@ public:
 
 	bool CleanUp();
 
+
 public:
 
 	bool isPicked = false;

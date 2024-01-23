@@ -7,16 +7,16 @@
 	<:anonymous />
 	<scene>
 		<newGame sameGame="true" />
-		<player x="3745" y="510" />
-		<flyingEnemy1 isOnSceen="true" x="673" y="249" />
-		<flyingEnemy2 isOnSceen="true" x="4481" y="1811" />
-		<enemy1 isOnSceen="false" x="3658" y="502" />
-		<enemy2 isOnSceen="true" x="4681" y="502" />
+		<player x="400" y="352" />
+		<flyingEnemy1 isOnSceen="true" x="833" y="209" />
+		<flyingEnemy2 isOnSceen="true" x="4434" y="1809" />
+		<enemy1 isOnSceen="true" x="3837" y="502" />
+		<enemy2 isOnSceen="true" x="4637" y="502" />
 	</scene>
 	<map />
 	<entitymanager />
 	<guiManager />
 	<renderer>
-		<player x="-3192" y="-10" />
+		<player x="0" y="-10" />
 	</renderer>
 </game_state>

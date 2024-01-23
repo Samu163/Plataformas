@@ -24,13 +24,18 @@ public:
 
 public:
 
-	bool isPicked = false;
+	bool isPickedRef = false;
 
 private:
 
 	SDL_Texture* texture;
 	const char* texturePath;
 	PhysBody* pbody;
+	Animation* currentAnimation = nullptr;
+	Animation idleAnim;
+	Animation pickedAnim;
+	bool isCollected = false;
+	int counterForAnim = 0;
 };
 
 #endif // __ITEM_H__

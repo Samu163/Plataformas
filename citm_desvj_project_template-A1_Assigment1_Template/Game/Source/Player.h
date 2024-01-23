@@ -58,7 +58,7 @@ private:
 	Animation iceBallAnim;
 
 public:
-
+	iPoint currentPosition;
 	
 	Animation* currentAnimation = nullptr;
 	
@@ -73,6 +73,7 @@ public:
 	//List<IceBall> listOfIceBallsToDestroy;
 
 	int pickCoinFxId;
+	int checkPointFxId;
 
 	int jumpFx;
 	int runningFx;
