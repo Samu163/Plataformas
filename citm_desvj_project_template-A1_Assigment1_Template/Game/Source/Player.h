@@ -82,7 +82,7 @@ public:
 	int iceballdeathFx;
 	int deathFx;
 
-	int lifes = 1;
+	int lifes = 3;
 	int zoomFactor = 1.0f;
 	int playerCooldown = 30;
 	
@@ -96,7 +96,7 @@ public:
 	int jumpingCounter;
 	int doubleJumpCounter;
 	int counterForIceBalls;
-	int deathCounter;
+	int deathCounter = 0;
 	int attackCounter;
 	int AttackAnimCounter;
 	iPoint deathPosition;
@@ -105,7 +105,6 @@ public:
 	iPoint lastCheckPoint = { 400,352 };
 
 	//Bools for knowing if has passed that checkPoint
-	bool checkPoint1 = false;
 
 
 

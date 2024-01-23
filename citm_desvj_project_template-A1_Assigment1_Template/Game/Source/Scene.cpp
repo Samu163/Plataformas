@@ -32,10 +32,8 @@ bool Scene::Awake(pugi::xml_node& config)
 	LOG("Loading Scene");
 	bool ret = true;
 
-	checkPoint1 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+	
 
-	checkPoint1->position.x = 1200;
-	checkPoint1->position.y = 460;
 
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
@@ -64,6 +62,22 @@ bool Scene::Awake(pugi::xml_node& config)
 	if (config.child("enemy2")) {
 		walkingEnemy_2 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
 		walkingEnemy_2->parameters = config.child("enemy2");
+	}
+	if (config.child("checkPoint")) {
+		checkPoint1 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+		checkPoint1->parameters = config.child("checkPoint");
+	}	
+	if (config.child("checkPoint2")) {
+		checkPoint2 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+		checkPoint2->parameters = config.child("checkPoint2");
+	}
+	if (config.child("checkPoint3")) {
+		checkPoint3 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+		checkPoint3->parameters = config.child("checkPoint3");
+	}
+	if (config.child("checkPoint4")) {
+		checkPoint4 = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+		checkPoint4->parameters = config.child("checkPoint4");
 	}
 
 	return ret;
@@ -115,7 +129,8 @@ bool Scene::Start()
 	musicSlider = (GuiControlSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", btPos, this);
 	musicSlider->function = FunctionGUI::MUSIC;
 	musicSlider->state = GuiControlState::DISABLED;
-	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos, this);
+	SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
+	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
 	playerLifesBox->function = FunctionGUI::LIVES;
 	//playerLifesBox->state = GuiControlState::DISABLED;
 

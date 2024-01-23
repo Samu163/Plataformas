@@ -155,7 +155,6 @@ void Player::Init()
 	//Init function that initialize most of the player parameters
 	speed = 0.4f;
 	jumpingCounter = 0;
-	deathCounter = 0;
 	playerCooldown = 40;
 
 	AttackAnimCounter = -1;
@@ -167,6 +166,11 @@ void Player::Init()
 	pbody = app->physics->CreateCircle(position.x + 20, position.y + 20, 20, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
+	if (lifes <= 0) {
+		lifes = 3;
+	}
+
+	
 }
 
 bool Player::Update(float dt)
@@ -178,6 +182,7 @@ bool Player::Update(float dt)
 	{
 		if (isDead) 
 		{
+			deathCounter = 0;
 			deathAnim.Reset();
 		}
 		else
@@ -191,6 +196,7 @@ bool Player::Update(float dt)
 	{
 		if (isDead) 
 		{
+			deathCounter = 0;
 			deathAnim.Reset();
 		}
 		else
@@ -205,6 +211,10 @@ bool Player::Update(float dt)
 	//GodMode
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) 
 	{
+		if (godMode) {
+			b2Vec2 newDebugPos = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
+			pbody->body->SetTransform(newDebugPos,0);
+		}
 		godMode = !godMode;
 	}
 
@@ -362,8 +372,16 @@ bool Player::Update(float dt)
 		pbody->body->SetLinearVelocity(vel);
 
 		//Update player position in pixels
-		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+		if (godMode) {
+			position.x = -app->render->camera.x+ app->render->camera.w/2;
+			position.y = -app->render->camera.y+ app->render->camera.h/2;
+		}
+		else
+		{
+			position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+			position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+		}
+	
 
 		//Draw texture
 		app->render->DrawTexture(texture, position.x - 45, position.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
@@ -382,6 +400,21 @@ bool Player::Update(float dt)
 			
 			
 		}
+		else if (deathCounter >60 && lifes>0)
+		{
+			deathCounter = -1;
+			//Respawn function
+			if (isDead)
+			{
+				deathAnim.Reset();
+			}
+			else
+			{
+				app->physics->DestroyObject(pbody);
+			}
+			position = lastCheckPoint;
+			Init();
+		}
 		position.x = deathPosition.x;
 		position.y = deathPosition.y;
 	
@@ -389,11 +422,15 @@ bool Player::Update(float dt)
 		currentAnimation = &deathAnim;
 		deathAnim.Update();
 	
-		
+		deathCounter++;
+
 
 		
 		app->render->DrawTexture(texture, deathPosition.x - 45, deathPosition.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
-		deathCounter++;
+		
+
+
+
 	}
 	
 
@@ -468,7 +505,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (isJumping && jumpingCounter > 1)
 			{
 				isJumping = false;
-
 			}
 			break;
 		case ColliderType::DEATH:
@@ -476,10 +512,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (!godMode)
 			{
 				lifes--;
-				if (lifes < 1) {
-					speed = 0;
-					isDead = true;
-				}
+				speed = 0;
+				isDead = true;
 			}
 			else
 			{
@@ -494,10 +528,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (!godMode)
 			{
 				lifes--;
-				if (lifes < 1) {
-					speed = 0;
-					isDead = true;
-				}
+				speed = 0;
+				isDead = true;
+			
 			}
 			else
 			{

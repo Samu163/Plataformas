@@ -72,6 +72,9 @@ public:
 
 	//CheckPoints
 	CheckPoint* checkPoint1;
+	CheckPoint* checkPoint2;
+	CheckPoint* checkPoint3;
+	CheckPoint* checkPoint4;
 
 	//List<CheckPoint*> listOfCheckPoints;
 

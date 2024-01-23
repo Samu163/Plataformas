@@ -11,7 +11,7 @@
 
 CheckPoint::CheckPoint() : Entity(EntityType::CHECKPOINT)
 {
-	//name.Create("checkPoint");
+	name.Create("checkPoint");
 
 }
 
@@ -19,8 +19,9 @@ CheckPoint::~CheckPoint() {}
 
 bool CheckPoint::Awake() {
 
-	/*position.x = parameters.attribute("x").as_int();
-	position.y = parameters.attribute("y").as_int();*/
+	position.x = parameters.attribute("x").as_int();
+	position.y = parameters.attribute("y").as_int();
+	texturePath = parameters.attribute("texturepath").as_string();
 
 	upAnim.PushBack({ 0, 0, 46, 79 });
 
@@ -33,15 +34,13 @@ bool CheckPoint::Awake() {
 	risingAnim.speed = 0.2f;
 	risingAnim.loop = false;
 
-	//texturePath = parameters.attribute("texturepath").as_string();
 
 	return true;
 }
 
 bool CheckPoint::Start() {
+	texture = app->tex->Load(texturePath);
 
-	//initilize textures
-	texture = app->tex->Load("Assets/Textures/checkPointRed.png");
 	pbody = app->physics->CreateCircle(position.x + 40, position.y + 40, 40, bodyType::STATIC);
 	pbody->ctype = ColliderType::CHECKPOINT;
 
@@ -93,7 +92,3 @@ bool CheckPoint::CleanUp()
 	return true;
 }
 
-void CheckPoint::OnCollision(PhysBody* physA, PhysBody* physB) {
-
-	
-}
