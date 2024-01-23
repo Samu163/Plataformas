@@ -20,6 +20,7 @@ class Scene;
 class EntityManager;
 class Map;
 class Physics;
+class GuiManager;
 
 class App
 {
@@ -99,6 +100,8 @@ public:
 	Map* map;
 	Physics* physics;
 	Player* player;
+	GuiManager* guiManager;
+
 
 private:
 

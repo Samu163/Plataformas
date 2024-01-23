@@ -26,6 +26,8 @@
     <ClCompile Include="Source\Pathfinding.cpp" />
     <ClCompile Include="Source\EnemyFlying.cpp" />
     <ClCompile Include="Source\CheckPoint.cpp" />
+    <ClCompile Include="Source\GuiControlButton.cpp" />
+    <ClCompile Include="Source\GuiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -79,6 +81,9 @@
     <ClInclude Include="Source\PQueue.h" />
     <ClInclude Include="Source\EnemyFlying.h" />
     <ClInclude Include="Source\CheckPoint.h" />
+    <ClInclude Include="Source\GuiControl.h" />
+    <ClInclude Include="Source\GuiControlButton.h" />
+    <ClInclude Include="Source\GuiManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

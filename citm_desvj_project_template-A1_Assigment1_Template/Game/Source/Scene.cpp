@@ -8,6 +8,8 @@
 #include "Map.h"
 #include "Pathfinding.h"
 #include "Player.h"
+#include "GuiControl.h"
+#include "GuiManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -100,6 +102,11 @@ bool Scene::Start()
 		app->map->mapData.tilesets.Count());
 
 	mouseTileTex = app->tex->Load("Assets/Maps/tileSelection.png");
+
+
+
+	SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
+	gcButtom = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "Epico", btPos, this);
 
 	return true;
 }

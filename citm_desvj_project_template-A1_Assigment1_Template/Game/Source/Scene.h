@@ -7,6 +7,8 @@
 #include "EnemyFlying.h"
 #include "Item.h"
 #include "CheckPoint.h"
+#include "GuiControl.h"
+#include "GuiControlButton.h"
 #include <list>
 
 
@@ -79,6 +81,8 @@ private:
 	uint windowW, windowH;
 
 	bool isInDebugMode = false;
+
+	GuiControlButton* gcButtom;
 
 };
 
