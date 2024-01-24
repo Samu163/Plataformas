@@ -16,11 +16,11 @@
 		<coin isCollected="true" x="-16" y="-16" />
 		<coin isCollected="false" x="195" y="667" />
 		<coin isCollected="false" x="496" y="667" />
-		<player x="343" y="539" LastCheckPointX="239" LastCheckPointY="510" />
-		<flyingEnemy1 isOnSceen="true" x="523" y="225" />
-		<flyingEnemy2 isOnSceen="true" x="4123" y="1809" />
-		<enemy1 isOnSceen="true" x="3523" y="502" />
-		<enemy2 isOnSceen="true" x="4323" y="502" />
+		<player x="388" y="539" LastCheckPointX="239" LastCheckPointY="510" />
+		<flyingEnemy1 isOnSceen="true" x="816" y="209" />
+		<flyingEnemy2 isOnSceen="true" x="4416" y="1809" />
+		<enemy1 isOnSceen="true" x="3819" y="502" />
+		<enemy2 isOnSceen="true" x="4619" y="502" />
 	</scene>
 	<map />
 	<entitymanager />

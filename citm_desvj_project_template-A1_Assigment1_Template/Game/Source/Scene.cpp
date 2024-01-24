@@ -286,17 +286,24 @@ bool Scene::LoadState(pugi::xml_node node)
 	
 
 
-
+	//checkPoints
 	int i = 0;
 	for (pugi::xml_node checkPointNode = node.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
 	{
 		listOfCheckPoints[i]->isPicked = checkPointNode.attribute("isPicked").as_bool();
 		i++;
 	}
+
+	//coins
 	i = 0;
 	for (pugi::xml_node coinNode = node.child("coin"); coinNode; coinNode = coinNode.next_sibling("coin"))
 	{
+		bool temp = listOfCoins[i]->isCollected;
 		listOfCoins[i]->isCollected = coinNode.attribute("isCollected").as_bool();
+		if (!temp && temp != listOfCoins[i]->isCollected) {
+			app->physics->DestroyObject(listOfCoins[i]->pbody);
+		}
+
 		i++;
 	}
 
