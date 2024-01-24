@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "GuiControl.h"
 #include "GuiManager.h"
+#include "ItemLives.h"
 
 
 #include "Defs.h"
@@ -40,6 +41,12 @@ bool Scene::Awake(pugi::xml_node& config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = itemNode;
 		listOfCoins.Add(item);
+	}
+	for (pugi::xml_node lifeItemNode = config.child("lifeItem"); lifeItemNode; lifeItemNode = lifeItemNode.next_sibling("lifeItem"))
+	{
+		ItemLives* itemLives = (ItemLives*)app->entityManager->CreateEntity(EntityType::LIVES_ITEM);
+		itemLives->parameters = lifeItemNode;
+		listOfItemLives.Add(itemLives);
 	}
 	for (pugi::xml_node checkPointNode = config.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
 	{
@@ -145,7 +152,7 @@ bool Scene::Update(float dt)
 	string strPlayerLifes = std::to_string(player->lifes);
 	playerLifesBox->SetValue(strPlayerLifes);	
 	string coins = std::to_string(player->coinCount);
-	playerLifesBox->SetValue(coins);
+	//playerLifesBox->SetValue(coins);
 
 	float camSpeed = 1;
 	

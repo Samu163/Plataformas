@@ -495,6 +495,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			physB->body->SetActive(false);
 			coinCount++;
 			app->audio->PlayFx(pickCoinFxId);
+		case ColliderType::LIVES_ITEM:
+			LOG("Collision LIFES_ITEM");
+			physB->body->SetActive(false);
+			lifes++;
+			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::CHECKPOINT:
 			LOG("Collision checkPoint");

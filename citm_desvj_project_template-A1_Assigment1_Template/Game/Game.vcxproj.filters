@@ -31,6 +31,7 @@
     <ClCompile Include="Source\GuiControlSlider.cpp" />
     <ClCompile Include="Source\GuiControlValueBox.cpp" />
     <ClCompile Include="Source\GuiControlCheckBox.cpp" />
+    <ClCompile Include="Source\ItemLives.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Source\GuiControlSlider.h" />
     <ClInclude Include="Source\GuiControlValueBox.h" />
     <ClInclude Include="Source\GuiControlCheckBox.h" />
+    <ClInclude Include="Source\ItemLives.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

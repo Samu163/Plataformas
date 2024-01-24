@@ -13,6 +13,7 @@ enum class EntityType
 {
 	PLAYER,
 	ITEM,
+	LIVES_ITEM,
 	WALKING_ENEMY,
 	FLYING_ENEMY,
 	CHECKPOINT,

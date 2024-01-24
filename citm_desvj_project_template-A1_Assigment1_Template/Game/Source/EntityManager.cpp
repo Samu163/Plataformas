@@ -93,6 +93,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::ITEM:
 		entity = new Item();
 		break;
+	case EntityType::LIVES_ITEM:
+		entity = new ItemLives();
+		break;
 	case EntityType::CHECKPOINT:
 		entity = new CheckPoint();
 		break;

@@ -13,6 +13,7 @@
 #include "GuiControlSlider.h"
 #include "GuiControlValueBox.h"
 #include "GuiControlCheckBox.h"
+#include "ItemLives.h"
 
 #include <list>
 
@@ -78,6 +79,7 @@ public:
 
 	List<CheckPoint*> listOfCheckPoints;
 	List<Item*> listOfCoins;
+	List<ItemLives*> listOfItemLives;
 
 	bool retButton = true;
 

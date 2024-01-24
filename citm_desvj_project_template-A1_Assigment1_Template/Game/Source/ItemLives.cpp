@@ -10,14 +10,14 @@
 #include "Point.h"
 #include "Physics.h"
 
-Lives::Lives() : Entity(EntityType::ITEMLIVES)
+ItemLives::ItemLives() : Entity(EntityType::LIVES_ITEM)
 {
 	name.Create("Lives");
 }
 
-Lives::~Lives() {}
+ItemLives::~ItemLives() {}
 
-bool Lives::Awake() {
+bool ItemLives::Awake() {
 
 
 	position.x = parameters.attribute("x").as_int();
@@ -52,20 +52,20 @@ bool Lives::Awake() {
 	return true;
 }
 
-bool Lives::Start() {
+bool ItemLives::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x + 12, position.y + 12, 12, bodyType::STATIC);
-	pbody->ctype = ColliderType::LIVES;
+	pbody->ctype = ColliderType::LIVES_ITEM;
 
 	return true;
 }
 
-bool Lives::Update(float dt)
+bool ItemLives::Update(float dt)
 {
 	//Checking if the player is colliding with the coin in order to destroy it 
-	if (app->scene->player->currentPosition.x < 400) {
+
 		if (app->scene->player->currentPosition.x > position.x - 50 &&
 			app->scene->player->currentPosition.x<position.x + 50 &&
 			app->scene->player->currentPosition.y>position.y - 50 &&
@@ -75,7 +75,7 @@ bool Lives::Update(float dt)
 
 
 		};
-	}
+
 
 
 
@@ -113,7 +113,7 @@ bool Lives::Update(float dt)
 	return true;
 }
 
-bool Lives::CleanUp()
+bool ItemLives::CleanUp()
 {
 	return true;
 }
