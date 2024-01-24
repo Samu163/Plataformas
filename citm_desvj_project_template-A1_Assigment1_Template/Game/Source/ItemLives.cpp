@@ -66,10 +66,10 @@ bool ItemLives::Update(float dt)
 {
 	//Checking if the player is colliding with the coin in order to destroy it 
 
-		if (app->scene->player->currentPosition.x > position.x - 50 &&
-			app->scene->player->currentPosition.x<position.x + 50 &&
-			app->scene->player->currentPosition.y>position.y - 50 &&
-			app->scene->player->currentPosition.y < position.y + 50)
+		if (app->scene->player->currentPosition.x > position.x - 20 &&
+			app->scene->player->currentPosition.x<position.x + 20 &&
+			app->scene->player->currentPosition.y>position.y - 20 &&
+			app->scene->player->currentPosition.y < position.y + 20)
 		{
 			isPickedRef = true;
 
