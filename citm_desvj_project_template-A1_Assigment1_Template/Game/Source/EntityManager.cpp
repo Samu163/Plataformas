@@ -129,8 +129,8 @@ bool EntityManager::Update(float dt)
 	for (item = entities.start; item != NULL && ret == true; item = item->next)
 	{
 		pEntity = item->data;
-
 		if (pEntity->active == false) continue;
+		//si no esta en pausa o item data == app.scene.player Epico
 		ret = item->data->Update(dt);
 	}
 

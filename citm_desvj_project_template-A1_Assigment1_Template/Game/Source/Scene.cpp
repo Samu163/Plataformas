@@ -281,8 +281,8 @@ bool Scene::LoadState(pugi::xml_node node)
 	//configure position for player
 	b2Vec2 newPos(PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointX").as_int()), PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointY").as_int()));
 	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
-	player->lastCheckPoint.x = newPos.x;
-	player->lastCheckPoint.y = newPos.y;
+	player->lastCheckPoint.x = node.child("player").attribute("LastCheckPointX").as_int();
+	player->lastCheckPoint.y = node.child("player").attribute("LastCheckPointY").as_int();
 	
 
 
@@ -296,7 +296,11 @@ bool Scene::LoadState(pugi::xml_node node)
 	i = 0;
 	for (pugi::xml_node coinNode = node.child("coin"); coinNode; coinNode = coinNode.next_sibling("coin"))
 	{
+		bool temp = listOfCoins[i]->isCollected;
 		listOfCoins[i]->isCollected = coinNode.attribute("isCollected").as_bool();
+		if (!temp && temp != listOfCoins[i]->isCollected) {
+			app->physics->DestroyObject(listOfCoins[i]->pbody);
+		}
 		i++;
 	}
 
