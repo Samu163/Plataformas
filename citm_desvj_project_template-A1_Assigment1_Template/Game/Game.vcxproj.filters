@@ -30,6 +30,7 @@
     <ClCompile Include="Source\GuiManager.cpp" />
     <ClCompile Include="Source\GuiControlSlider.cpp" />
     <ClCompile Include="Source\GuiControlValueBox.cpp" />
+    <ClCompile Include="Source\GuiControlCheckBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="Source\GuiManager.h" />
     <ClInclude Include="Source\GuiControlSlider.h" />
     <ClInclude Include="Source\GuiControlValueBox.h" />
+    <ClInclude Include="Source\GuiControlCheckBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

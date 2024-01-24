@@ -8,6 +8,7 @@
 #include "Point.h"
 #include "SString.h"
 
+
 #include "SDL/include/SDL.h"
 #include "Log.h"
 
@@ -95,38 +96,7 @@ public:
 	// 
 	void NotifyObserver()
 	{
-		switch (function)
-		{
-		case FunctionGUI::START:
-			break;
-		case FunctionGUI::EXIT:
-			hasToExit = true;
-			break;
-		case FunctionGUI::SETTINGS:
-			break;
-		case FunctionGUI::CREDITS:
-			break;
-		case FunctionGUI::MUSIC:
-			break;
-		case FunctionGUI::FX:
-			break;
-		case FunctionGUI::FULLSCREEN:
-			break;
-		case FunctionGUI::VSYNC:
-			break;
-		case FunctionGUI::TIMER:
-			break;
-		case FunctionGUI::LIVES:
-			break;
-		case FunctionGUI::COINS:
-			break;
-		case FunctionGUI::RESUME:
-			break;
-		case FunctionGUI::BACKTOTITLE:
-			break;
-		default:
-			break;
-		}
+		
 		observer->OnGuiMouseClickEvent(this);
 	}
 

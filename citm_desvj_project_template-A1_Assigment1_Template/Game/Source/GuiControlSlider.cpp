@@ -50,7 +50,7 @@ bool GuiControlSlider::Update(float dt)
         }
 
         // Draw slider
-        app->render->DrawRectangle(bounds, 0, 0, 255, 255, true, false); // Draw the slider bar
+        app->render->DrawRectangle(bounds, 255, 255, 255, 255, true, false); // Draw the slider bar
         app->render->DrawRectangle(sliderButton, 0, 255, 0, 255, true, false); // Draw the handle
 
         // Draw text

@@ -39,10 +39,14 @@ bool CheckPoint::Awake() {
 }
 
 bool CheckPoint::Start() {
+
 	texture = app->tex->Load(texturePath);
 
 	pbody = app->physics->CreateCircle(position.x + 40, position.y + 40, 40, bodyType::STATIC);
 	pbody->ctype = ColliderType::CHECKPOINT;
+
+	checkPointFxId = app->audio->LoadFx("Assets/Audio/Fx/successFx.ogg");
+
 
 	return true;
 }
@@ -56,26 +60,34 @@ bool CheckPoint::Update(float dt)
 	else
 	{
 		currentAnimation = &downAnim;
-	}
-	//Check position of the last checkpoint player and activate flag if so 
-	if (app->scene->player->lastCheckPoint.x > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40 &&
-		app->scene->player->lastCheckPoint.x<METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 40 &&
-		app->scene->player->lastCheckPoint.y>METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 40 &&
-		app->scene->player->lastCheckPoint.y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y) + 40
-		&& !isPicked)
-	{
-		counter++;
-		currentAnimation = &risingAnim;
-		//Ending the animation 
-		if (counter > 20)
+		//Check position of the last checkpoint player and activate flag if so 
+		if (app->scene->player->currentPosition.x > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40 &&
+			app->scene->player->currentPosition.x<METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 40 &&
+			app->scene->player->currentPosition.y>METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 40 &&
+			app->scene->player->currentPosition.y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y) + 40
+			&& !isPicked)
 		{
-			currentAnimation = &upAnim;
-			risingAnim.Reset();
-			//for not entering more here 
-			isPicked = true;
+			if (counter == 0) {
+				app->audio->PlayFx(checkPointFxId);
+				app->scene->player->lastCheckPoint.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x);
+				app->scene->player->lastCheckPoint.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y);
+			}
+
+			counter++;
+			currentAnimation = &risingAnim;
+			//Ending the animation 
+			if (counter > 10)
+			{
+				currentAnimation = &upAnim;
+				risingAnim.Reset();
+				//for not entering more here 
+				isPicked = true;
+				
+			}
+			risingAnim.Update();
 		}
-		risingAnim.Update();
 	}
+	
 
 	//updating position
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;

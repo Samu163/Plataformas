@@ -64,20 +64,17 @@ bool Item::Start() {
 bool Item::Update(float dt)
 {
 	//Checking if the player is colliding with the coin in order to destroy it 
-	if (app->scene->player->currentPosition.x < 400) {
-		if (app->scene->player->currentPosition.x > position.x - 50 &&
-			app->scene->player->currentPosition.x<position.x + 50 &&
-			app->scene->player->currentPosition.y>position.y - 50 &&
-			app->scene->player->currentPosition.y < position.y + 50)
-		{
-			isPickedRef = true;
+	if (app->scene->player->currentPosition.x > position.x - 50 &&
+		app->scene->player->currentPosition.x<position.x + 50 &&
+		app->scene->player->currentPosition.y>position.y - 50 &&
+		app->scene->player->currentPosition.y < position.y + 50)
+	{
+		isPickedRef = true;
 
 
-		};
-	}
+	};
 	
-
-
+	
 
 	// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
@@ -90,6 +87,7 @@ bool Item::Update(float dt)
 		{
 			currentAnimation = &pickedAnim;
 			pickedAnim.Update();
+			//Destroyed
 			if (counterForAnim == 19)
 			{
 				app->physics->DestroyObject(pbody);
