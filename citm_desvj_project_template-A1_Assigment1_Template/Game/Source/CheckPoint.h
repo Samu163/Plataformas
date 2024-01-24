@@ -29,6 +29,8 @@ public:
 
 	PhysBody* pbody;
 	int counter;
+	int checkPointFxId;
+
 
 private:
 
@@ -38,6 +40,7 @@ private:
 	Animation upAnim;
 	Animation downAnim;
 	Animation risingAnim;
+
 };
 
 #endif // __ITEM_H__

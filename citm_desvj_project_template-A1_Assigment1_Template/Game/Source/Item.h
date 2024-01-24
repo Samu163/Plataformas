@@ -23,19 +23,19 @@ public:
 	bool CleanUp();
 
 public:
-
-	bool isPickedRef = false;
-
-private:
-
-	SDL_Texture* texture;
-	const char* texturePath;
 	PhysBody* pbody;
 	Animation* currentAnimation = nullptr;
 	Animation idleAnim;
 	Animation pickedAnim;
 	bool isCollected = false;
 	int counterForAnim = 0;
+
+
+
+private:
+	bool isPickedRef = false;
+	SDL_Texture* texture;
+	const char* texturePath;
 };
 
 #endif // __ITEM_H__

@@ -7,11 +7,20 @@
 	<:anonymous />
 	<scene>
 		<newGame sameGame="true" />
-		<player x="400" y="352" />
-		<flyingEnemy1 isOnSceen="true" x="833" y="209" />
-		<flyingEnemy2 isOnSceen="true" x="4434" y="1809" />
-		<enemy1 isOnSceen="true" x="3837" y="502" />
-		<enemy2 isOnSceen="true" x="4637" y="502" />
+		<checkPoint isPicked="false" x="1224" y="2494" />
+		<checkPoint isPicked="false" x="3068" y="453" />
+		<checkPoint isPicked="false" x="124" y="494" />
+		<checkPoint isPicked="true" x="223" y="494" />
+		<coin isCollected="true" x="-16" y="-16" />
+		<coin isCollected="true" x="-16" y="-16" />
+		<coin isCollected="true" x="-16" y="-16" />
+		<coin isCollected="false" x="195" y="667" />
+		<coin isCollected="false" x="496" y="667" />
+		<player x="343" y="539" LastCheckPointX="239" LastCheckPointY="510" />
+		<flyingEnemy1 isOnSceen="true" x="523" y="225" />
+		<flyingEnemy2 isOnSceen="true" x="4123" y="1809" />
+		<enemy1 isOnSceen="true" x="3523" y="502" />
+		<enemy2 isOnSceen="true" x="4323" y="502" />
 	</scene>
 	<map />
 	<entitymanager />

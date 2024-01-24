@@ -30,6 +30,7 @@ public:
 	// Retrieve window scale
 	uint GetScale() const;
 
+
 public:
 	// The window we'll be rendering to
 	SDL_Window* window;
@@ -37,10 +38,12 @@ public:
 	// The surface contained by the window
 	SDL_Surface* screenSurface;
 
-private:
-	SString title;
 	uint width;
 	uint height;
+
+private:
+	SString title;
+	
 	uint scale;
 };
 

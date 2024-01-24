@@ -73,7 +73,6 @@ public:
 	//List<IceBall> listOfIceBallsToDestroy;
 
 	int pickCoinFxId;
-	int checkPointFxId;
 
 	int jumpFx;
 	int runningFx;
@@ -104,6 +103,8 @@ public:
 
 	//checkPoints
 	iPoint lastCheckPoint = { 400,352 };
+
+	int coinCount = 0;
 
 	//Bools for knowing if has passed that checkPoint
 

@@ -3,6 +3,7 @@
 
 #include "Defs.h"
 #include "Log.h"
+#include "GuiManager.h"
 
 #include "SDL/include/SDL.h"
 

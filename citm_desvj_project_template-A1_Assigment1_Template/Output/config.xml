@@ -33,7 +33,7 @@
     <item x="384" y="352" texturepath="Assets/Textures/Coin.png"/>
     <item x="200" y="672" texturepath="Assets/Textures/Coin.png"/>
     <item x="500" y="672" texturepath="Assets/Textures/Coin.png"/>
-    <checkPoint x="1200" y="470" texturepath="Assets/Textures/checkPointRed.png"/>
+    <checkPoint x="1200" y="2470" texturepath="Assets/Textures/checkPointRed.png"/>
     <checkPoint x="3045" y="430" texturepath="Assets/Textures/checkPointRed.png"/>
     <checkPoint x="100" y="470" texturepath="Assets/Textures/checkPointRed.png"/>
     <checkPoint x="200" y="470" texturepath="Assets/Textures/checkPointRed.png"/>

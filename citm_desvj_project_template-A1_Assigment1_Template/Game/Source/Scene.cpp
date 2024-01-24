@@ -10,8 +10,6 @@
 #include "Player.h"
 #include "GuiControl.h"
 #include "GuiManager.h"
-#include "GuiControlButton.h"
-#include "GuiControlSlider.h"
 
 
 #include "Defs.h"
@@ -41,11 +39,14 @@ bool Scene::Awake(pugi::xml_node& config)
 	{
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = itemNode;
+		listOfCoins.Add(item);
 	}
 	for (pugi::xml_node checkPointNode = config.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
 	{
 		CheckPoint* checkPoint = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
 		checkPoint->parameters = checkPointNode;
+		listOfCheckPoints.Add(checkPoint);
+
 	}
 
 
@@ -115,7 +116,7 @@ bool Scene::Start()
 
 	SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
 	exitPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "EXIT", btPos, this);
-	exitPauseButton->function = FunctionGUI::EXIT;
+	exitPauseButton->function = FunctionGUI::FULLSCREEN;
 	exitPauseButton->state = GuiControlState::DISABLED;
 	musicSlider = (GuiControlSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", btPos, this);
 	musicSlider->function = FunctionGUI::MUSIC;
@@ -123,7 +124,10 @@ bool Scene::Start()
 	SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
 	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
 	playerLifesBox->function = FunctionGUI::LIVES;
-	//playerLifesBox->state = GuiControlState::DISABLED;
+	SDL_Rect btPos3 = { windowW - 150, 400, 50,50 };
+	fullScreenBox = (GuiControlCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "Fullscreen", btPos3, this);
+	fullScreenBox->function = FunctionGUI::FULLSCREEN;
+	//fullScreenBox->state = GuiControlState::DISABLED;
 
 
 	return true;
@@ -138,13 +142,10 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (app->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
-	{
-		player->lifes++;
-	}
 	string strPlayerLifes = std::to_string(player->lifes);
-	playerLifesBox->SetValue(strPlayerLifes);
-
+	playerLifesBox->SetValue(strPlayerLifes);	
+	string coins = std::to_string(player->coinCount);
+	playerLifesBox->SetValue(coins);
 
 	float camSpeed = 1;
 	
@@ -255,6 +256,18 @@ void Scene::ShowPauseButtons(bool condition)
 	}
 }
 
+void Scene::ShowSettings(bool condition)
+{
+	if (condition) 
+	{
+		exitPauseButton->state = GuiControlState::NORMAL;
+	}
+	else
+	{
+		exitPauseButton->state = GuiControlState::DISABLED;
+	}
+}
+
 // Called before quitting
 bool Scene::CleanUp()
 {
@@ -266,8 +279,27 @@ bool Scene::CleanUp()
 bool Scene::LoadState(pugi::xml_node node) 
 {
 	//configure position for player
-	b2Vec2 newPos(PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()));
+	b2Vec2 newPos(PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointX").as_int()), PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointY").as_int()));
 	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
+	player->lastCheckPoint.x = newPos.x;
+	player->lastCheckPoint.y = newPos.y;
+	
+
+
+
+	int i = 0;
+	for (pugi::xml_node checkPointNode = node.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
+	{
+		listOfCheckPoints[i]->isPicked = checkPointNode.attribute("isPicked").as_bool();
+		i++;
+	}
+	i = 0;
+	for (pugi::xml_node coinNode = node.child("coin"); coinNode; coinNode = coinNode.next_sibling("coin"))
+	{
+		listOfCoins[i]->isCollected = coinNode.attribute("isCollected").as_bool();
+		i++;
+	}
+
 
 	//Configure the position of enemies and if they are dead or not
 	bool checkGame = node.child("newGame").attribute("sameGame").as_bool();
@@ -301,10 +333,32 @@ bool Scene::SaveState(pugi::xml_node node)
 	pugi::xml_node gameNode = node.append_child("newGame");
 	gameNode.append_attribute("sameGame").set_value(sameGame);
 
+
+
+	//Save the checkPoints Position and if its picked
+	for (int i = 0; i < listOfCheckPoints.Count(); i++)
+	{
+		pugi::xml_node checkPointNode = node.append_child("checkPoint");
+		checkPointNode.append_attribute("isPicked").set_value(listOfCheckPoints[i]->isPicked);
+		checkPointNode.append_attribute("x").set_value(listOfCheckPoints[i]->position.x);
+		checkPointNode.append_attribute("y").set_value(listOfCheckPoints[i]->position.y);
+	}
+
+	//Save the coins Position and if its picked
+	for (int i = 0; i < listOfCoins.Count(); i++)
+	{
+		pugi::xml_node coinNode = node.append_child("coin");
+		coinNode.append_attribute("isCollected").set_value(listOfCoins[i]->isCollected);
+		coinNode.append_attribute("x").set_value(listOfCoins[i]->position.x);
+		coinNode.append_attribute("y").set_value(listOfCoins[i]->position.y);
+	}
+
 	//Save player position
 	pugi::xml_node playerNode = node.append_child("player");
-	playerNode.append_attribute("x").set_value(player->lastCheckPoint.x);
-	playerNode.append_attribute("y").set_value(player->lastCheckPoint.y);
+	playerNode.append_attribute("x").set_value(player->position.x);
+	playerNode.append_attribute("y").set_value(player->position.y);
+	playerNode.append_attribute("LastCheckPointX").set_value(player->lastCheckPoint.x);
+	playerNode.append_attribute("LastCheckPointY").set_value(player->lastCheckPoint.y);
 	//Save Enemies position
 	pugi::xml_node flyingEnemy1Node = node.append_child("flyingEnemy1");
 	flyingEnemy1Node.append_attribute("isOnSceen").set_value(flyingEnemy_1->isOnSceen);
@@ -404,4 +458,57 @@ bool Scene::CheckVelocityForFlip(b2Vec2 vel) {
 		return false;
 	}
 
+}
+
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+	switch (control->function)
+	{
+	case FunctionGUI::START:
+		break;
+	case FunctionGUI::EXIT:
+		control->hasToExit = true;
+		break;
+	case FunctionGUI::SETTINGS:
+		break;	
+	case FunctionGUI::FULLSCREEN:
+		if (!isFullScreen) {
+			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+
+			////TODO: Relocating all the other butons 
+			//app->win->GetWindowSize(windowW, windowH);	
+			//SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
+			//exitButton->bounds = btPos;
+
+
+
+
+			isFullScreen = true;
+		}
+		else
+		{
+			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_SHOWN);
+			isFullScreen = false;
+		}
+		break;
+	case FunctionGUI::CREDITS:
+		break;
+	case FunctionGUI::MUSIC:
+		break;
+	case FunctionGUI::FX:
+		break;
+	case FunctionGUI::VSYNC:
+		break;
+	case FunctionGUI::TIMER:
+		break;
+	case FunctionGUI::RESUME:
+		break;
+	case FunctionGUI::BACKTOTITLE:
+		break;
+	default:
+		break;
+	}
+	return true;
 }

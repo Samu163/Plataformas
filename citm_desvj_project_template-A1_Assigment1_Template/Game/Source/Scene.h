@@ -12,6 +12,8 @@
 #include "GuiControlButton.h"
 #include "GuiControlSlider.h"
 #include "GuiControlValueBox.h"
+#include "GuiControlCheckBox.h"
+
 #include <list>
 
 
@@ -50,11 +52,14 @@ public:
 
 	bool SaveState(pugi::xml_node node);
 
+	bool OnGuiMouseClickEvent(GuiControl* control);
+
 	//Just for checking the movement in other places (enmey, player) 
 	b2Vec2 CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition);
 
 	bool CheckVelocityForFlip(b2Vec2 vel);
 	void ShowPauseButtons(bool condition);
+	void ShowSettings(bool condition);
 
 
 public: 
@@ -71,7 +76,8 @@ public:
 	bool sameGame = false;
 
 
-	//List<CheckPoint*> listOfCheckPoints;
+	List<CheckPoint*> listOfCheckPoints;
+	List<Item*> listOfCoins;
 
 	bool retButton = true;
 
@@ -87,11 +93,17 @@ private:
 	bool isInDebugMode = false;
 
 	GuiControlButton* exitPauseButton;
+	GuiControlButton* exitButton;
+	GuiControlButton* settingsButton;
+	GuiControlButton* settingsPauseButton;
 	GuiControlSlider* musicSlider;
+	GuiControlSlider* fxSlider;
+	GuiControlCheckBox* fullScreenBox;
 	GuiControlValueBox* playerLifesBox;
 
 	bool isOnPause = false;
 
+	bool isFullScreen = false;
 
 };
 

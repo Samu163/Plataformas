@@ -136,7 +136,6 @@ bool Player::Start()
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
 	iceBallTexture = app->tex->Load("Assets/Textures/iceBall.png");
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinFx.ogg");
-	checkPointFxId = app->audio->LoadFx("Assets/Audio/Fx/successFx.ogg");
 	
 	jumpFx= app->audio->LoadFx("Assets/Audio/Fx/jump.ogg");
 	/*runningFx= app->audio->LoadFx("Assets/Audio/Fx/run.ogg");*/
@@ -494,14 +493,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
 			physB->body->SetActive(false);
+			coinCount++;
 			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::CHECKPOINT:
 			LOG("Collision checkPoint");
-			app->audio->PlayFx(checkPointFxId);
 			physB->body->SetActive(false);
-			lastCheckPoint.x = METERS_TO_PIXELS(physB->body->GetTransform().p.x);
-			lastCheckPoint.y = METERS_TO_PIXELS(physB->body->GetTransform().p.y);
 			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
@@ -576,6 +573,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
+			break;
+		case ColliderType::CHECKPOINT:
+			LOG("Collision UNKNOWN");
+			physB->body->SetActive(false);
+
 			break;
 		case ColliderType::ENEMY:
 			LOG("Collision ENEMY");
