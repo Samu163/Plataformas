@@ -134,7 +134,9 @@ bool EntityManager::Update(float dt)
 		pEntity = item->data;
 		if (pEntity->active == false) continue;
 		//si no esta en pausa o item data == app.scene.player Epico
-		ret = item->data->Update(dt);
+		if (!app->scene->isOnPause || item->data == app->scene->player) {
+			ret = item->data->Update(dt);
+		}
 	}
 
 	return ret;

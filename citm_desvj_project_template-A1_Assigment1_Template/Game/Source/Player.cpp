@@ -224,12 +224,12 @@ bool Player::Update(float dt)
 	if (!isDead) 
 	{
 		
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !app->scene->isOnPause)
 		{
 			isJumping = true;
 			//Sound Effect
 		}
-		else if ((app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && playerCooldown == 40))
+		else if ((app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN && playerCooldown == 40) && !app->scene->isOnPause)
 		{
 
 			//Set counter to shoot to 0, in order to shoot again
@@ -246,7 +246,7 @@ bool Player::Update(float dt)
 			//Sound Effect
 		}
 		
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !app->scene->isOnPause)
 		{
 			isFlipped = true;
 			currentAnimation = &walkAnim;
@@ -255,7 +255,7 @@ bool Player::Update(float dt)
 			vel = b2Vec2(-speed * dt, -GRAVITY_Y);
 			app->audio->PlayFx(runningFx);
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !app->scene->isOnPause) {
 			isFlipped = false;
 			currentAnimation = &walkAnim;
 			walkAnim.Update();
@@ -384,7 +384,10 @@ bool Player::Update(float dt)
 	
 
 		//Draw texture
-		app->render->DrawTexture(texture, position.x - 45, position.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+		if (!app->scene->isOnPause) {
+			app->render->DrawTexture(texture, position.x - 45, position.y - 40, isFlipped, &currentAnimation->GetCurrentFrame(), zoomFactor);
+
+		}
 
 	}
 	else
@@ -555,6 +558,17 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 		switch (physB->ctype)
 		{
+		case ColliderType::ITEM:
+			LOG("Collision ITEM");
+			physB->body->SetActive(false);
+		case ColliderType::LIVES_ITEM:
+			LOG("Collision LIFES_ITEM");
+			physB->body->SetActive(false);
+			break;
+		case ColliderType::CHECKPOINT:
+			LOG("Collision checkPoint");
+			physB->body->SetActive(false);
+			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
 			for (int i = 0; i < listOfIceBalls.Count(); i++)
@@ -578,11 +592,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
-			break;
-		case ColliderType::CHECKPOINT:
-			LOG("Collision UNKNOWN");
-			physB->body->SetActive(false);
-
 			break;
 		case ColliderType::ENEMY:
 			LOG("Collision ENEMY");
