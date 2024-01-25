@@ -101,6 +101,8 @@ public:
 	int AttackAnimCounter;
 	iPoint deathPosition;
 
+	bool isOnLevel2 = false;
+
 	//checkPoints
 	iPoint lastCheckPoint = { 400,352 };
 

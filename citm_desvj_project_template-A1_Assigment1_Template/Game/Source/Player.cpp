@@ -175,6 +175,14 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
+	if (position.x > 7500 && position.x < 8000)
+	{
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(10175), PIXEL_TO_METERS(320));
+		pbody->body->SetTransform(newPos, 0);
+	}
+
+
+
 	if (app->scene->isOnPause)
 	{
 		app->win->GetWindowSize(app->scene->windowW, app->scene->windowH);
@@ -374,11 +382,11 @@ bool Player::Update(float dt)
 				if (isFlipped)
 				{
 					iceBallVel = b2Vec2(-20, 0);
-					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 7, bodyType::DYNAMIC);
 				}
 				else
 				{
-					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 7, bodyType::DYNAMIC);
 				}
 				iceBall.iceBallCollider->body->SetLinearVelocity(iceBallVel);
 				iceBall.iceBallCollider->listener = this;
