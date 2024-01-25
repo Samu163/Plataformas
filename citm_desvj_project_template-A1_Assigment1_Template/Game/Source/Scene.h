@@ -91,6 +91,9 @@ public:
 	uint windowW, windowH;
 
 
+	GuiControlValueBox* playerLifesBox;
+	GuiControlValueBox* coinsBox;
+
 private:
 
 
@@ -111,8 +114,7 @@ private:
 	GuiControlSlider* fxSlider;
 	GuiControlCheckBox* fullScreenBox;
 	GuiControlCheckBox* vSyncBtn;
-	GuiControlValueBox* playerLifesBox;
-	GuiControlValueBox* coinsBox;
+
 
 
 	bool isFullScreen = false;

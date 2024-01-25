@@ -17,8 +17,13 @@ public:
     void SetValue(const std::string& value);
     const std::string& GetValue() const;
 
+
+
+
 public:
     std::string value; // The current value displayed in the box
+    
+
 
 };
 

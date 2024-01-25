@@ -208,10 +208,15 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 	switch (control->function)
 	{
 	case FunctionGUI::START:
+		//app->fadeToBlack->FadeToBlack(this, app->entityManager, 60);
+		//app->fadeToBlack->FadeToBlack(this, app->map, 60);
+		//app->fadeToBlack->FadeToBlack(this, app->scene, 60);
 		app->entityManager->active = true;
 		app->map->active = true;
 		app->scene->active = true;
 		app->titleScreen->active = false;
+		app->scene->coinsBox->state = GuiControlState::NORMAL;
+		app->scene->playerLifesBox->state = GuiControlState::NORMAL;
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::CONTINUE:
