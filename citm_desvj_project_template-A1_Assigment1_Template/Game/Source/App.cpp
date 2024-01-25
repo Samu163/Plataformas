@@ -38,6 +38,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	player = new Player();
 	guiManager = new GuiManager();
 	titleScreen = new Title();
+	credits = new Credits();
+	fadeToBlack = new ModuleFadeToBlack(true);
 
 
 	// Ordered for awake / Start / Update
@@ -52,6 +54,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map);
 	AddModule(entityManager);
 	AddModule(guiManager);
+	AddModule(fadeToBlack);
+	AddModule(credits);
 
 	// Render last to swap buffer
 	AddModule(render);

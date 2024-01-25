@@ -101,9 +101,9 @@ private:
 
 	GuiControlButton* exitPauseButton;
 	GuiControlButton* backSettingsButton;
+	GuiControlButton* returnTitleButton;
 	GuiControlButton* resumeButton;
 	GuiControlButton* exitButton;
-	GuiControlButton* settingsButton;
 	GuiControlButton* settingsPauseButton;
 	GuiControlSlider* musicSlider;
 	GuiControlSlider* fxSlider;

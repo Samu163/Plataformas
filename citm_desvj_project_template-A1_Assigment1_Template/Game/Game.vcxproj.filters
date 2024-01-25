@@ -34,6 +34,8 @@
     <ClCompile Include="Source\ItemLives.cpp" />
     <ClCompile Include="Source\Boss.cpp" />
     <ClCompile Include="Source\Title.cpp" />
+    <ClCompile Include="Source\FadeToBlack.cpp" />
+    <ClCompile Include="Source\CreditsScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -96,6 +98,8 @@
     <ClInclude Include="Source\ItemLives.h" />
     <ClInclude Include="Source\Boss.h" />
     <ClInclude Include="Source\Title.h" />
+    <ClInclude Include="Source\FadeToBlack.h" />
+    <ClInclude Include="Source\CreditsScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

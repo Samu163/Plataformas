@@ -118,7 +118,10 @@ bool Title::Update(float dt)
 {
 	app->scene->player->position = app->scene->player->initialPosition;
 
-	app->render->DrawTexture(intialScreen, 0, 0, false);
+
+
+
+	app->render->DrawTexture(intialScreen, 0, 0, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
 
 
 	if (isOnSettings)
@@ -392,6 +395,8 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		break;
 	case FunctionGUI::CREDITS:
+		app->credits->counter = 0;
+		app->fadeToBlack->FadeToBlack(this, app->credits, 60);
 		break;
 	case FunctionGUI::MUSIC:
 		app->audio->ChangeMusicVolume(musicSlider->newValue);

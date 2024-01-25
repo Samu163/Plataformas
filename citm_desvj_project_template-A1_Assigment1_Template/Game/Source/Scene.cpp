@@ -116,10 +116,15 @@ bool Scene::Start()
 	windowTex = app->tex->Load("Assets/Textures/bgSettings.png");
 
 	//buttons
-	SDL_Rect btPos = { windowW / 2 - 120, windowH / 2 , 240,60 };
+	SDL_Rect btPos = { windowW / 2 - 120, windowH / 2 +120, 240,60 };
 	exitPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "EXIT     ", btPos, this);
 	exitPauseButton->function = FunctionGUI::EXIT;
 	exitPauseButton->state = GuiControlState::DISABLED;
+	
+	SDL_Rect btPosRM = { windowW / 2 - 120, windowH / 2 , 240,60 };
+	returnTitleButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "BACK TO MENU", btPosRM, this);
+	returnTitleButton->function = FunctionGUI::BACKTOTITLE;
+	returnTitleButton->state = GuiControlState::DISABLED;
 	
 	SDL_Rect btPosR = { windowW / 2 - 120, windowH / 2 - 240, 240,60 };
 	resumeButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "RESUME", btPosR, this);
@@ -157,17 +162,16 @@ bool Scene::Start()
 	backSettingsButton->function = FunctionGUI::BACKTOPAUSE;
 	backSettingsButton->state = GuiControlState::DISABLED;
 
-
 	//Ui Player
 	SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
 	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
 	playerLifesBox->function = FunctionGUI::LIVES;
 	playerLifesBox->state = GuiControlState::DISABLED;
 
-	//SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
-	//playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
-	//playerLifesBox->function = FunctionGUI::LIVES;
-	//playerLifesBox->state = GuiControlState::DISABLED;
+	SDL_Rect btPos5 = { windowW - 150, 300, 240,100 };
+	coinsBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos5, this);
+	coinsBox->function = FunctionGUI::LIVES;
+	coinsBox->state = GuiControlState::DISABLED;
 
 
 
@@ -287,6 +291,7 @@ void Scene::ShowPauseButtons(bool condition)
 		resumeButton->state = GuiControlState::NORMAL;
 		settingsPauseButton->state = GuiControlState::NORMAL;
 		exitPauseButton->state = GuiControlState::NORMAL;
+		returnTitleButton->state = GuiControlState::NORMAL;
 	}
 	else
 	{
@@ -294,6 +299,8 @@ void Scene::ShowPauseButtons(bool condition)
 		resumeButton->state = GuiControlState::DISABLED;
 		settingsPauseButton->state = GuiControlState::DISABLED;
 		exitPauseButton->state = GuiControlState::DISABLED;
+		returnTitleButton->state = GuiControlState::DISABLED;
+
 	}
 }
 
@@ -550,11 +557,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 	case FunctionGUI::FULLSCREEN:
 		if (!isFullScreen) {
 			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN);
-			////TODO: Relocating all the other butons 
-			//app->win->GetWindowSize(windowW, windowH);
-				
-			//SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
-			//exitButton->bounds = btPos;
 			isFullScreen = true;
 		}
 		else
@@ -582,6 +584,14 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::BACKTOTITLE:
+		isOnPause = false;
+		ShowPauseButtons(false);
+		app->titleScreen->ShowPauseButtons(true);
+		app->entityManager->active = false;
+		app->map->active = false;
+		app->scene->active = false;
+		app->titleScreen->active = true;
+
 		break;
 	case FunctionGUI::BACKTOPAUSE:
 		ShowSettings(false);
