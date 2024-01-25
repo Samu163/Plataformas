@@ -78,6 +78,8 @@ public:
 	iPoint mouseTile;
 	bool sameGame = false;
 
+	bool isOnSettings;
+
 
 	List<CheckPoint*> listOfCheckPoints;
 	List<Item*> listOfCoins;
@@ -101,18 +103,16 @@ private:
 	bool isInDebugMode = false;
 
 	GuiControlButton* exitPauseButton;
+	GuiControlButton* creditsButton;
 	GuiControlButton* startButton;
+	GuiControlButton* continueButton;
 	GuiControlButton* backSettingsButton;
-	GuiControlButton* resumeButton;
 	GuiControlButton* exitButton;
 	GuiControlButton* settingsButton;
-	GuiControlButton* settingsPauseButton;
 	GuiControlSlider* musicSlider;
 	GuiControlSlider* fxSlider;
 	GuiControlCheckBox* fullScreenBox;
 	GuiControlCheckBox* vSyncBtn;
-	GuiControlValueBox* playerLifesBox;
-	GuiControlValueBox* coinsBox;
 
 
 	bool isFullScreen = false;

@@ -28,8 +28,8 @@ Title::~Title()
 // Called before render is available
 bool Title::Awake(pugi::xml_node& config)
 {
-	
-	
+
+
 	return true;
 }
 
@@ -54,63 +54,53 @@ bool Title::Start()
 	intialScreen = app->tex->Load("Assets/Textures/Tittlebg.png");
 
 	//buttons
-	SDL_Rect btPosSTART = { windowW / 2 - 120, windowH / 2 , 240,60 };
+	SDL_Rect btPosSTART = { windowW / 2 - 120, windowH / 2 - 240 , 240,60 };
 	startButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "START     ", btPosSTART, this);
 	startButton->function = FunctionGUI::START;
-	//startButton->state = GuiControlState::DISABLED;
-	
-	SDL_Rect btPos = { windowW / 2 - 120, windowH / 2 , 240,60 };
+
+	SDL_Rect btPosCONT = { windowW / 2 - 120, windowH / 2 - 120 , 240,60 };
+	continueButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "CONTINUE  ", btPosCONT, this);
+	continueButton->function = FunctionGUI::CONTINUE;
+
+	SDL_Rect btPosS = { windowW / 2 - 120, windowH / 2 , 240,60 };
+	settingsButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "SETTINGS", btPosS, this);
+	settingsButton->function = FunctionGUI::SETTINGS;
+
+	SDL_Rect btPosCR = { windowW / 2 - 120, windowH / 2 + 120, 240,60 };
+	creditsButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "CREDITS     ", btPosCR, this);
+	creditsButton->function = FunctionGUI::CREDITS;
+
+	SDL_Rect btPos = { windowW / 2 - 120, windowH / 2 + 240, 240,60 };
 	exitPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "EXIT     ", btPos, this);
 	exitPauseButton->function = FunctionGUI::EXIT;
-	exitPauseButton->state = GuiControlState::DISABLED;
-	
-	SDL_Rect btPosR = { windowW / 2 - 120, windowH / 2 - 240, 240,60 };
-	resumeButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "RESUME", btPosR, this);
-	resumeButton->function = FunctionGUI::RESUME;
-	resumeButton->state = GuiControlState::DISABLED;
 
-	SDL_Rect btPosS = { windowW / 2 - 120, windowH / 2 -120, 240,60 };
-	settingsPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "SETTINGS", btPosS, this);
-	settingsPauseButton->function = FunctionGUI::SETTINGS;
-	settingsPauseButton->state = GuiControlState::DISABLED;
 
 	//Settings
 	SDL_Rect btPosM = { windowW / 2 - 120, windowH / 2 - 240, 240,60 };
 	musicSlider = (GuiControlSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC   ", btPosM, this);
 	musicSlider->function = FunctionGUI::MUSIC;
 	musicSlider->state = GuiControlState::DISABLED;
-	
-	SDL_Rect btPosFx = { windowW / 2 - 120, windowH / 2 -120 , 240,60 };
+
+	SDL_Rect btPosFx = { windowW / 2 - 120, windowH / 2 - 120 , 240,60 };
 	fxSlider = (GuiControlSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "FX          ", btPosFx, this);
 	fxSlider->function = FunctionGUI::FX;
 	fxSlider->state = GuiControlState::DISABLED;
-	
-	SDL_Rect btPos3 = { windowW / 2 +40,windowH / 2 -20 , 50,50 };
+
+	SDL_Rect btPos3 = { windowW / 2 + 40,windowH / 2 - 20 , 50,50 };
 	fullScreenBox = (GuiControlCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "Fullscreen", btPos3, this);
 	fullScreenBox->function = FunctionGUI::FULLSCREEN;
 	fullScreenBox->state = GuiControlState::DISABLED;
-	
-	SDL_Rect btPosVS = { windowW / 2 +40,windowH / 2+80  , 50,50 };
+
+	SDL_Rect btPosVS = { windowW / 2 + 40,windowH / 2 + 120 , 50,50 };
 	vSyncBtn = (GuiControlCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "VSYNC", btPosVS, this);
 	vSyncBtn->function = FunctionGUI::VSYNC;
 	vSyncBtn->state = GuiControlState::DISABLED;
 
-	SDL_Rect btPosBP = { windowW / 2 - 120, windowH / 2+180 , 240,60 };
+	SDL_Rect btPosBP = { windowW / 2 - 120, windowH / 2 + 240 , 240,60 };
 	backSettingsButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "BACK", btPosBP, this);
-	backSettingsButton->function = FunctionGUI::BACKTOPAUSE;
+	backSettingsButton->function = FunctionGUI::BACKTOTITLE;
 	backSettingsButton->state = GuiControlState::DISABLED;
 
-
-	//Ui Player
-	SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
-	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
-	playerLifesBox->function = FunctionGUI::LIVES;
-	playerLifesBox->state = GuiControlState::DISABLED;
-
-	//SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
-	//playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
-	//playerLifesBox->function = FunctionGUI::LIVES;
-	//playerLifesBox->state = GuiControlState::DISABLED;
 
 
 
@@ -130,7 +120,17 @@ bool Title::Update(float dt)
 
 	app->render->DrawTexture(intialScreen, 0, 0, false);
 
-	
+
+	if (isOnSettings)
+	{
+		app->win->GetWindowSize(app->scene->windowW, app->scene->windowH);
+		app->render->DrawTexture(windowTex, (app->scene->windowW / 2) - 185, (app->scene->windowH / 2) - 300, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
+	}
+
+
+
+
+
 	// Get the mouse position and obtain the map coordinate
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 
@@ -155,7 +155,7 @@ bool Title::PostUpdate()
 
 	bool ret = true;
 
-	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || exitPauseButton->hasToExit)
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || exitPauseButton->hasToExit)
 		ret = false;
 
 	return ret;
@@ -163,25 +163,27 @@ bool Title::PostUpdate()
 
 void Title::ShowPauseButtons(bool condition)
 {
-	if (condition) 
+	if (condition)
 	{
-		exitPauseButton->state = GuiControlState::NORMAL;
-		resumeButton->state = GuiControlState::NORMAL;
-		settingsPauseButton->state = GuiControlState::NORMAL;
+		startButton->state = GuiControlState::NORMAL;
+		continueButton->state = GuiControlState::NORMAL;
+		settingsButton->state = GuiControlState::NORMAL;
+		creditsButton->state = GuiControlState::NORMAL;
 		exitPauseButton->state = GuiControlState::NORMAL;
 	}
 	else
 	{
-		exitPauseButton->state = GuiControlState::DISABLED;
-		resumeButton->state = GuiControlState::DISABLED;
-		settingsPauseButton->state = GuiControlState::DISABLED;
+		startButton->state = GuiControlState::DISABLED;
+		continueButton->state = GuiControlState::DISABLED;
+		settingsButton->state = GuiControlState::DISABLED;
+		creditsButton->state = GuiControlState::DISABLED;
 		exitPauseButton->state = GuiControlState::DISABLED;
 	}
 }
 
 void Title::ShowSettings(bool condition)
 {
-	if (condition) 
+	if (condition)
 	{
 		musicSlider->state = GuiControlState::NORMAL;
 		fxSlider->state = GuiControlState::NORMAL;
@@ -214,7 +216,7 @@ bool Title::LoadState(pugi::xml_node node)
 	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
 	player->lastCheckPoint.x = node.child("player").attribute("LastCheckPointX").as_int();
 	player->lastCheckPoint.y = node.child("player").attribute("LastCheckPointY").as_int();
-	
+
 
 
 
@@ -248,7 +250,7 @@ bool Title::LoadState(pugi::xml_node node)
 
 	//Configure the position of enemies and if they are dead or not
 	bool checkGame = node.child("newGame").attribute("sameGame").as_bool();
-	if (sameGame != checkGame) 
+	if (sameGame != checkGame)
 	{
 		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("y").as_int()));
 		flyingEnemy_1->pbody->body->SetTransform(newPos, flyingEnemy_1->pbody->body->GetAngle());
@@ -267,7 +269,7 @@ bool Title::LoadState(pugi::xml_node node)
 		walkingEnemy_2->pbody->body->SetTransform(newPos, walkingEnemy_2->pbody->body->GetAngle());
 		sameGame = true;
 	}
-	
+
 	return true;
 
 };
@@ -288,7 +290,7 @@ bool Title::SaveState(pugi::xml_node node)
 		checkPointNode.append_attribute("x").set_value(listOfCheckPoints[i]->position.x);
 		checkPointNode.append_attribute("y").set_value(listOfCheckPoints[i]->position.y);
 	}
-	
+
 	for (int i = 0; i < listOfItemLives.Count(); i++)
 	{
 		pugi::xml_node checkPointNode = node.append_child("liveItem");
@@ -324,7 +326,7 @@ bool Title::SaveState(pugi::xml_node node)
 		flyingEnemy1Node.append_attribute("x").set_value(flyingEnemy_1->deathPosition.x);
 		flyingEnemy1Node.append_attribute("y").set_value(flyingEnemy_1->deathPosition.y);
 	}
-	
+
 
 	pugi::xml_node flyingEnemy2Node = node.append_child("flyingEnemy2");
 	flyingEnemy2Node.append_attribute("isOnSceen").set_value(flyingEnemy_2->isOnSceen);
@@ -364,17 +366,19 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		app->map->active = true;
 		app->scene->active = true;
 		app->titleScreen->active = false;
+		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::EXIT:
 		control->hasToExit = true;
 		break;
 	case FunctionGUI::SETTINGS:
+		isOnSettings = true;
 		ShowPauseButtons(false);
 		ShowSettings(true);
-		break;	
+		break;
 	case FunctionGUI::FULLSCREEN:
 		if (!isFullScreen) {
-			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN);
 			////TODO: Relocating all the other butons 
 			//app->win->GetWindowSize(windowW, windowH);	
 			//SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
@@ -404,6 +408,10 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::BACKTOTITLE:
+		isOnSettings = false;
+		ShowPauseButtons(true);
+		ShowSettings(false);
+
 		break;
 	case FunctionGUI::BACKTOPAUSE:
 		ShowSettings(false);
@@ -414,3 +422,4 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 	}
 	return true;
 }
+
