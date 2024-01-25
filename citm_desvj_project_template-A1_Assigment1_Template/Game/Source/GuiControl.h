@@ -37,6 +37,7 @@ enum class GuiControlState
 enum class FunctionGUI
 {
 	START,
+	CONTINUE,
 	EXIT,
 	SETTINGS,
 	CREDITS,

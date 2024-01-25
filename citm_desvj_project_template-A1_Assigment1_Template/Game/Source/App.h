@@ -8,6 +8,8 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "Title.h"
+#include "FadeToBlack.h"
+#include "CreditsScene.h"
 
 #include "PugiXml/src/pugixml.hpp"
 
@@ -103,6 +105,8 @@ public:
 	Player* player;
 	GuiManager* guiManager;
 	Title* titleScreen;
+	ModuleFadeToBlack* fadeToBlack;
+	Credits* credits;
 
 
 private:

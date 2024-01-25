@@ -44,7 +44,7 @@ bool GuiControlCheckBox::Update(float dt)
         }
 
         //Render
-        app->render->DrawTexture(texture, bounds.x - 200, bounds.y + app->render->camera.y, false);
+        app->render->DrawTexture(texture, bounds.x - 200, bounds.y + app->render->camera.y, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
 
         app->render->DrawRectangle(bounds, 0, 255, 255, 255, true, false);
         if (checked)
