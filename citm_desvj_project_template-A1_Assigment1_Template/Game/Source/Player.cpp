@@ -382,11 +382,11 @@ bool Player::Update(float dt)
 				if (isFlipped)
 				{
 					iceBallVel = b2Vec2(-20, 0);
-					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 7, bodyType::DYNAMIC);
 				}
 				else
 				{
-					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 15, bodyType::DYNAMIC);
+					iceBall.iceBallCollider = app->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, 7, bodyType::DYNAMIC);
 				}
 				iceBall.iceBallCollider->body->SetLinearVelocity(iceBallVel);
 				iceBall.iceBallCollider->listener = this;
