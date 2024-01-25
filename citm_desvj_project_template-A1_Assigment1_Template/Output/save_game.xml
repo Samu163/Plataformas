@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <game_state>
-	<scene />
 	<window />
 	<input />
 	<textures />
@@ -27,7 +26,7 @@
 		<coin isCollected="false" x="7006" y="496" />
 		<coin isCollected="false" x="10140" y="316" />
 		<player x="130" y="539" LastCheckPointX="400" LastCheckPointY="352" lifes="3" />
-		<flyingEnemy1 isOnSceen="true" x="3441" y="306" />
+		<flyingEnemy1 isOnSceen="true" x="3438" y="306" />
 		<flyingEnemy2 isOnSceen="true" x="4482" y="400" />
 		<enemy1 isOnSceen="true" x="1371" y="502" />
 		<enemy2 isOnSceen="true" x="3161" y="502" />
@@ -35,8 +34,9 @@
 	</scene>
 	<map />
 	<entitymanager />
-	<guiManager />
 	<:anonymous />
+	<scene />
+	<guiManager />
 	<scene />
 	<renderer>
 		<player x="0" y="-10" />
