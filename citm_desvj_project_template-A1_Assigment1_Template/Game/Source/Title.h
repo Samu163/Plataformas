@@ -49,10 +49,6 @@ public:
 
 	void DrawPath();
 
-	bool LoadState(pugi::xml_node node);
-
-	bool SaveState(pugi::xml_node node);
-
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	//Just for checking the movement in other places (enmey, player) 
@@ -80,6 +76,8 @@ public:
 
 	bool isOnSettings;
 
+
+	bool continueBtn = false;
 
 	List<CheckPoint*> listOfCheckPoints;
 	List<Item*> listOfCoins;

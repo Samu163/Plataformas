@@ -196,6 +196,13 @@ bool Scene::Update(float dt)
 	string coins = std::to_string(player->coinCount);
 	//playerLifesBox->SetValue(coins);
 
+
+	if (app->titleScreen->continueBtn) {
+		app->LoadRequest();
+		sameGame = true;
+		app->titleScreen->continueBtn = false;
+	}
+
 	float camSpeed = 1;
 	
 	//Debug
