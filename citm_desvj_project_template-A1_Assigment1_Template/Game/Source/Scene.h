@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Boss.h"
 #include "EnemyFlying.h"
 #include "Item.h"
 #include "CheckPoint.h"
@@ -67,6 +68,7 @@ public:
 	Player* player;
 	Enemy* walkingEnemy_1;
 	Enemy* walkingEnemy_2;
+	Boss* boss;
 	FlyingEnemy* flyingEnemy_1;
 	FlyingEnemy* flyingEnemy_2;
 	SString path;

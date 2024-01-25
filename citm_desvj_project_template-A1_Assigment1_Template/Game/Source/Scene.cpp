@@ -77,7 +77,11 @@ bool Scene::Awake(pugi::xml_node& config)
 		walkingEnemy_2 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
 		walkingEnemy_2->parameters = config.child("enemy2");
 	}
-	
+	if (config.child("Boss")) {
+		boss = (Boss*)app->entityManager->CreateEntity(EntityType::BOSS_ENEMY);
+		boss->parameters = config.child("Boss");
+	}
+
 	return ret;
 }
 
@@ -385,6 +389,13 @@ bool Scene::LoadState(pugi::xml_node node)
 		newPos = b2Vec2(PIXEL_TO_METERS(node.child("enemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("enemy2").attribute("y").as_int()));
 		walkingEnemy_2->pbody->body->SetTransform(newPos, walkingEnemy_2->pbody->body->GetAngle());
 		sameGame = true;
+
+
+		boss->isOnSceen = node.child("Boss").attribute("isOnSceen").as_bool();
+		newPos = b2Vec2(PIXEL_TO_METERS(node.child("Boss").attribute("x").as_int()), PIXEL_TO_METERS(node.child("Boss").attribute("y").as_int()));
+		boss->pbody->body->SetTransform(newPos, boss->pbody->body->GetAngle());
+		sameGame = true;
+
 	}
 	
 	return true;
@@ -468,6 +479,11 @@ bool Scene::SaveState(pugi::xml_node node)
 	enemy2Node.append_attribute("x").set_value(walkingEnemy_2->position.x);
 	enemy2Node.append_attribute("y").set_value(walkingEnemy_2->position.y);
 
+
+	pugi::xml_node BossNode = node.append_child("Boss");
+	BossNode.append_attribute("isOnSceen").set_value(boss->isOnSceen);
+	BossNode.append_attribute("x").set_value(boss->position.x);
+	BossNode.append_attribute("y").set_value(boss->position.y);
 
 
 

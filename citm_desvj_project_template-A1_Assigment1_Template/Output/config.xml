@@ -26,15 +26,17 @@
 
 	  <map path="Assets/Maps/" name="MapTemplate.tmx"/>
 	  
-    <player x="128" y="544" texturepath="Assets/Textures/player1.png"/>
-	
+      <player x="128" y="544" texturepath="Assets/Textures/player1.png"/>
+
+	  <Boss x="10350" y="500" texturepath="Assets/Textures/Boss.png"/>
+	  
 	  <flyingEnemy1 x="3552" y="224" texturepath="Assets/Textures/Enemy.png"/>
 	
 	  <flyingEnemy2 x="4544" y="288" texturepath="Assets/Textures/Enemy.png"/>
   
-	  <enemy1 x="1216" y="512" texturepath="Assets/Textures/Enemy.png"/>
+	  <enemy1 x="1262" y="512" texturepath="Assets/Textures/Enemy.png"/>
    
-	  <enemy2 x="3040" y="512" texturepath="Assets/Textures/Enemy.png"/>
+	  <enemy2 x="3050" y="512" texturepath="Assets/Textures/Enemy.png"/>
 
     <item x="544" y="352" texturepath="Assets/Textures/Coin.png"/>
 	  <item x="1248" y="350" texturepath="Assets/Textures/Coin.png"/>

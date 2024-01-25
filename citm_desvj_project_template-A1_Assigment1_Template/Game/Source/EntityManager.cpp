@@ -99,8 +99,12 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::CHECKPOINT:
 		entity = new CheckPoint();
 		break;
+	case EntityType::BOSS_ENEMY:
+		entity = new Boss();
+		break;
 	default:
 		break;
+
 	}
 
 	entities.Add(entity);

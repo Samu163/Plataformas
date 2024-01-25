@@ -101,7 +101,7 @@ void Enemy::Init()
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 200;
 	counterForPath = 0;
-	walkingRange = 200;
+	walkingRange = 130;
 	counterForDead = 0;
 	hasDead = false;
 }
