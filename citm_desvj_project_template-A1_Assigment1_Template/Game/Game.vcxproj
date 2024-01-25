@@ -95,6 +95,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Boss.cpp" />
     <ClCompile Include="Source\CheckPoint.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyFlying.cpp" />
@@ -121,6 +122,7 @@
     <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Window.cpp" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Source\Boss.h" />
     <ClInclude Include="Source\CheckPoint.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyFlying.h" />

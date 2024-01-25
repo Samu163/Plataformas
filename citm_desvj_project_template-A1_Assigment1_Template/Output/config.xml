@@ -22,22 +22,44 @@
   </audio>
 
   <scene>
-    <player x="400" y="352" texturepath="Assets/Textures/player1.png"/>
-	<flyingEnemy1 x="700" y="200" texturepath="Assets/Textures/Enemy.png"/>
-	<flyingEnemy2 x="4300" y="1800" texturepath="Assets/Textures/Enemy.png"/>
-    <enemy1 x="3700" y="200" texturepath="Assets/Textures/Enemy.png"/>
-    <enemy2 x="4500" y="200" texturepath="Assets/Textures/Enemy.png"/>
-	<map path="Assets/Maps/" name="MapTemplate.tmx"/>
-    <item x="256" y="515" texturepath="Assets/Textures/Coin.png"/>
-    <item x="416" y="512" texturepath="Assets/Textures/Coin.png"/>
-    <item x="1384" y="352" texturepath="Assets/Textures/Coin.png"/>
-    <item x="200" y="672" texturepath="Assets/Textures/Coin.png"/>
-    <item x="500" y="672" texturepath="Assets/Textures/Coin.png"/>
-    <lifeItem x="500" y="200" texturepath="Assets/Textures/Coin.png"/>
-    <checkPoint x="1200" y="2470" texturepath="Assets/Textures/checkPointRed.png"/>
-    <checkPoint x="4545" y="430" texturepath="Assets/Textures/checkPointRed.png"/>
-    <checkPoint x="100" y="470" texturepath="Assets/Textures/checkPointRed.png"/>
-    <checkPoint x="200" y="470" texturepath="Assets/Textures/checkPointRed.png"/>
+
+
+	  <map path="Assets/Maps/" name="MapTemplate.tmx"/>
+	  
+    <player x="128" y="544" texturepath="Assets/Textures/player1.png"/>
+	
+	  <flyingEnemy1 x="3552" y="224" texturepath="Assets/Textures/Enemy.png"/>
+	
+	  <flyingEnemy2 x="4544" y="288" texturepath="Assets/Textures/Enemy.png"/>
+  
+	  <enemy1 x="1216" y="512" texturepath="Assets/Textures/Enemy.png"/>
+   
+	  <enemy2 x="3040" y="512" texturepath="Assets/Textures/Enemy.png"/>
+
+    <item x="544" y="352" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="1248" y="350" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="1918" y="438" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="2432" y="416" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="3250" y="480" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="4860" y="380" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="6528" y="288" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="7010" y="500" texturepath="Assets/Textures/Coin.png"/>
+	  <item x="10144" y="320" texturepath="Assets/Textures/Coin.png"/>
+
+    
+
+	  <lifeItem x="1984" y="240" texturepath="Assets/Textures/Icelives.png"/>
+	  <lifeItem x="4640" y="480" texturepath="Assets/Textures/Icelives.png"/>
+	  <lifeItem x="6304" y="224" texturepath="Assets/Textures/Icelives.png"/>
+	  <lifeItem x="10560" y="320" texturepath="Assets/Textures/Icelives.png"/>
+
+
+	  <checkPoint x="672" y="270" texturepath="Assets/Textures/checkPointRed.png"/>
+	  <checkPoint x="1620" y="528" texturepath="Assets/Textures/checkPointRed.png"/>
+	  <checkPoint x="3552" y="400" texturepath="Assets/Textures/checkPointRed.png"/>
+	  <checkPoint x="5216" y="370" texturepath="Assets/Textures/checkPointRed.png"/>
+
+	  
   </scene>
 
   <map>

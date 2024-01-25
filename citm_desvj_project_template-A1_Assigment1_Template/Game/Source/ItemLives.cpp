@@ -25,26 +25,28 @@ bool ItemLives::Awake() {
 	texturePath = parameters.attribute("texturepath").as_string();
 
 
-	idleAnim.PushBack({ 0, 0, 20, 20 });
-	idleAnim.PushBack({ 20, 0, 20, 20 });
-	idleAnim.PushBack({ 40, 0, 20, 20 });
-	idleAnim.PushBack({ 60, 0, 20, 20 });
-	idleAnim.PushBack({ 80, 0, 20, 20 });
-	idleAnim.PushBack({ 100, 0, 20, 20 });
-	idleAnim.PushBack({ 120, 0, 20, 20 });
-	idleAnim.PushBack({ 140, 0, 20, 20 });
-	idleAnim.speed = 0.2f;
+	idleAnim.PushBack({ 0, 0, 122,91 });
+	idleAnim.PushBack({ 122, 0,122,91 });
+	idleAnim.PushBack({ 122+122, 0, 122,91 });
+	idleAnim.PushBack({ 0 ,91, 122,91 });
+	idleAnim.PushBack({ 122  ,91, 122,91 });
+
+	idleAnim.PushBack({ 0 ,91, 122,91 });
+	idleAnim.PushBack({ 122 + 122, 0, 122,91 });
+	idleAnim.PushBack({ 122, 0,122,91 });
+
+		idleAnim.speed = 0.2f;
 	idleAnim.loop = true;
 
 
-	pickedAnim.PushBack({ 0, 0, 20, 20 });
-	pickedAnim.PushBack({ 20, 0, 20, 20 });
-	pickedAnim.PushBack({ 40, 0, 20, 20 });
-	pickedAnim.PushBack({ 60, 0, 20, 20 });
-	pickedAnim.PushBack({ 80, 0, 20, 20 });
-	pickedAnim.PushBack({ 100, 0, 20, 20 });
-	pickedAnim.PushBack({ 120, 0, 20, 20 });
-	pickedAnim.PushBack({ 140, 0, 20, 20 });
+	pickedAnim.PushBack({ 0, 0, 122,91 });
+	pickedAnim.PushBack({ 122, 0,122,91 });
+	pickedAnim.PushBack({ 122 + 122, 0, 122,91 });
+	pickedAnim.PushBack({ 0 ,91, 122,91 });
+	pickedAnim.PushBack({ 122  ,91, 122,91 });
+	pickedAnim.PushBack({ 0 ,91, 122,91 });
+	pickedAnim.PushBack({ 122 + 122, 0, 122,91 });
+	pickedAnim.PushBack({ 122, 0,122,91 });
 	pickedAnim.speed = 1.0f;
 	pickedAnim.loop = true;
 
@@ -75,9 +77,6 @@ bool ItemLives::Update(float dt)
 
 
 		};
-
-
-
 
 
 	// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
