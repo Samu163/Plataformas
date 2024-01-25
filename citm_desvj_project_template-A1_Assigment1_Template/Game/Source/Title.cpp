@@ -128,7 +128,7 @@ bool Title::Update(float dt)
 {
 	app->scene->player->position = app->scene->player->initialPosition;
 
-	app->render->DrawTexture(intialScreen, (app->scene->windowW / 2)*-1, (app->scene->windowH / 2)*-1 , false);
+	app->render->DrawTexture(intialScreen, 0, 0, false);
 
 	
 	// Get the mouse position and obtain the map coordinate
