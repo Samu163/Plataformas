@@ -22,6 +22,8 @@ public:
 
 	bool CleanUp();
 
+	void CheckPoint::OnCollision(PhysBody* physA, PhysBody* physB);
+
 
 public:
 
@@ -40,6 +42,10 @@ private:
 	Animation upAnim;
 	Animation downAnim;
 	Animation risingAnim;
+
+
+	bool isPickedRef = false;
+
 
 };
 

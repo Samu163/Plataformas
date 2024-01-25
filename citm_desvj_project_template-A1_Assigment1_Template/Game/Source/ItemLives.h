@@ -21,20 +21,24 @@ public:
 	bool Update(float dt);
 
 	bool CleanUp();
+	void ItemLives::OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
 
 	bool isPickedRef = false;
+	bool isCollected = false;
+
+	PhysBody* pbody;
+
+
 
 private:
 
 	SDL_Texture* texture;
 	const char* texturePath;
-	PhysBody* pbody;
 	Animation* currentAnimation = nullptr;
 	Animation idleAnim;
 	Animation pickedAnim;
-	bool isCollected = false;
 	int counterForAnim = 0;
 };
 

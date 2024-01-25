@@ -311,6 +311,16 @@ bool Scene::LoadState(pugi::xml_node node)
 		}
 		i++;
 	}
+	i = 0;
+	for (pugi::xml_node lifeItemNode = node.child("liveItem"); lifeItemNode; lifeItemNode = lifeItemNode.next_sibling("liveItem"))
+	{
+		bool temp = listOfItemLives[i]->isCollected;
+		listOfItemLives[i]->isCollected = lifeItemNode.attribute("isCollected").as_bool();
+		if (!temp && temp != listOfItemLives[i]->isCollected) {
+			app->physics->DestroyObject(listOfItemLives[i]->pbody);
+		}
+		i++;
+	}
 
 
 	//Configure the position of enemies and if they are dead or not
@@ -354,6 +364,14 @@ bool Scene::SaveState(pugi::xml_node node)
 		checkPointNode.append_attribute("isPicked").set_value(listOfCheckPoints[i]->isPicked);
 		checkPointNode.append_attribute("x").set_value(listOfCheckPoints[i]->position.x);
 		checkPointNode.append_attribute("y").set_value(listOfCheckPoints[i]->position.y);
+	}
+	
+	for (int i = 0; i < listOfItemLives.Count(); i++)
+	{
+		pugi::xml_node checkPointNode = node.append_child("liveItem");
+		checkPointNode.append_attribute("isPicked").set_value(listOfItemLives[i]->isCollected);
+		checkPointNode.append_attribute("x").set_value(listOfItemLives[i]->position.x);
+		checkPointNode.append_attribute("y").set_value(listOfItemLives[i]->position.y);
 	}
 
 	//Save the coins Position and if its picked

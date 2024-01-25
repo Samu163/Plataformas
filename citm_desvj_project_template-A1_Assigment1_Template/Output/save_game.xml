@@ -7,25 +7,29 @@
 	<:anonymous />
 	<scene>
 		<newGame sameGame="true" />
-		<checkPoint isPicked="false" x="1224" y="2494" />
-		<checkPoint isPicked="false" x="4569" y="453" />
-		<checkPoint isPicked="true" x="124" y="494" />
-		<checkPoint isPicked="true" x="223" y="494" />
+		<checkPoint isPicked="true" x="696" y="294" />
+		<checkPoint isPicked="true" x="1644" y="552" />
+		<checkPoint isPicked="false" x="3575" y="424" />
+		<checkPoint isPicked="false" x="5240" y="394" />
 		<coin isCollected="true" x="-16" y="-16" />
+		<coin isCollected="false" x="1244" y="346" />
 		<coin isCollected="true" x="-16" y="-16" />
-		<coin isCollected="false" x="1380" y="348" />
-		<coin isCollected="false" x="195" y="667" />
-		<coin isCollected="false" x="496" y="667" />
-		<player x="344" y="539" LastCheckPointX="140" LastCheckPointY="510" />
-		<flyingEnemy1 isOnSceen="false" x="441" y="441" />
-		<flyingEnemy2 isOnSceen="true" x="4256" y="1812" />
-		<enemy1 isOnSceen="true" x="3657" y="503" />
-		<enemy2 isOnSceen="true" x="4440" y="502" />
+		<coin isCollected="false" x="2427" y="411" />
+		<coin isCollected="false" x="3246" y="476" />
+		<coin isCollected="false" x="4855" y="375" />
+		<coin isCollected="false" x="6524" y="284" />
+		<coin isCollected="false" x="7006" y="496" />
+		<coin isCollected="false" x="10140" y="316" />
+		<player x="1644" y="394" LastCheckPointX="1660" LastCheckPointY="568" />
+		<flyingEnemy1 isOnSceen="true" x="3591" y="219" />
+		<flyingEnemy2 isOnSceen="true" x="4583" y="283" />
+		<enemy1 isOnSceen="true" x="1097" y="502" />
+		<enemy2 isOnSceen="true" x="3190" y="502" />
 	</scene>
 	<map />
 	<entitymanager />
 	<guiManager />
 	<renderer>
-		<player x="0" y="-10" />
+		<player x="-1132" y="-10" />
 	</renderer>
 </game_state>

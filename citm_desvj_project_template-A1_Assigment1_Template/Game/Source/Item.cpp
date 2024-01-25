@@ -56,6 +56,7 @@ bool Item::Start() {
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x + 12, position.y + 12, 12, bodyType::STATIC);
+	pbody->listener = this;
 	pbody->ctype = ColliderType::ITEM;
 
 	return true;
@@ -63,19 +64,6 @@ bool Item::Start() {
 
 bool Item::Update(float dt)
 {
-	//Checking if the player is colliding with the coin in order to destroy it 
-	if (app->scene->player->currentPosition.x > position.x - 30 &&
-		app->scene->player->currentPosition.x<position.x + 30 &&
-		app->scene->player->currentPosition.y>position.y - 30 &&
-		app->scene->player->currentPosition.y < position.y + 30)
-	{
-		isPickedRef = true;
-
-
-	};
-	
-	
-
 	// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
@@ -113,4 +101,16 @@ bool Item::Update(float dt)
 bool Item::CleanUp()
 {
 	return true;
+}
+
+void Item::OnCollision(PhysBody* physA, PhysBody* physB) {
+	switch(physB->ctype)
+	{
+		case ColliderType::PLAYER:
+			isPickedRef = true;
+			break;
+		case ColliderType::UNKNOWN:
+			LOG("Collision UNKNOWN");
+			break;
+	}
 }

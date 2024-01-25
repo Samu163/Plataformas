@@ -22,6 +22,8 @@ public:
 
 	bool CleanUp();
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 public:
 	PhysBody* pbody;
 	Animation* currentAnimation = nullptr;

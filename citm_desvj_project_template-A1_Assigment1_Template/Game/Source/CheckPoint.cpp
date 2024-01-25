@@ -43,6 +43,8 @@ bool CheckPoint::Start() {
 	texture = app->tex->Load(texturePath);
 
 	pbody = app->physics->CreateCircle(position.x + 40, position.y + 40, 40, bodyType::STATIC);
+	pbody->listener = this;
+
 	pbody->ctype = ColliderType::CHECKPOINT;
 
 	checkPointFxId = app->audio->LoadFx("Assets/Audio/Fx/successFx.ogg");
@@ -61,11 +63,7 @@ bool CheckPoint::Update(float dt)
 	{
 		currentAnimation = &downAnim;
 		//Check position of the last checkpoint player and activate flag if so 
-		if (app->scene->player->currentPosition.x > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40 &&
-			app->scene->player->currentPosition.x<METERS_TO_PIXELS(pbody->body->GetTransform().p.x) + 40 &&
-			app->scene->player->currentPosition.y>METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 40 &&
-			app->scene->player->currentPosition.y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y) + 40
-			&& !isPicked)
+		if (isPickedRef)
 		{
 			if (counter == 0) {
 				app->audio->PlayFx(checkPointFxId);
@@ -102,5 +100,17 @@ bool CheckPoint::Update(float dt)
 bool CheckPoint::CleanUp()
 {
 	return true;
+}
+
+void CheckPoint::OnCollision(PhysBody* physA, PhysBody* physB) {
+	switch (physB->ctype)
+	{
+	case ColliderType::PLAYER:
+		isPickedRef = true;
+		break;
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+		break;
+	}
 }
 
