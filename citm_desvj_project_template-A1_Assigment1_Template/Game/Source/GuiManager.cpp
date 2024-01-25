@@ -37,6 +37,14 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 		break;
 	case GuiControlType::VALUEBOX:
 		guiControl = new GuiControlValueBox(id, bounds, text);
+		if (guiControl->id ==1) {
+			guiControl->texture = app->tex->Load("Assets/Textures/uilive.png");
+		}
+		else
+		{
+			guiControl->texture = app->tex->Load("Assets/Textures/uicoin.png");
+
+		}
 		break;
 	case GuiControlType::CHECKBOX:
 		guiControl = new GuiControlCheckBox(id, bounds, text);

@@ -98,9 +98,6 @@ private:
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 
-
-	bool isInDebugMode = false;
-
 	GuiControlButton* exitPauseButton;
 	GuiControlButton* creditsButton;
 	GuiControlButton* startButton;

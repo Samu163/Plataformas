@@ -168,14 +168,14 @@ bool Scene::Start()
 	backSettingsButton->state = GuiControlState::DISABLED;
 
 	//Ui Player
-	SDL_Rect btPos2 = { windowW - 150, 100, 240,100 };
+	SDL_Rect btPos2 = { windowW - 150, 100, 240, 100};
 	playerLifesBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos2, this);
 	playerLifesBox->function = FunctionGUI::LIVES;
 	playerLifesBox->state = GuiControlState::DISABLED;
 
-	SDL_Rect btPos5 = { windowW - 150, 300, 240,100 };
-	coinsBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 1, "Lifes:", btPos5, this);
-	coinsBox->function = FunctionGUI::LIVES;
+	SDL_Rect btPos5 = { windowW - 150, 300, 240, 100};
+	coinsBox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 2, "Coins:", btPos5, this);
+	coinsBox->function = FunctionGUI::COINS;
 	coinsBox->state = GuiControlState::DISABLED;
 
 
@@ -195,7 +195,7 @@ bool Scene::Update(float dt)
 	string strPlayerLifes = std::to_string(player->lifes);
 	playerLifesBox->SetValue(strPlayerLifes);	
 	string coins = std::to_string(player->coinCount);
-	//playerLifesBox->SetValue(coins);
+	coinsBox->SetValue(coins);
 
 
 	if (app->titleScreen->continueBtn) {
@@ -265,6 +265,8 @@ bool Scene::Update(float dt)
 		app->LoadRequest();
 	}
 
+
+
 	return true;
 }
 
@@ -304,6 +306,9 @@ void Scene::ShowPauseButtons(bool condition)
 		settingsPauseButton->state = GuiControlState::NORMAL;
 		exitPauseButton->state = GuiControlState::NORMAL;
 		returnTitleButton->state = GuiControlState::NORMAL;
+		playerLifesBox->state = GuiControlState::DISABLED;
+		coinsBox->state = GuiControlState::DISABLED;
+
 	}
 	else
 	{
@@ -312,6 +317,8 @@ void Scene::ShowPauseButtons(bool condition)
 		settingsPauseButton->state = GuiControlState::DISABLED;
 		exitPauseButton->state = GuiControlState::DISABLED;
 		returnTitleButton->state = GuiControlState::DISABLED;
+		playerLifesBox->state = GuiControlState::NORMAL;
+		coinsBox->state = GuiControlState::NORMAL;
 
 	}
 }
@@ -325,6 +332,8 @@ void Scene::ShowSettings(bool condition)
 		fullScreenBox->state = GuiControlState::NORMAL;
 		backSettingsButton->state = GuiControlState::NORMAL;
 		vSyncBtn->state = GuiControlState::NORMAL;
+		playerLifesBox->state = GuiControlState::DISABLED;
+		coinsBox->state = GuiControlState::DISABLED;
 	}
 	else
 	{
@@ -333,6 +342,8 @@ void Scene::ShowSettings(bool condition)
 		fullScreenBox->state = GuiControlState::DISABLED;
 		backSettingsButton->state = GuiControlState::DISABLED;
 		vSyncBtn->state = GuiControlState::DISABLED;
+		playerLifesBox->state = GuiControlState::NORMAL;
+		coinsBox->state = GuiControlState::NORMAL;
 	}
 }
 
@@ -631,7 +642,8 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case FunctionGUI::BACKTOTITLE:
 		app->audio->PlayFx(clickFx);
-
+		app->scene->coinsBox->state = GuiControlState::DISABLED;
+		app->scene->playerLifesBox->state = GuiControlState::DISABLED;
 		isOnPause = false;
 		ShowPauseButtons(false);
 		app->titleScreen->ShowPauseButtons(true);

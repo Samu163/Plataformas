@@ -54,7 +54,7 @@ bool Credits::PreUpdate()
 // Called each loop iteration
 bool Credits::Update(float dt)
 {
-	app->render->DrawTexture(windowTex, 0, 0, false);
+	app->render->DrawTexture(windowTex, 0, 0, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
 
 	if (counter > 20) {
 		app->fadeToBlack->FadeToBlack(this, app->titleScreen, 60);
