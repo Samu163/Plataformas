@@ -83,6 +83,8 @@ public:
 
 	bool retButton = true;
 
+	bool isOnPause = false;
+
 
 private:
 
@@ -103,7 +105,6 @@ private:
 	GuiControlCheckBox* fullScreenBox;
 	GuiControlValueBox* playerLifesBox;
 
-	bool isOnPause = false;
 
 	bool isFullScreen = false;
 

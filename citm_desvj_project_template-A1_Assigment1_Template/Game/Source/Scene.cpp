@@ -224,6 +224,7 @@ bool Scene::Update(float dt)
 
 	return true;
 }
+
 void Scene::DrawPath() {
 	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
 	for (uint i = 0; i < path->Count(); ++i)
@@ -482,6 +483,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		control->hasToExit = true;
 		break;
 	case FunctionGUI::SETTINGS:
+		
 		break;	
 	case FunctionGUI::FULLSCREEN:
 		if (!isFullScreen) {
