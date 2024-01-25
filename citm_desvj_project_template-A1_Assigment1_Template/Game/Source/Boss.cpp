@@ -87,10 +87,9 @@ bool Boss::Start()
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/Boss.png");
 
-	idleEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/idleEn1.ogg");
-	attackEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/attackEn1.ogg");
+	cowFx = app->audio->LoadFx("Assets/Audio/Fx/cow.ogg");
+	tickingFx = app->audio->LoadFx("Assets/Audio/Fx/ticking.ogg");
 	deathEn1Fx = app->audio->LoadFx("Assets/Audio/Fx/deathEn1.ogg");
-
 
 	//initialize player parameters
 	Init();
@@ -185,28 +184,43 @@ bool Boss::Update(float dt)
 				break;
 			}
 
-
+		
 			//150= 5 segundos 
 			if (time < 150) {
-
+				
 				pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 				vel = app->scene->CheckTheMovementWithPath(pos, position);
 				vel.x *= 0;
 				vel.y = -GRAVITY_Y;
 				isFlipped = app->scene->CheckVelocityForFlip(vel);
+				if (Isattacking == false) {
+					app->audio->PlayFx(tickingFx);
+
+				}
+				Isattacking = true;
+				Isattacking2 = false;
+
+				
 			}
 			else {
+			
 				pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 				vel = app->scene->CheckTheMovementWithPath(pos, position);
 				vel.x *= 6;
 				vel.y = -GRAVITY_Y;
 				isFlipped = app->scene->CheckVelocityForFlip(vel);
+				if (Isattacking2 == false) {
+					app->audio->PlayFx(cowFx);
 
+				}
+				Isattacking2 = true;
 
+				Isattacking = false;
 			}
 			if (time >= 250) {
 				time = 0;
 			}
+			
 			FollowAnim.Update();
 		}
 		else
@@ -215,7 +229,8 @@ bool Boss::Update(float dt)
 			enemyState = state::IDLE;
 			break;
 		}
-		app->audio->PlayFx(idleEn1Fx);
+	
+
 		break;
 	case state::RETURNING_HOME:
 		time = 0;
@@ -236,7 +251,7 @@ bool Boss::Update(float dt)
 		vel = app->scene->CheckTheMovementWithPath(pos, position);
 		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
-		app->audio->PlayFx(idleEn1Fx);
+
 		break;
 	case state::WALK:
 		time = 0;
@@ -257,7 +272,7 @@ bool Boss::Update(float dt)
 		isFlipped = app->scene->CheckVelocityForFlip(vel);
 		walkAnim.Update();
 		//path.Update();
-		app->audio->PlayFx(idleEn1Fx);
+
 		break;
 	case state::ATTACK:
 
@@ -271,7 +286,6 @@ bool Boss::Update(float dt)
 		}
 		attackDuration++;
 		attackAnim.Update();
-		app->audio->PlayFx(attackEn1Fx);
 		//path.Update();
 		break;
 

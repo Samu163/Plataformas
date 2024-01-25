@@ -15,6 +15,7 @@
 #include "GuiControlValueBox.h"
 #include "GuiControlCheckBox.h"
 #include "ItemLives.h"
+#include "Audio.h"
 
 #include <list>
 
@@ -78,7 +79,7 @@ public:
 	iPoint mousePos;
 	iPoint mouseTile;
 	bool sameGame = false;
-
+	int clickFx;
 
 	List<CheckPoint*> listOfCheckPoints;
 	List<Item*> listOfCoins;

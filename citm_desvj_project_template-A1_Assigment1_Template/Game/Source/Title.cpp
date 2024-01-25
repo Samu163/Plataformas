@@ -53,6 +53,8 @@ bool Title::Start()
 	windowTex = app->tex->Load("Assets/Textures/bgSettings.png");
 	intialScreen = app->tex->Load("Assets/Textures/Tittlebg.png");
 
+	clickFx = app->audio->LoadFx("Assets/Audio/Fx/click.ogg");
+
 	//buttons
 	SDL_Rect btPosSTART = { windowW / 2 - 120, windowH / 2 - 240 , 240,60 };
 	startButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "START     ", btPosSTART, this);
@@ -208,6 +210,7 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 	switch (control->function)
 	{
 	case FunctionGUI::START:
+		app->audio->PlayFx(clickFx);
 		app->entityManager->active = true;
 		app->map->active = true;
 		app->scene->active = true;
@@ -215,6 +218,7 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::CONTINUE:
+		app->audio->PlayFx(clickFx);
 		app->entityManager->active = true;
 		app->map->active = true;
 		app->scene->active = true;
@@ -223,14 +227,17 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::EXIT:
+		app->audio->PlayFx(clickFx);
 		control->hasToExit = true;
 		break;
 	case FunctionGUI::SETTINGS:
+		app->audio->PlayFx(clickFx);
 		isOnSettings = true;
 		ShowPauseButtons(false);
 		ShowSettings(true);
 		break;
 	case FunctionGUI::FULLSCREEN:
+		app->audio->PlayFx(clickFx);
 		if (!isFullScreen) {
 			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN);
 			////TODO: Relocating all the other butons 
@@ -246,30 +253,37 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		break;
 	case FunctionGUI::CREDITS:
+		app->audio->PlayFx(clickFx);
 		app->credits->counter = 0;
 		app->fadeToBlack->FadeToBlack(this, app->credits, 60);
 		break;
 	case FunctionGUI::MUSIC:
+		app->audio->PlayFx(clickFx);
 		app->audio->ChangeMusicVolume(musicSlider->newValue);
 		break;
 	case FunctionGUI::FX:
+		app->audio->PlayFx(clickFx);
 		app->audio->ChangeFxVolume(fxSlider->newValue);
 		break;
 	case FunctionGUI::VSYNC:
+		app->audio->PlayFx(clickFx);
 		break;
 	case FunctionGUI::TIMER:
 		break;
 	case FunctionGUI::RESUME:
+		app->audio->PlayFx(clickFx);
 		isOnPause = false;
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::BACKTOTITLE:
+		app->audio->PlayFx(clickFx);
 		isOnSettings = false;
 		ShowPauseButtons(true);
 		ShowSettings(false);
 
 		break;
 	case FunctionGUI::BACKTOPAUSE:
+		app->audio->PlayFx(clickFx);
 		ShowSettings(false);
 		ShowPauseButtons(true);
 		break;

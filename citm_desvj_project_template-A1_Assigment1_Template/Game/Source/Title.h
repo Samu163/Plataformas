@@ -60,6 +60,7 @@ public:
 
 
 public: 
+	int clickFx;
 	Player* player;
 	Enemy* walkingEnemy_1;
 	Enemy* walkingEnemy_2;

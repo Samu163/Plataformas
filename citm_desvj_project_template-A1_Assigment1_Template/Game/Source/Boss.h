@@ -62,10 +62,11 @@ public:
 
 	state enemyState = state::WALK;
 
-	int idleEn1Fx;
-	int attackEn1Fx;
+	int cowFx;
+	int tickingFx;
 	int deathEn1Fx;
-
+	bool Isattacking =false;
+	bool Isattacking2 = false;
 	float speed = 0.4f;
 	int visionRange;
 	int walkingRange;
