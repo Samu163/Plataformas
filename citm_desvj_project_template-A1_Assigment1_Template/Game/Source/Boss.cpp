@@ -109,9 +109,9 @@ void Boss::Init()
 	pbody = app->physics->CreateCircle(position.x + 25, position.y + 25, 25, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
-	visionRange = 2;
+	visionRange = 400;
 	counterForPath = 0;
-	walkingRange = 370;
+	walkingRange = 375;
 	counterForDead = 0;
 	hasDead = false;
 
@@ -198,13 +198,13 @@ bool Boss::Update(float dt)
 			else {
 				pos = app->map->MapToWorld(path->At(counterForPath)->x, path->At(counterForPath)->y);
 				vel = app->scene->CheckTheMovementWithPath(pos, position);
-				vel.x *= 4;
+				vel.x *= 6;
 				vel.y = -GRAVITY_Y;
 				isFlipped = app->scene->CheckVelocityForFlip(vel);
 
 
 			}
-			if (time >= 200) {
+			if (time >= 250) {
 				time = 0;
 			}
 			FollowAnim.Update();
