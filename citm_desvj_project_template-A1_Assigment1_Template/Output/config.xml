@@ -28,7 +28,7 @@
 	  
       <player x="128" y="544" texturepath="Assets/Textures/player1.png"/>
 
-	  <Boss x="10350" y="500" texturepath="Assets/Textures/Boss.png"/>
+	  <Boss x="10352,5" y="500" texturepath="Assets/Textures/Boss.png"/>
 	  
 	  <flyingEnemy1 x="3552" y="224" texturepath="Assets/Textures/Enemy.png"/>
 	

@@ -111,7 +111,7 @@ void Boss::Init()
 	pbody->ctype = ColliderType::ENEMY;
 	visionRange = 400;
 	counterForPath = 0;
-	walkingRange = 375;
+	walkingRange = 378;
 	counterForDead = 0;
 	hasDead = false;
 
