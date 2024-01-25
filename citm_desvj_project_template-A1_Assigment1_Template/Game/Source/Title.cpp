@@ -137,16 +137,6 @@ bool Title::Update(float dt)
 	// Get the mouse position and obtain the map coordinate
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 
-	//if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && !player->isDead) 
-	//{
-	//	sameGame = true;
-	//	app->SaveRequest();
-	//}
-
-	//if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && !player->isDead) 
-	//{
-	//	app->LoadRequest();
-	//}
 
 	return true;
 }

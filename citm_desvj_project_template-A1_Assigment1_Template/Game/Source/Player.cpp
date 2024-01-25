@@ -175,6 +175,14 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
+	if (position.x > 7500 && position.x < 8000)
+	{
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(10175), PIXEL_TO_METERS(320));
+		pbody->body->SetTransform(newPos, 0);
+	}
+
+
+
 	if (app->scene->isOnPause)
 	{
 		app->win->GetWindowSize(app->scene->windowW, app->scene->windowH);
