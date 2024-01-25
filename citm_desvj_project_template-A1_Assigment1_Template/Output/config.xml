@@ -58,8 +58,9 @@
 	  <checkPoint x="1620" y="528" texturepath="Assets/Textures/checkPointRed.png"/>
 	  <checkPoint x="3552" y="400" texturepath="Assets/Textures/checkPointRed.png"/>
 	  <checkPoint x="5216" y="370" texturepath="Assets/Textures/checkPointRed.png"/>
+	  <checkPoint x="10175" y="340" texturepath="Assets/Textures/checkPointRed.png"/>
 
-	  
+
   </scene>
 
   <map>

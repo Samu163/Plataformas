@@ -549,7 +549,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		break;	
 	case FunctionGUI::FULLSCREEN:
 		if (!isFullScreen) {
-			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN);
 			////TODO: Relocating all the other butons 
 			//app->win->GetWindowSize(windowW, windowH);
 				
