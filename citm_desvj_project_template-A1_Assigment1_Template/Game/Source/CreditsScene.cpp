@@ -56,7 +56,7 @@ bool Credits::Update(float dt)
 {
 	app->render->DrawTexture(windowTex, 0, 0, false);
 
-	if (counter > 200) {
+	if (counter > 20) {
 		app->fadeToBlack->FadeToBlack(this, app->titleScreen, 60);
 
 	}

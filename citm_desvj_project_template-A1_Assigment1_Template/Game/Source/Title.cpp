@@ -212,153 +212,6 @@ bool Title::CleanUp()
 	return true;
 }
 
-bool Title::LoadState(pugi::xml_node node)
-{
-	//configure position for player
-	b2Vec2 newPos(PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointX").as_int()), PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointY").as_int()));
-	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
-	player->lastCheckPoint.x = node.child("player").attribute("LastCheckPointX").as_int();
-	player->lastCheckPoint.y = node.child("player").attribute("LastCheckPointY").as_int();
-
-
-
-
-	int i = 0;
-	for (pugi::xml_node checkPointNode = node.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
-	{
-		listOfCheckPoints[i]->isPicked = checkPointNode.attribute("isPicked").as_bool();
-		i++;
-	}
-	i = 0;
-	for (pugi::xml_node coinNode = node.child("coin"); coinNode; coinNode = coinNode.next_sibling("coin"))
-	{
-		bool temp = listOfCoins[i]->isCollected;
-		listOfCoins[i]->isCollected = coinNode.attribute("isCollected").as_bool();
-		if (!temp && temp != listOfCoins[i]->isCollected) {
-			app->physics->DestroyObject(listOfCoins[i]->pbody);
-		}
-		i++;
-	}
-	i = 0;
-	for (pugi::xml_node lifeItemNode = node.child("liveItem"); lifeItemNode; lifeItemNode = lifeItemNode.next_sibling("liveItem"))
-	{
-		bool temp = listOfItemLives[i]->isCollected;
-		listOfItemLives[i]->isCollected = lifeItemNode.attribute("isCollected").as_bool();
-		if (!temp && temp != listOfItemLives[i]->isCollected) {
-			app->physics->DestroyObject(listOfItemLives[i]->pbody);
-		}
-		i++;
-	}
-
-
-	//Configure the position of enemies and if they are dead or not
-	bool checkGame = node.child("newGame").attribute("sameGame").as_bool();
-	if (sameGame != checkGame)
-	{
-		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy1").attribute("y").as_int()));
-		flyingEnemy_1->pbody->body->SetTransform(newPos, flyingEnemy_1->pbody->body->GetAngle());
-		flyingEnemy_1->isOnSceen = node.child("flyingEnemy1").attribute("isOnSceen").as_bool();
-
-		flyingEnemy_2->isOnSceen = node.child("flyingEnemy2").attribute("isOnSceen").as_bool();
-		newPos = b2Vec2(PIXEL_TO_METERS(node.child("flyingEnemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("flyingEnemy2").attribute("y").as_int()));
-		flyingEnemy_2->pbody->body->SetTransform(newPos, flyingEnemy_2->pbody->body->GetAngle());
-
-		walkingEnemy_1->isOnSceen = node.child("enemy1").attribute("isOnSceen").as_bool();
-		newPos = b2Vec2(PIXEL_TO_METERS(node.child("enemy1").attribute("x").as_int()), PIXEL_TO_METERS(node.child("enemy1").attribute("y").as_int()));
-		walkingEnemy_1->pbody->body->SetTransform(newPos, walkingEnemy_1->pbody->body->GetAngle());
-
-		walkingEnemy_2->isOnSceen = node.child("enemy2").attribute("isOnSceen").as_bool();
-		newPos = b2Vec2(PIXEL_TO_METERS(node.child("enemy2").attribute("x").as_int()), PIXEL_TO_METERS(node.child("enemy2").attribute("y").as_int()));
-		walkingEnemy_2->pbody->body->SetTransform(newPos, walkingEnemy_2->pbody->body->GetAngle());
-		sameGame = true;
-	}
-
-	return true;
-
-};
-
-bool Title::SaveState(pugi::xml_node node)
-{
-	//Save if is on a current game
-	pugi::xml_node gameNode = node.append_child("newGame");
-	gameNode.append_attribute("sameGame").set_value(sameGame);
-
-
-
-	//Save the checkPoints Position and if its picked
-	for (int i = 0; i < listOfCheckPoints.Count(); i++)
-	{
-		pugi::xml_node checkPointNode = node.append_child("checkPoint");
-		checkPointNode.append_attribute("isPicked").set_value(listOfCheckPoints[i]->isPicked);
-		checkPointNode.append_attribute("x").set_value(listOfCheckPoints[i]->position.x);
-		checkPointNode.append_attribute("y").set_value(listOfCheckPoints[i]->position.y);
-	}
-
-	for (int i = 0; i < listOfItemLives.Count(); i++)
-	{
-		pugi::xml_node checkPointNode = node.append_child("liveItem");
-		checkPointNode.append_attribute("isPicked").set_value(listOfItemLives[i]->isCollected);
-		checkPointNode.append_attribute("x").set_value(listOfItemLives[i]->position.x);
-		checkPointNode.append_attribute("y").set_value(listOfItemLives[i]->position.y);
-	}
-
-	//Save the coins Position and if its picked
-	for (int i = 0; i < listOfCoins.Count(); i++)
-	{
-		pugi::xml_node coinNode = node.append_child("coin");
-		coinNode.append_attribute("isCollected").set_value(listOfCoins[i]->isCollected);
-		coinNode.append_attribute("x").set_value(listOfCoins[i]->position.x);
-		coinNode.append_attribute("y").set_value(listOfCoins[i]->position.y);
-	}
-
-	//Save player position
-	pugi::xml_node playerNode = node.append_child("player");
-	playerNode.append_attribute("x").set_value(player->position.x);
-	playerNode.append_attribute("y").set_value(player->position.y);
-	playerNode.append_attribute("LastCheckPointX").set_value(player->lastCheckPoint.x);
-	playerNode.append_attribute("LastCheckPointY").set_value(player->lastCheckPoint.y);
-	//Save Enemies position
-	pugi::xml_node flyingEnemy1Node = node.append_child("flyingEnemy1");
-	flyingEnemy1Node.append_attribute("isOnSceen").set_value(flyingEnemy_1->isOnSceen);
-	if (flyingEnemy_1->isOnSceen) {
-		flyingEnemy1Node.append_attribute("x").set_value(flyingEnemy_1->position.x);
-		flyingEnemy1Node.append_attribute("y").set_value(flyingEnemy_1->position.y);
-	}
-	else
-	{
-		flyingEnemy1Node.append_attribute("x").set_value(flyingEnemy_1->deathPosition.x);
-		flyingEnemy1Node.append_attribute("y").set_value(flyingEnemy_1->deathPosition.y);
-	}
-
-
-	pugi::xml_node flyingEnemy2Node = node.append_child("flyingEnemy2");
-	flyingEnemy2Node.append_attribute("isOnSceen").set_value(flyingEnemy_2->isOnSceen);
-	if (flyingEnemy_2->isOnSceen) {
-		flyingEnemy2Node.append_attribute("x").set_value(flyingEnemy_2->position.x);
-		flyingEnemy2Node.append_attribute("y").set_value(flyingEnemy_2->position.y);
-	}
-	else
-	{
-		flyingEnemy2Node.append_attribute("x").set_value(flyingEnemy_2->deathPosition.x);
-		flyingEnemy2Node.append_attribute("y").set_value(flyingEnemy_2->deathPosition.y);
-	}
-
-	pugi::xml_node enemy1Node = node.append_child("enemy1");
-	enemy1Node.append_attribute("isOnSceen").set_value(walkingEnemy_1->isOnSceen);
-	enemy1Node.append_attribute("x").set_value(walkingEnemy_1->position.x);
-	enemy1Node.append_attribute("y").set_value(walkingEnemy_1->position.y);
-
-	pugi::xml_node enemy2Node = node.append_child("enemy2");
-	enemy2Node.append_attribute("isOnSceen").set_value(walkingEnemy_2->isOnSceen);
-	enemy2Node.append_attribute("x").set_value(walkingEnemy_2->position.x);
-	enemy2Node.append_attribute("y").set_value(walkingEnemy_2->position.y);
-
-
-
-
-	return true;
-};
-
 
 bool Title::OnGuiMouseClickEvent(GuiControl* control)
 {
@@ -369,6 +222,14 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		app->map->active = true;
 		app->scene->active = true;
 		app->titleScreen->active = false;
+		ShowPauseButtons(false);
+		break;
+	case FunctionGUI::CONTINUE:
+		app->entityManager->active = true;
+		app->map->active = true;
+		app->scene->active = true;
+		app->titleScreen->active = false;
+		continueBtn = true;
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::EXIT:
