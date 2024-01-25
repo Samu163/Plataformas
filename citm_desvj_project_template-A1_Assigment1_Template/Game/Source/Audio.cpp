@@ -176,3 +176,13 @@ bool Audio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+void Audio::ChangeMusicVolume(float percentage) 
+{
+	Mix_VolumeMusic(MIX_MAX_VOLUME * percentage);
+}
+
+void Audio::ChangeFxVolume(float percentage) 
+{
+	Mix_Volume(-1,MIX_MAX_VOLUME * percentage);
+}

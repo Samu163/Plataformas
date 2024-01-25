@@ -3,95 +3,42 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Render.h"
+#include "Map.h"
 #include "Window.h"
 #include "Scene.h"
-#include "Map.h"
-#include "Pathfinding.h"
 #include "Player.h"
 #include "GuiControl.h"
 #include "GuiManager.h"
 #include "ItemLives.h"
+#include "title.h"
 
 
 #include "Defs.h"
 #include "Log.h"
 
-Scene::Scene() : Module()
+Title::Title() : Module()
 {
 	name.Create("scene");
 }
 
 // Destructor
-Scene::~Scene()
+Title::~Title()
 {}
 
 // Called before render is available
-bool Scene::Awake(pugi::xml_node& config)
+bool Title::Awake(pugi::xml_node& config)
 {
-	LOG("Loading Scene");
-	bool ret = true;
-
-
-
-	// iterate all objects in the scene
-	// Check https://pugixml.org/docs/quickstart.html#access
-	for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
-	{
-		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
-		item->parameters = itemNode;
-		listOfCoins.Add(item);
-	}
-	for (pugi::xml_node lifeItemNode = config.child("lifeItem"); lifeItemNode; lifeItemNode = lifeItemNode.next_sibling("lifeItem"))
-	{
-		ItemLives* itemLives = (ItemLives*)app->entityManager->CreateEntity(EntityType::LIVES_ITEM);
-		itemLives->parameters = lifeItemNode;
-		listOfItemLives.Add(itemLives);
-	}
-	for (pugi::xml_node checkPointNode = config.child("checkPoint"); checkPointNode; checkPointNode = checkPointNode.next_sibling("checkPoint"))
-	{
-		CheckPoint* checkPoint = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
-		checkPoint->parameters = checkPointNode;
-		listOfCheckPoints.Add(checkPoint);
-
-	}
-
-
-	app->map->path = config.child("map").attribute("path").as_string();
-	if (config.child("player")) {
-		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
-		player->parameters = config.child("player");
-	}
-	if (config.child("flyingEnemy1")) {
-		flyingEnemy_1 = (FlyingEnemy*)app->entityManager->CreateEntity(EntityType::FLYING_ENEMY);
-		flyingEnemy_1->parameters = config.child("flyingEnemy1");
-	}
-	if (config.child("flyingEnemy2")) {
-		flyingEnemy_2 = (FlyingEnemy*)app->entityManager->CreateEntity(EntityType::FLYING_ENEMY);
-		flyingEnemy_2->parameters = config.child("flyingEnemy2");
-	}
-	if (config.child("enemy1")) {
-		walkingEnemy_1 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
-		walkingEnemy_1->parameters = config.child("enemy1");
-	}
-	if (config.child("enemy2")) {
-		walkingEnemy_2 = (Enemy*)app->entityManager->CreateEntity(EntityType::WALKING_ENEMY);
-		walkingEnemy_2->parameters = config.child("enemy2");
-	}
 	
-	return ret;
+	
+	return true;
 }
 
-
 // Called before the first frame
-bool Scene::Start()
+bool Title::Start()
 {
-
-
-	// NOTE: We have to avoid the use of paths in the code, we will move it later to a config file
-	//img = app->tex->Load("Assets/Textures/test.png");
-	
-	//Music is commented so that you can add your own music
-	app->audio->PlayMusic("Assets/Audio/Musica.wav", 0.0f);
+	app->entityManager->active = false;
+	app->map->active = false;
+	app->scene->active = false;
 
 	//Get the size of the window
 	app->win->GetWindowSize(windowW, windowH);
@@ -102,20 +49,16 @@ bool Scene::Start()
 	textPosX = (float)windowW / 2 - (float)texW / 2;
 	textPosY = (float)windowH / 2 - (float)texH / 2;
 
-	app->map->Load();
-
-
-	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
-		app->map->mapData.width,
-		app->map->mapData.height,
-		app->map->mapData.tileWidth,
-		app->map->mapData.tileHeight,
-		app->map->mapData.tilesets.Count());
-
 	mouseTileTex = app->tex->Load("Assets/Maps/tileSelection.png");
 	windowTex = app->tex->Load("Assets/Textures/bgSettings.png");
+	intialScreen = app->tex->Load("Assets/Textures/Tittlebg.png");
 
 	//buttons
+	SDL_Rect btPosSTART = { windowW / 2 - 120, windowH / 2 , 240,60 };
+	startButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "START     ", btPosSTART, this);
+	startButton->function = FunctionGUI::START;
+	//startButton->state = GuiControlState::DISABLED;
+	
 	SDL_Rect btPos = { windowW / 2 - 120, windowH / 2 , 240,60 };
 	exitPauseButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "EXIT     ", btPos, this);
 	exitPauseButton->function = FunctionGUI::EXIT;
@@ -175,102 +118,41 @@ bool Scene::Start()
 }
 
 // Called each loop iteration
-bool Scene::PreUpdate()
+bool Title::PreUpdate()
 {
 	return true;
 }
 
 // Called each loop iteration
-bool Scene::Update(float dt)
+bool Title::Update(float dt)
 {
-	string strPlayerLifes = std::to_string(player->lifes);
-	playerLifesBox->SetValue(strPlayerLifes);	
-	string coins = std::to_string(player->coinCount);
-	//playerLifesBox->SetValue(coins);
+	app->scene->player->position = app->scene->player->initialPosition;
 
-	float camSpeed = 1;
+	app->render->DrawTexture(intialScreen, (app->scene->windowW / 2)*-1, (app->scene->windowH / 2)*-1 , false);
+
 	
-	//Debug
-	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
-	{
-		isInDebugMode=!isInDebugMode;
-	}
-	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-	{
-		isOnPause = true;
-		ShowPauseButtons(isOnPause);
-	}
-	
-
-	if (isInDebugMode)
-	{
-		if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-			app->render->camera.y += (int)ceil(camSpeed * dt);
-
-		if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-			app->render->camera.y -= (int)ceil(camSpeed * dt);
-
-		if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-			app->render->camera.x += (int)ceil(camSpeed * dt);
-
-		if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-			app->render->camera.x -= (int)ceil(camSpeed * dt);
-	}
-	else
-	{
-		if (player->position.x < app->win->screenSurface->w / 2) {
-			player->position.x = app->win->screenSurface->w / 2;
-		}
-		app->render->camera.x = -player->position.x + app->win->screenSurface->w / 2;
-		
-		 if (player->position.y >= app->win->screenSurface->h/1.1) 
-		{
-			player->position.y -= app->win->screenSurface->h - 13 * 29;
-		}
-		else
-		{
-			player->position.y = 10;
-		}
-
-		app->render->camera.y = -player->position.y;
-		
-	}
 	// Get the mouse position and obtain the map coordinate
 	app->input->GetMousePosition(mousePos.x, mousePos.y);
 
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && !player->isDead) 
-	{
-		sameGame = true;
-		app->SaveRequest();
-	}
+	//if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && !player->isDead) 
+	//{
+	//	sameGame = true;
+	//	app->SaveRequest();
+	//}
 
-	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && !player->isDead) 
-	{
-		app->LoadRequest();
-	}
+	//if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && !player->isDead) 
+	//{
+	//	app->LoadRequest();
+	//}
 
 	return true;
 }
 
-void Scene::DrawPath() {
-	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
-	for (uint i = 0; i < path->Count(); ++i)
-	{
-		if (path != NULL)
-		{
-			iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-			if (app->physics->debugMode) {
-				app->render->DrawTexture(mouseTileTex, pos.x, pos.y, false);
-
-			}
-		}
-
-	}
-}
-
 // Called each loop iteration
-bool Scene::PostUpdate()
+bool Title::PostUpdate()
 {
+
+
 	bool ret = true;
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || exitPauseButton->hasToExit)
@@ -279,7 +161,7 @@ bool Scene::PostUpdate()
 	return ret;
 }
 
-void Scene::ShowPauseButtons(bool condition)
+void Title::ShowPauseButtons(bool condition)
 {
 	if (condition) 
 	{
@@ -297,7 +179,7 @@ void Scene::ShowPauseButtons(bool condition)
 	}
 }
 
-void Scene::ShowSettings(bool condition)
+void Title::ShowSettings(bool condition)
 {
 	if (condition) 
 	{
@@ -318,21 +200,20 @@ void Scene::ShowSettings(bool condition)
 }
 
 // Called before quitting
-bool Scene::CleanUp()
+bool Title::CleanUp()
 {
 	LOG("Freeing scene");
 
 	return true;
 }
 
-bool Scene::LoadState(pugi::xml_node node) 
+bool Title::LoadState(pugi::xml_node node)
 {
 	//configure position for player
 	b2Vec2 newPos(PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointX").as_int()), PIXEL_TO_METERS(node.child("player").attribute("LastCheckPointY").as_int()));
 	player->pbody->body->SetTransform(newPos, player->pbody->body->GetAngle());
 	player->lastCheckPoint.x = node.child("player").attribute("LastCheckPointX").as_int();
 	player->lastCheckPoint.y = node.child("player").attribute("LastCheckPointY").as_int();
-	player->lifes = node.child("player").attribute("lifes").as_int();
 	
 
 
@@ -391,7 +272,7 @@ bool Scene::LoadState(pugi::xml_node node)
 
 };
 
-bool Scene::SaveState(pugi::xml_node node)
+bool Title::SaveState(pugi::xml_node node)
 {
 	//Save if is on a current game
 	pugi::xml_node gameNode = node.append_child("newGame");
@@ -431,7 +312,6 @@ bool Scene::SaveState(pugi::xml_node node)
 	playerNode.append_attribute("y").set_value(player->position.y);
 	playerNode.append_attribute("LastCheckPointX").set_value(player->lastCheckPoint.x);
 	playerNode.append_attribute("LastCheckPointY").set_value(player->lastCheckPoint.y);
-	playerNode.append_attribute("lifes").set_value(player->lifes);
 	//Save Enemies position
 	pugi::xml_node flyingEnemy1Node = node.append_child("flyingEnemy1");
 	flyingEnemy1Node.append_attribute("isOnSceen").set_value(flyingEnemy_1->isOnSceen);
@@ -474,71 +354,16 @@ bool Scene::SaveState(pugi::xml_node node)
 	return true;
 };
 
-b2Vec2 Scene::CheckTheMovementWithPath(iPoint positionOfThePath, iPoint originalPosition)
+
+bool Title::OnGuiMouseClickEvent(GuiControl* control)
 {
-	if (positionOfThePath.x > originalPosition.x)
-	{
-		if (positionOfThePath.y < originalPosition.y) {
-			return b2Vec2(3, -3);
-		}
-		else if (positionOfThePath.y > originalPosition.y)
-		{
-			return b2Vec2(3, 3);
-		}
-		else
-		{
-			return b2Vec2(3, -0.165);
-		}
-	}
-	else if (positionOfThePath.x < originalPosition.x)
-	{
-		if (positionOfThePath.y < originalPosition.y) {
-			return b2Vec2(-3, -3);
-		}
-		else if (positionOfThePath.y > originalPosition.y)
-		{
-			return b2Vec2(-3, 3);
-		}
-		else
-		{
-			return b2Vec2(-3, -0.165);
-		}
-	}
-	else
-	{
-		if (positionOfThePath.y < originalPosition.y) {
-			return b2Vec2(0, -3);
-		}
-		else if (positionOfThePath.y > originalPosition.y)
-		{
-			return b2Vec2(0, 3);
-		}
-		else
-		{
-			return b2Vec2(0, -0.165);
-		}
-	}
-}
-
-bool Scene::CheckVelocityForFlip(b2Vec2 vel) {
-
-	if (vel.x < 0) {
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
-}
-
-bool Scene::OnGuiMouseClickEvent(GuiControl* control)
-{
-	uint height = 0;
-	uint width =0;
 	switch (control->function)
 	{
 	case FunctionGUI::START:
+		app->entityManager->active = true;
+		app->map->active = true;
+		app->scene->active = true;
+		app->titleScreen->active = false;
 		break;
 	case FunctionGUI::EXIT:
 		control->hasToExit = true;
@@ -551,17 +376,14 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		if (!isFullScreen) {
 			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 			////TODO: Relocating all the other butons 
-			//app->win->GetWindowSize(windowW, windowH);
-				
+			//app->win->GetWindowSize(windowW, windowH);	
 			//SDL_Rect btPos = { windowW / 2 - 60, windowH / 2 - 10, 240,60 };
 			//exitButton->bounds = btPos;
 			isFullScreen = true;
 		}
 		else
 		{
-			app->win->GetWindowSize(width, height);
-			SDL_SetWindowSize(app->win->window, width, height);
-			SDL_SetWindowFullscreen(app->win->window, 0);
+			SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_SHOWN);
 			isFullScreen = false;
 		}
 		break;

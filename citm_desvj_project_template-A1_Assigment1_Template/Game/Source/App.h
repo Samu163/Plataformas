@@ -7,6 +7,7 @@
 #include "Timer.h"
 #include "EntityManager.h"
 #include "Player.h"
+#include "Title.h"
 
 #include "PugiXml/src/pugixml.hpp"
 
@@ -101,6 +102,7 @@ public:
 	Physics* physics;
 	Player* player;
 	GuiManager* guiManager;
+	Title* titleScreen;
 
 
 private:

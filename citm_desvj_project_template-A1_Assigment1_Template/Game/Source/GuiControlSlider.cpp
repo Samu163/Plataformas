@@ -11,7 +11,7 @@ GuiControlSlider::GuiControlSlider(uint32 id, SDL_Rect bounds, const char* text)
     this->text = text;
 
     // Slider specific properties
-    sliderButton = { bounds.x, bounds.y, 10, bounds.h }; // Small rectangle representing the slider handle
+    sliderButton = { bounds.x+ bounds.x/2, bounds.y, 10, bounds.h }; // Small rectangle representing the slider handle
 }
 
 // Destructor
@@ -39,9 +39,13 @@ bool GuiControlSlider::Update(float dt)
                 state = GuiControlState::PRESSED;
 
                 // Update the slider value based on mouse position
-                float newValue = (float)(mouseX - bounds.x) / (float)(bounds.w);
+                newValue = (float)(mouseX - bounds.x) / (float)(bounds.w);
                 newValue = minValue + newValue * (maxValue - minValue);
                 SetValue(newValue);
+                
+            }
+            if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+                NotifyObserver();
             }
         }
         else

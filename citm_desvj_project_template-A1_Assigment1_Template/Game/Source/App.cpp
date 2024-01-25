@@ -37,10 +37,12 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	entityManager = new EntityManager();
 	player = new Player();
 	guiManager = new GuiManager();
+	titleScreen = new Title();
 
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
+	AddModule(titleScreen);
 	AddModule(win);
 	AddModule(input);
 	AddModule(tex);
@@ -53,6 +55,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 
 	// Render last to swap buffer
 	AddModule(render);
+
 
 	LOG("Timer App Constructor: %f", timer.ReadMSec());
 }

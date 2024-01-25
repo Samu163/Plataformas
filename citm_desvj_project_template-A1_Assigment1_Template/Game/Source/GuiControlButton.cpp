@@ -1,6 +1,7 @@
 #include "GuiControlButton.h"
 #include "Render.h"
 #include "App.h"
+#include "scene.h"
 #include "Audio.h"
 
 GuiControlButton::GuiControlButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
@@ -45,16 +46,20 @@ bool GuiControlButton::Update(float dt)
 		switch (state)
 		{
 		case GuiControlState::DISABLED:
-			app->render->DrawRectangle(bounds, 200, 200, 200, 255, true, false);
 			break;
 		case GuiControlState::NORMAL:
-			app->render->DrawRectangle(bounds, 0, 0, 255, 255, true, false);
+			//app->render->DrawRectangle(bounds, 0, 0, 255, 100, true, false);
+			app->render->DrawTexture(texture, bounds.x - 40,bounds.y - 20,false,0,1,0, INT_MAX, INT_MAX,1,true);
 			break;
 		case GuiControlState::FOCUSED:
-			app->render->DrawRectangle(bounds, 0, 0, 20, 255, true, false);
+			app->render->DrawTexture(texture, bounds.x-40, bounds.y-20, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
+			app->render->DrawRectangle(bounds, 0, 0, 20, 100, true, false);
 			break;
 		case GuiControlState::PRESSED:
-			app->render->DrawRectangle(bounds, 0, 255, 0, 255, true, false);
+			app->render->DrawTexture(texture, bounds.x - 40, bounds.y-20, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
+			app->render->DrawRectangle(bounds, 0, 255, 0, 100, true, false);
+
+
 			break;
 		}
 

@@ -175,6 +175,26 @@ void Player::Init()
 
 bool Player::Update(float dt)
 {
+	if (app->scene->isOnPause)
+	{
+		app->win->GetWindowSize(app->scene->windowW, app->scene->windowH);
+		app->render->DrawTexture(app->scene->windowTex, (app->scene->windowW / 2)-185, (app->scene->windowH / 2)-300, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+		lastCheckPoint = app->scene->listOfCheckPoints[0]->position;
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
+		pbody->body->SetTransform(newPos, 0);
+
+	}
+	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) {
+		lastCheckPoint = app->scene->listOfCheckPoints[1]->position;
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
+		pbody->body->SetTransform(newPos, 0);
+
+	}
+
+
 
 	//Debug
 	//Restart from initial position

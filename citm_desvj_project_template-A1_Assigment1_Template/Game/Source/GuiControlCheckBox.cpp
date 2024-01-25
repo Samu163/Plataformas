@@ -1,6 +1,7 @@
 #include "GuiControlCheckBox.h"
 #include "Render.h"
 #include "App.h"
+#include "render.h"
 #include "Audio.h"
 
 // Constructor
@@ -41,18 +42,22 @@ bool GuiControlCheckBox::Update(float dt)
         {
             state = GuiControlState::NORMAL;
         }
+
+        //Render
+        app->render->DrawTexture(texture, bounds.x - 200, bounds.y + app->render->camera.y, false);
+
+        app->render->DrawRectangle(bounds, 0, 255, 255, 255, true, false);
+        if (checked)
+        {
+            // Draw something to indicate the CheckBox is checked (like a checkmark or filled box)
+            app->render->DrawRectangle({ bounds.x + 4, bounds.y + 4, bounds.w - 8, bounds.h - 8 }, 0, 255, 0, 255, true, false);
+        }
+
+        // Optional: Draw the text label for the CheckBox
+        app->render->DrawText(text.GetString(), bounds.x - bounds.w*3, bounds.y, 150, bounds.h);
     }
 
-    //Render
-    app->render->DrawRectangle(bounds, 0, 255, 255, 255, true, false);
-    if (checked)
-    {
-        // Draw something to indicate the CheckBox is checked (like a checkmark or filled box)
-        app->render->DrawRectangle({ bounds.x + 4, bounds.y + 4, bounds.w - 8, bounds.h - 8 }, 0, 255, 0, 255, true, false);
-    }
-
-    // Optional: Draw the text label for the CheckBox
-    app->render->DrawText(text.GetString(), bounds.x - bounds.w -10, bounds.y, 150, bounds.h);
+    
 
     return false;
 }

@@ -1,5 +1,5 @@
-#ifndef __SCENE_H__
-#define __SCENE_H__
+#ifndef __TITLE_H__
+#define __TITLE_H__
 
 #include "Module.h"
 #include "Player.h"
@@ -20,14 +20,14 @@
 
 struct SDL_Texture;
 
-class Scene : public Module
+class Title : public Module
 {
 public:
 
-	Scene();
+	Title();
 
 	// Destructor
-	virtual ~Scene();
+	virtual ~Title();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node& conf);
@@ -72,6 +72,7 @@ public:
 	SString path;
 	SDL_Texture* mouseTileTex = nullptr;
 	SDL_Texture* windowTex = nullptr;
+	SDL_Texture* intialScreen = nullptr;
 	Animation pathAnim;
 	iPoint mousePos;
 	iPoint mouseTile;
@@ -100,6 +101,7 @@ private:
 	bool isInDebugMode = false;
 
 	GuiControlButton* exitPauseButton;
+	GuiControlButton* startButton;
 	GuiControlButton* backSettingsButton;
 	GuiControlButton* resumeButton;
 	GuiControlButton* exitButton;

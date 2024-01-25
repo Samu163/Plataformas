@@ -21,6 +21,9 @@ public:
     void SetValue(float value);
     float GetValue() const;
 
+
+public:
+    float newValue;
 protected:
     float value;        // Current value of the slider
     float minValue;     // Minimum value of the slider

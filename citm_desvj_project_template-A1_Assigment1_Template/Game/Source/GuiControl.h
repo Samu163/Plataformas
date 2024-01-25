@@ -48,7 +48,8 @@ enum class FunctionGUI
 	LIVES,
 	COINS,
 	RESUME,
-	BACKTOTITLE
+	BACKTOTITLE,
+	BACKTOPAUSE
 };
 
 class GuiControl

@@ -30,6 +30,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	{
 	case GuiControlType::BUTTON:
 		guiControl = new GuiControlButton(id, bounds, text);
+		guiControl->texture = app->tex->Load("Assets/Textures/Button.png");
 		break;
 	case GuiControlType::SLIDER:
 		guiControl = new GuiControlSlider(id, bounds, text);
@@ -39,6 +40,8 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 		break;
 	case GuiControlType::CHECKBOX:
 		guiControl = new GuiControlCheckBox(id, bounds, text);
+		guiControl->texture = app->tex->Load("Assets/Textures/Button.png");
+
 		break;
 	}
 
