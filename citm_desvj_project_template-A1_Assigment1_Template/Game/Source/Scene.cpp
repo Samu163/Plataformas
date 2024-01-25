@@ -200,7 +200,7 @@ bool Scene::Update(float dt)
 
 	if (app->titleScreen->continueBtn) {
 		app->LoadRequest();
-		sameGame = true;
+		//sameGame = true;
 		app->titleScreen->continueBtn = false;
 	}
 
@@ -606,8 +606,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		else
 		{
-		
-
 			app->win->GetWindowSize(width, height);
 			SDL_SetWindowSize(app->win->window, width, height);
 			SDL_SetWindowFullscreen(app->win->window, 0);
@@ -642,15 +640,19 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case FunctionGUI::BACKTOTITLE:
 		app->audio->PlayFx(clickFx);
-		app->scene->coinsBox->state = GuiControlState::DISABLED;
-		app->scene->playerLifesBox->state = GuiControlState::DISABLED;
-		isOnPause = false;
 		ShowPauseButtons(false);
-		app->titleScreen->ShowPauseButtons(true);
+		ShowSettings(false);
+		coinsBox->state = GuiControlState::DISABLED;
+		playerLifesBox->state = GuiControlState::DISABLED;
+		isOnPause = false;
 		app->entityManager->active = false;
 		app->map->active = false;
 		app->scene->active = false;
 		app->titleScreen->active = true;
+		app->titleScreen->backFromScene = true;
+		app->titleScreen->ShowPauseButtons(true);
+		app->titleScreen->ShowSettings(false);
+
 
 		break;
 	case FunctionGUI::BACKTOPAUSE:
