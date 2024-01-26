@@ -32,8 +32,6 @@ public:
 	bool isCollected = false;
 	int counterForAnim = 0;
 
-
-
 private:
 	bool isPickedRef = false;
 	SDL_Texture* texture;

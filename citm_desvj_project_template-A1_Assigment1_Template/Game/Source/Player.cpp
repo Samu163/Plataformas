@@ -171,12 +171,11 @@ void Player::Init()
 	if (lifes <= 0) {
 		lifes = 3;
 	}
-
-	
 }
 
 bool Player::Update(float dt)
 {
+	//teleport to level 2
 	if (position.x > 7500 && position.x < 8000)
 	{
 		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(10175), PIXEL_TO_METERS(320));
@@ -184,13 +183,14 @@ bool Player::Update(float dt)
 	}
 
 
-
+	//Draw pause bg
 	if (app->scene->isOnPause)
 	{
 		app->win->GetWindowSize(app->scene->windowW, app->scene->windowH);
 		app->render->DrawTexture(app->scene->windowTex, (app->scene->windowW / 2)-185, (app->scene->windowH / 2)-300, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
 	}
 
+	//Teleport checkpoints
 	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		lastCheckPoint = app->scene->listOfCheckPoints[0]->position;
 		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
@@ -201,7 +201,21 @@ bool Player::Update(float dt)
 		lastCheckPoint = app->scene->listOfCheckPoints[1]->position;
 		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
 		pbody->body->SetTransform(newPos, 0);
-
+	}
+	if (app->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) {
+		lastCheckPoint = app->scene->listOfCheckPoints[2]->position;
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
+		pbody->body->SetTransform(newPos, 0);
+	}
+	if (app->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) {
+		lastCheckPoint = app->scene->listOfCheckPoints[3]->position;
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
+		pbody->body->SetTransform(newPos, 0);
+	}
+	if (app->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) {
+		lastCheckPoint = app->scene->listOfCheckPoints[4]->position;
+		b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(lastCheckPoint.x), PIXEL_TO_METERS(lastCheckPoint.y));
+		pbody->body->SetTransform(newPos, 0);
 	}
 
 
@@ -603,14 +617,32 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		{
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
-			physB->body->SetActive(false);
+			for (int i = 0; i < listOfIceBalls.Count(); i++)
+			{
+				if (listOfIceBalls[i].iceBallCollider == physA)
+				{
+					listOfIceBalls[i].pendingToDelete = true;
+				}
+			}
 		case ColliderType::LIVES_ITEM:
 			LOG("Collision LIFES_ITEM");
-			physB->body->SetActive(false);
+			for (int i = 0; i < listOfIceBalls.Count(); i++)
+			{
+				if (listOfIceBalls[i].iceBallCollider == physA)
+				{
+					listOfIceBalls[i].pendingToDelete = true;
+				}
+			}
 			break;
 		case ColliderType::CHECKPOINT:
 			LOG("Collision checkPoint");
-			physB->body->SetActive(false);
+			for (int i = 0; i < listOfIceBalls.Count(); i++)
+			{
+				if (listOfIceBalls[i].iceBallCollider == physA)
+				{
+					listOfIceBalls[i].pendingToDelete = true;
+				}
+			}
 			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
