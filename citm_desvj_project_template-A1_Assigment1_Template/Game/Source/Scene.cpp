@@ -220,7 +220,7 @@ bool Scene::Update(float dt)
 
 	//}
 
-	if (boss->life == 0)
+	if (boss->life <= 0)
 	{
 
 		active = false;

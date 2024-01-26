@@ -36,6 +36,7 @@
 	<entitymanager />
 	<:anonymous />
 	<scene />
+	<win />
 	<guiManager />
 	<scene />
 	<renderer>

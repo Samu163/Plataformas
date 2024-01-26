@@ -39,7 +39,7 @@ bool Win::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Win::Start()
 {
-	pantallaWin = app->tex->Load("Assets/Win.png");
+	pantallaWin = app->tex->Load("Assets/Textures/win.png");
 
 
 	return true;
@@ -55,8 +55,6 @@ bool Win::PreUpdate()
 bool Win::Update(float dt)
 {
 	
-	app->render->camera.x = 0;
-	app->render->camera.y = 0;
 	app->render->DrawTexture(pantallaWin, 0, 0, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
 	app->titleScreen->exitPauseButton->state == GuiControlState::NORMAL;
 	return true;

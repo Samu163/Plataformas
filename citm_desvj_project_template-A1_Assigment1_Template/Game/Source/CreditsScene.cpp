@@ -28,7 +28,6 @@ Credits::~Credits()
 // Called before render is available
 bool Credits::Awake(pugi::xml_node& config)
 {
-
 	return true;
 }
 
@@ -36,6 +35,7 @@ bool Credits::Awake(pugi::xml_node& config)
 bool Credits::Start()
 {
 	app->titleScreen->active = false;
+	app->winscene->active = false;
 	app->entityManager->active = false;
 	app->map->active = false;
 	app->scene->active = false;
