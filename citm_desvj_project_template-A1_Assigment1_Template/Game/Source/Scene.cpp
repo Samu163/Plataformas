@@ -179,7 +179,7 @@ bool Scene::Start()
 	coinsBox->state = GuiControlState::DISABLED;
 
 	SDL_Rect btPos6 = { windowW -1000, 100, 240, 100 };
-	Timervox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 2, "", btPos6, this);
+	Timervox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 3, "", btPos6, this);
 	Timervox->function = FunctionGUI::TIMER;
 	Timervox->state = GuiControlState::NORMAL;
 

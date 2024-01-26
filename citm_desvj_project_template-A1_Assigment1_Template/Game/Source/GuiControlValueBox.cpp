@@ -45,9 +45,13 @@ bool GuiControlValueBox::Update(float dt)
         {
             app->render->DrawTexture(texture, bounds.x+10, bounds.y + app->render->camera.y +20, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
         }
-        else
+        else if (id == 2)
         {
             app->render->DrawTexture(texture, bounds.x+60, bounds.y + app->render->camera.y+40, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
+        }
+        else
+        {
+
         }
     }
   
