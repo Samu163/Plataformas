@@ -40,7 +40,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	titleScreen = new Title();
 	credits = new Credits();
 	fadeToBlack = new ModuleFadeToBlack(true);
-
+	winscene = new Win();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp

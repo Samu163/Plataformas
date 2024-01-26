@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Title.cpp" />
     <ClCompile Include="Source\FadeToBlack.cpp" />
     <ClCompile Include="Source\CreditsScene.cpp" />
+    <ClCompile Include="Source\WinScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="Source\Title.h" />
     <ClInclude Include="Source\FadeToBlack.h" />
     <ClInclude Include="Source\CreditsScene.h" />
+    <ClInclude Include="Source\WinScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

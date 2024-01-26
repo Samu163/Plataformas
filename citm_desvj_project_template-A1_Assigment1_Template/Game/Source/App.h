@@ -10,7 +10,7 @@
 #include "Title.h"
 #include "FadeToBlack.h"
 #include "CreditsScene.h"
-
+#include "WinScene.h"
 #include "PugiXml/src/pugixml.hpp"
 
 // Modules
@@ -107,6 +107,7 @@ public:
 	Title* titleScreen;
 	ModuleFadeToBlack* fadeToBlack;
 	Credits* credits;
+	Win* winscene;
 
 
 private:

@@ -91,7 +91,7 @@ public:
 	bool isOnPause = false;
 
 	uint windowW, windowH;
-
+	GuiControlButton* exitPauseButton;
 
 private:
 
@@ -100,7 +100,7 @@ private:
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 
-	GuiControlButton* exitPauseButton;
+
 	GuiControlButton* creditsButton;
 	GuiControlButton* startButton;
 	GuiControlButton* continueButton;

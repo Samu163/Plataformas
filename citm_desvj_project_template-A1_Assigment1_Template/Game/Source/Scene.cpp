@@ -12,6 +12,7 @@
 #include "GuiManager.h"
 #include "ItemLives.h"
 #include "Title.h"
+#include "WinScene.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -206,6 +207,28 @@ bool Scene::Update(float dt)
 	string seconds = std::to_string(player->secondsCount);
 	Timervox->SetValue(seconds);
 
+
+	//if (app->player->lifes == 0)
+	//{
+
+	//	active = false;
+	//	app->map->active = false;
+	//	app->entityManager->active = false;
+	///*	app->guiManager->active = false;*/
+
+	//	app->gameover->active = true;
+
+	//}
+
+	if (boss->life == 0)
+	{
+
+		active = false;
+		app->map->active = false;
+		app->entityManager->active = false;
+		//app->guiManager->active = false;
+		app->winscene->active = true;
+	}
 
 	if (app->titleScreen->continueBtn) {
 		app->LoadRequest();

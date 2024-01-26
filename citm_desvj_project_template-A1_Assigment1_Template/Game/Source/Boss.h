@@ -96,11 +96,11 @@ public:
 	int attackDuration = 0;
 
 	bool isOnSceen = true;
-
+	int life = 1;
 private:
 
 	iPoint deathPosition;
-	int life = 10;
+
 	const DynArray<iPoint>* path;
 	b2Vec2 vel;
 	int counterForDead = 0;
