@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
-
+#include "Scene.h"
 
 #include "Window.h"
 
@@ -253,12 +253,18 @@ bool Player::Update(float dt)
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (!isDead) 
 	{
-
+		float Auxiliartiempo = 0;
 		//counter
-		secondsCount = fps / 60;
-		fps++;
 
-
+		if (app->scene->isOnPause == true) {
+			
+			Auxiliartiempo = fps;
+			fps = Auxiliartiempo;
+		}
+		else {
+			secondsCount = fps / 60;
+			fps++;
+		}
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !app->scene->isOnPause)
 		{

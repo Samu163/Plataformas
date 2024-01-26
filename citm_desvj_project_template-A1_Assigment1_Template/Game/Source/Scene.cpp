@@ -602,7 +602,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case FunctionGUI::SETTINGS:
 		app->audio->PlayFx(clickFx);
-
+		
 		ShowPauseButtons(false);
 		ShowSettings(true);
 		break;	
@@ -658,6 +658,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		ShowSettings(false);
 		coinsBox->state = GuiControlState::DISABLED;
 		playerLifesBox->state = GuiControlState::DISABLED;
+		Timervox->state = GuiControlState::DISABLED;
 		isOnPause = false;
 		app->entityManager->active = false;
 		app->map->active = false;

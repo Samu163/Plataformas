@@ -226,6 +226,7 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		app->scene->active = true;
 		app->titleScreen->active = false;
 		app->scene->coinsBox->state = GuiControlState::NORMAL;
+		app->scene->Timervox->state = GuiControlState::NORMAL;
 		app->scene->playerLifesBox->state = GuiControlState::NORMAL;
 		ShowPauseButtons(false);
 		break;
@@ -237,6 +238,7 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		app->titleScreen->active = false;
 		continueBtn = true;
 		app->scene->coinsBox->state = GuiControlState::NORMAL;
+		app->scene->Timervox->state = GuiControlState::NORMAL;
 		app->scene->playerLifesBox->state = GuiControlState::NORMAL;
 		ShowPauseButtons(false);
 		break;
