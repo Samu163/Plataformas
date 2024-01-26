@@ -93,12 +93,12 @@ bool Title::Start()
 	fullScreenBox->function = FunctionGUI::FULLSCREEN;
 	fullScreenBox->state = GuiControlState::DISABLED;
 
-	SDL_Rect btPosVS = { windowW / 2 + 40,windowH / 2 + 120 , 50,50 };
+	SDL_Rect btPosVS = { windowW / 2 + 40,windowH / 2 + 80 , 50,50 };
 	vSyncBtn = (GuiControlCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "VSYNC", btPosVS, this);
 	vSyncBtn->function = FunctionGUI::VSYNC;
 	vSyncBtn->state = GuiControlState::DISABLED;
 
-	SDL_Rect btPosBP = { windowW / 2 - 120, windowH / 2 + 240 , 240,60 };
+	SDL_Rect btPosBP = { windowW / 2 - 120, windowH / 2 + 200 , 240,60 };
 	backSettingsButton = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "BACK", btPosBP, this);
 	backSettingsButton->function = FunctionGUI::BACKTOTITLE;
 	backSettingsButton->state = GuiControlState::DISABLED;
@@ -118,12 +118,17 @@ bool Title::PreUpdate()
 // Called each loop iteration
 bool Title::Update(float dt)
 {
-	app->scene->player->position = app->scene->player->initialPosition;
-
-
-
+	if(backFromScene) {
+		ShowPauseButtons(true);
+		ShowSettings(false);
+		backFromScene = false;
+		isOnSettings = false;
+	}
 
 	app->render->DrawTexture(intialScreen, 0, 0, false, 0, 1, 0, INT_MAX, INT_MAX, 1, true);
+
+	
+
 
 
 	if (isOnSettings)
@@ -231,6 +236,8 @@ bool Title::OnGuiMouseClickEvent(GuiControl* control)
 		app->scene->active = true;
 		app->titleScreen->active = false;
 		continueBtn = true;
+		app->scene->coinsBox->state = GuiControlState::NORMAL;
+		app->scene->playerLifesBox->state = GuiControlState::NORMAL;
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::EXIT:

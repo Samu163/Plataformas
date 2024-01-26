@@ -60,6 +60,8 @@ public:
 
 
 public: 
+
+	bool backFromScene = false;
 	int clickFx;
 	Player* player;
 	Enemy* walkingEnemy_1;

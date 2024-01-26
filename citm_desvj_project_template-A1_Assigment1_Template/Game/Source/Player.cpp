@@ -508,7 +508,7 @@ bool Player::Update(float dt)
 		{
 			//Drawing regular Iceballs
 			listOfIceBalls[i].currentIceBallAnimation = &iceBallAnim;
-			app->render->DrawTexture(iceBallTexture, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x)-20, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y)-30, isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
+			app->render->DrawTexture(iceBallTexture, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.x)-20, METERS_TO_PIXELS(listOfIceBalls[i].iceBallCollider->body->GetTransform().p.y)-20, isFlipped, &listOfIceBalls[i].currentIceBallAnimation->GetCurrentFrame(), zoomFactor);
 			iceBallAnim.Update();
 		}
 			
