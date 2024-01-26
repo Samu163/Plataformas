@@ -6,26 +6,26 @@
 	<audio />
 	<:anonymous />
 	<scene>
-		<newGame sameGame="true" />
-		<checkPoint isPicked="true" x="672" y="270" />
+		<newGame sameGame="false" />
+		<checkPoint isPicked="false" x="672" y="270" />
 		<checkPoint isPicked="false" x="1620" y="528" />
 		<checkPoint isPicked="false" x="3552" y="400" />
 		<checkPoint isPicked="false" x="5216" y="370" />
-		<checkPoint isPicked="true" x="10175" y="340" />
+		<checkPoint isPicked="false" x="10175" y="340" />
 		<liveItem isPicked="false" x="1984" y="240" />
 		<liveItem isPicked="false" x="4640" y="480" />
 		<liveItem isPicked="false" x="6304" y="224" />
 		<liveItem isPicked="false" x="10560" y="320" />
-		<coin isCollected="true" x="544" y="352" />
-		<coin isCollected="true" x="1248" y="350" />
-		<coin isCollected="true" x="1918" y="438" />
+		<coin isCollected="false" x="544" y="352" />
+		<coin isCollected="false" x="1248" y="350" />
+		<coin isCollected="false" x="1918" y="438" />
 		<coin isCollected="false" x="2432" y="416" />
 		<coin isCollected="false" x="3250" y="480" />
 		<coin isCollected="false" x="4860" y="380" />
 		<coin isCollected="false" x="6528" y="288" />
 		<coin isCollected="false" x="7010" y="500" />
-		<coin isCollected="true" x="10144" y="320" />
-		<player x="128" y="544" LastCheckPointX="10215" LastCheckPointY="380" lifes="4" />
+		<coin isCollected="false" x="10144" y="320" />
+		<player x="128" y="544" LastCheckPointX="400" LastCheckPointY="352" lifes="3" />
 		<flyingEnemy1 isOnSceen="true" x="3552" y="224" />
 		<flyingEnemy2 isOnSceen="true" x="4544" y="288" />
 		<enemy1 isOnSceen="true" x="1262" y="512" />

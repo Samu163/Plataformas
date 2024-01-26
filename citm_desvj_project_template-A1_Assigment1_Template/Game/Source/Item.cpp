@@ -108,7 +108,7 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 		case ColliderType::PLAYER:
 			isPickedRef = true;
-			break;
+			break;	
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
 			break;

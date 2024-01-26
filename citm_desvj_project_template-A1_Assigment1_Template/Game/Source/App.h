@@ -109,6 +109,9 @@ public:
 	Credits* credits;
 	Win* winscene;
 
+	bool isIn30fps;
+
+
 
 private:
 
@@ -141,7 +144,6 @@ private:
 
 	uint32 maxFrameDuration = 16;
 
-	bool isIn30fps;
 
 	bool saveRequest;
 	bool loadRequest;

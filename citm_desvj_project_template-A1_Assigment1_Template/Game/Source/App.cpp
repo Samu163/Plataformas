@@ -9,6 +9,7 @@
 #include "Physics.h"
 #include "Animation.h"
 #include "GuiManager.h"
+#include "Optick/include/optick.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -143,6 +144,8 @@ bool App::Start()
 // Called each loop iteration
 bool App::Update()
 {
+	OPTICK_EVENT();
+
 	bool ret = true;
 	PrepareUpdate();
 	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
@@ -168,6 +171,9 @@ bool App::Update()
 	if(ret == true)
 		ret = PostUpdate();
 
+
+	OPTICK_FRAME("Main Loop");
+
 	FinishUpdate();
 	return ret;
 }
@@ -192,12 +198,16 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	OPTICK_EVENT();
+
 	frameTime.Start();
 }
 
 // ---------------------------------------------
 void App::FinishUpdate()
 {
+	OPTICK_EVENT();
+
 	// This is a good place to call Load / Save functions
 	double currentDt = frameTime.ReadMs();
 	if (maxFrameDuration > 0 && currentDt < maxFrameDuration) {
@@ -251,6 +261,8 @@ void App::FinishUpdate()
 // Call modules before each loop iteration
 bool App::PreUpdate()
 {
+	OPTICK_EVENT();
+
 	bool ret = true;
 
 	ListItem<Module*>* item;
@@ -273,6 +285,8 @@ bool App::PreUpdate()
 // Call modules on each loop iteration
 bool App::DoUpdate()
 {
+	OPTICK_EVENT();
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.start;
@@ -295,6 +309,8 @@ bool App::DoUpdate()
 // Call modules after each loop iteration
 bool App::PostUpdate()
 {
+	OPTICK_EVENT();
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	Module* pModule = NULL;

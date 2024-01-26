@@ -381,7 +381,7 @@ void Scene::ShowSettings(bool condition)
 
 // Called before quitting
 bool Scene::CleanUp()
-{
+{ 
 	LOG("Freeing scene");
 
 	return true;
@@ -660,7 +660,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case FunctionGUI::VSYNC:
 		app->audio->PlayFx(clickFx);
-
+		app->isIn30fps = !app->isIn30fps;
 		break;
 	case FunctionGUI::TIMER:
 		break;
