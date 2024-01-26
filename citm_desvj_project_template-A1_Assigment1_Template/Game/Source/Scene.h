@@ -91,9 +91,9 @@ public:
 
 	uint windowW, windowH;
 
-
 	GuiControlValueBox* playerLifesBox;
 	GuiControlValueBox* coinsBox;
+	GuiControlValueBox* Timervox;
 
 private:
 

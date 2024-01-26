@@ -107,7 +107,8 @@ public:
 	iPoint lastCheckPoint = { 400,352 };
 
 	int coinCount = 0;
-
+	int secondsCount =  0;
+	int fps=0;
 	//Bools for knowing if has passed that checkPoint
 
 

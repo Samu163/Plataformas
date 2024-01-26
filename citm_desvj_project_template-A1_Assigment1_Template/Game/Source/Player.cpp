@@ -132,6 +132,7 @@ bool Player::Start()
 {
 	
 	
+
 	//initilize textures
 	texture = app->tex->Load("Assets/Textures/playerIce.png");
 	iceBallTexture = app->tex->Load("Assets/Textures/iceBall.png");
@@ -145,6 +146,7 @@ bool Player::Start()
 	iceballdeathFx = app->audio->LoadFx("Assets/Audio/Fx/iceballdeath.ogg");
 	deathFx = app->audio->LoadFx("Assets/Audio/Fx/death.ogg");
 	initialPosition = position;
+
 	//initialize player parameters
 	Init();
 	return true;
@@ -251,7 +253,13 @@ bool Player::Update(float dt)
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (!isDead) 
 	{
-		
+
+		//counter
+		secondsCount = fps / 60;
+		fps++;
+
+
+
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !app->scene->isOnPause)
 		{
 			isJumping = true;

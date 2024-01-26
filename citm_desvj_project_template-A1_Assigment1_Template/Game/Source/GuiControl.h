@@ -48,6 +48,7 @@ enum class FunctionGUI
 	TIMER,
 	LIVES,
 	COINS,
+
 	RESUME,
 	BACKTOTITLE,
 	BACKTOPAUSE

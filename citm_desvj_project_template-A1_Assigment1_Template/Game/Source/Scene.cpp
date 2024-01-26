@@ -52,8 +52,8 @@ bool Scene::Awake(pugi::xml_node& config)
 		CheckPoint* checkPoint = (CheckPoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
 		checkPoint->parameters = checkPointNode;
 		listOfCheckPoints.Add(checkPoint);
-
 	}
+
 
 
 	app->map->path = config.child("map").attribute("path").as_string();
@@ -178,6 +178,10 @@ bool Scene::Start()
 	coinsBox->function = FunctionGUI::COINS;
 	coinsBox->state = GuiControlState::DISABLED;
 
+	SDL_Rect btPos6 = { windowW -1000, 100, 240, 100 };
+	Timervox = (GuiControlValueBox*)app->guiManager->CreateGuiControl(GuiControlType::VALUEBOX, 2, "", btPos6, this);
+	Timervox->function = FunctionGUI::TIMER;
+	Timervox->state = GuiControlState::NORMAL;
 
 
 	return true;
@@ -192,10 +196,15 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+
+
 	string strPlayerLifes = std::to_string(player->lifes);
 	playerLifesBox->SetValue(strPlayerLifes);	
 	string coins = std::to_string(player->coinCount);
 	coinsBox->SetValue(coins);
+
+	string seconds = std::to_string(player->secondsCount);
+	Timervox->SetValue(seconds);
 
 
 	if (app->titleScreen->continueBtn) {
@@ -641,9 +650,12 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		ShowPauseButtons(false);
 		break;
 	case FunctionGUI::BACKTOTITLE:
-		app->audio->PlayFx(clickFx);
+
+       app->audio->PlayFx(clickFx);
+
+
 		app->scene->coinsBox->state = GuiControlState::DISABLED;
-		app->scene->playerLifesBox->state = GuiControlState::DISABLED;
+
 		isOnPause = false;
 		ShowPauseButtons(false);
 		app->titleScreen->ShowPauseButtons(true);
