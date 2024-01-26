@@ -182,7 +182,6 @@ bool Player::Update(float dt)
 		pbody->body->SetTransform(newPos, 0);
 	}
 
-
 	//Draw pause bg
 	if (app->scene->isOnPause)
 	{
@@ -222,7 +221,7 @@ bool Player::Update(float dt)
 
 	//Debug
 	//Restart from initial position
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 	{
 		if (isDead) 
 		{
@@ -233,9 +232,24 @@ bool Player::Update(float dt)
 		{
 			app->physics->DestroyObject(pbody);
 		}
-		position = initialPosition;
+		position = lastCheckPoint;
 		Init();
 	}
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN )
+	{
+		if (isDead) 
+		{
+			deathCounter = 0;
+			deathAnim.Reset();
+		}
+		else
+		{
+			app->physics->DestroyObject(pbody);
+		}
+		lastCheckPoint = app->scene->listOfCheckPoints[4]->position;
+		position = lastCheckPoint;
+		Init();
+	}	
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN )
 	{
 		if (isDead) 
@@ -247,6 +261,7 @@ bool Player::Update(float dt)
 		{
 			app->physics->DestroyObject(pbody);
 		}
+		lastCheckPoint = app->scene->listOfCheckPoints[0]->position;
 		position = lastCheckPoint;
 		Init();
 	}
