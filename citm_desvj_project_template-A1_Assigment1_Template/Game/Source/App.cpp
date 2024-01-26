@@ -42,6 +42,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	credits = new Credits();
 	fadeToBlack = new ModuleFadeToBlack(true);
 	winscene = new Win();
+	loseScene = new Lose();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -56,6 +57,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(fadeToBlack);
 	AddModule(titleScreen);
 	AddModule(winscene);
+	AddModule(loseScene);
 
 	AddModule(guiManager);
 	AddModule(credits);

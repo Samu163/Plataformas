@@ -207,27 +207,31 @@ bool Scene::Update(float dt)
 	string seconds = std::to_string(player->secondsCount);
 	Timervox->SetValue(seconds);
 
-
-	//if (app->player->lifes == 0)
-	//{
-
-	//	active = false;
-	//	app->map->active = false;
-	//	app->entityManager->active = false;
-	///*	app->guiManager->active = false;*/
-
-	//	app->gameover->active = true;
-
-	//}
-
-	if (boss->life <= 0)
+	if (player->deathCounter > 60 && player->lifes <= 0)
 	{
-
+		exitPauseButton->state = GuiControlState::NORMAL;
+		coinsBox->state = GuiControlState::DISABLED;
+		playerLifesBox->state = GuiControlState::DISABLED;
+		Timervox->state = GuiControlState::DISABLED;
 		active = false;
 		app->map->active = false;
 		app->entityManager->active = false;
-		//app->guiManager->active = false;
+		app->loseScene->active = true;
+		app->loseScene->exitButton->state = GuiControlState::NORMAL;
+
+	}
+
+	if (boss->hasDead)
+	{
+		exitPauseButton->state = GuiControlState::DISABLED;
+		coinsBox->state = GuiControlState::DISABLED;
+		playerLifesBox->state = GuiControlState::DISABLED;
+		Timervox->state = GuiControlState::DISABLED;
+		active = false;
+		app->map->active = false;
+		app->entityManager->active = false;
 		app->winscene->active = true;
+		app->winscene->exitButton->state = GuiControlState::NORMAL;
 	}
 
 	if (app->titleScreen->continueBtn) {

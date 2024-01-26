@@ -96,7 +96,10 @@ public:
 	int attackDuration = 0;
 
 	bool isOnSceen = true;
-	int life = 1;
+	int life = 10;
+
+	bool hasDead = false;
+
 private:
 
 	iPoint deathPosition;
@@ -104,7 +107,6 @@ private:
 	const DynArray<iPoint>* path;
 	b2Vec2 vel;
 	int counterForDead = 0;
-	bool hasDead = false;
 
 };
 #endif // __ENEMY_H__

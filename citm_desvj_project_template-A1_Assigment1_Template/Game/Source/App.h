@@ -11,6 +11,7 @@
 #include "FadeToBlack.h"
 #include "CreditsScene.h"
 #include "WinScene.h"
+#include "LoseScene.h"
 #include "PugiXml/src/pugixml.hpp"
 
 // Modules
@@ -108,6 +109,7 @@ public:
 	ModuleFadeToBlack* fadeToBlack;
 	Credits* credits;
 	Win* winscene;
+	Lose* loseScene;
 
 	bool isIn30fps;
 

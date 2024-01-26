@@ -1,5 +1,5 @@
-#ifndef __WIN_H__
-#define __WIN_H__
+#ifndef __LOSE_H__
+#define __LOSE_H__
 
 #include "Module.h"
 #include "Player.h"
@@ -18,14 +18,14 @@
 #include <list>
 struct SDL_Texture;
 
-class Win : public Module
+class Lose : public Module
 {
 public:
 
-	Win();
+	Lose();
 
 	// Destructor
-	virtual ~Win();
+	virtual ~Lose();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node& conf);
@@ -48,15 +48,11 @@ public:
 
 public:
 
-	SDL_Texture* pantallaWin;
-
-
-	bool ext;
-
+	SDL_Texture* loseScreen;
 	GuiControlButton* exitButton;
 
+	bool ext;
 private:
-
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;
 	uint texW, texH;

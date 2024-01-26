@@ -36,6 +36,7 @@ bool Credits::Start()
 {
 	app->titleScreen->active = false;
 	app->winscene->active = false;
+	app->loseScene->active = false;
 	app->entityManager->active = false;
 	app->map->active = false;
 	app->scene->active = false;

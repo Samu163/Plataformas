@@ -109,6 +109,7 @@
     <ClCompile Include="Source\GuiManager.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemLives.cpp" />
+    <ClCompile Include="Source\LoseScene.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\App.cpp" />
     <ClCompile Include="Source\Audio.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Source\GuiManager.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemLives.h" />
+    <ClInclude Include="Source\LoseScene.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Pathfinding.h" />
     <ClInclude Include="Source\PerfTimer.h" />
